@@ -1,0 +1,79 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <h3 class="ui black block header">
+        Volunteer Profile
+    </h3>
+    <div class="ui segment">
+        <i class="square inverted teal huge user icon"></i>
+        {% if volunteer.description %}
+            <h5 class="ui dividing header">
+                About Me
+            </h5>
+            {{ volunteer.description }}
+        {% endif %}
+    </div>
+    <div class="ui divided selection list">
+        <a class="item">
+            <div class="ui horizontal black label">Name</div>
+            {{ volunteer.first_name }} {{ volunteer.last_name }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal black label">Address</div>
+            {{ volunteer.address }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal black label">City</div>
+            {{ volunteer.city }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal black label">State</div>
+            {{ volunteer.state }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal black label">Country</div>
+            {{ volunteer.country }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal black label">Phone Number</div>
+            {{ volunteer.phone_number }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal black label">Company</div>
+            {{ volunteer.company }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal black label">Email Address</div>
+            {{ volunteer.email }}
+        </a>
+    </div>
+    {% if volunteer.websites %}
+        <div class="ui secondary segment">
+            <h5 class="ui dividing header">
+                Other Profiles
+            </h5>
+            {{ volunteer.websites }}
+        </div>
+    {% endif %}
+    {% if volunteer.resume %}
+        <div class="ui fluid accordion">
+            <div class="title">
+                <i class="dropdown icon"></i>
+                View Resume
+            </div>
+            <div class="content">
+                <pre>
+                    {{ volunteer.resume }}    
+                </pre>
+            </div>
+        </div>
+    {% endif %}
+    {% if volunteer.resume_file %}
+        <form action="{% url 'volunteer:download_resume' volunteer.id %}" method="post">
+            {% csrf_token %}
+            <div class="ui form segment">
+                <button class="ui small blue button" type="submit">Download Resume</button> 
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

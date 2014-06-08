@@ -1,0 +1,67 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    {% if volunteer_list %}
+        <h3 class="ui black block header">
+            Manage Volunteers
+        </h3>
+        <form action="{% url 'volunteer:list_options' %}" method="post">
+            {% csrf_token %}
+            <div class="ui tertiary segment">
+                Options:
+                <div class="ui buttons">
+                    <button type="submit" class="tiny ui blue button" name="option" value="profile">View Profile</button>
+                    <button type="submit" class="tiny ui teal button" name="option" value="edit">Edit Profile</button>
+                    <button type="submit" class="tiny ui red button" name="option" value="delete">Delete</button>
+                </div>
+            </div>
+            <table class="ui table segment">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>State/Province</th>
+                        <th>Country</th>
+                        <th>Phone Number</th>
+                        <th>Company/Employer</th>
+                        <th>Email</th>
+                        <th>Select volunteer for Options:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for volunteer in volunteer_list %}
+                        <tr>
+                            <td>{{ volunteer.first_name }}</td>
+                            <td>{{ volunteer.last_name }}</td>
+                            <td>{{ volunteer.address }}</td>
+                            <td>{{ volunteer.city }}</td>
+                            <td>{{ volunteer.state }}</td>
+                            <td>{{ volunteer.country }}</td>
+                            <td>{{ volunteer.phone_number }}</td>
+                            <td>{{ volunteer.company }}</td>
+                            <td>{{ volunteer.email }}</td>
+                            <td>
+                                {% if forloop.first %}
+                                    <input type="radio" checked="checked" name="volunteer_id" value="{{ volunteer.id }}">
+                                {% else %}
+                                    <input type="radio" name="volunteer_id" value="{{ volunteer.id }}">
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+    {% else %}
+        <div class="ui icon error message">
+            <i class="attention icon"></i>
+            <div class="content">
+                <div class="header">
+                    No volunteers currently exist!
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
