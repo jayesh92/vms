@@ -85,5 +85,4 @@ class Volunteer(models.Model):
         ],
     )
     resume = models.TextField(blank=True)
-    #do validation
     resume_file = models.FileField(upload_to='resumes/', max_length=40, blank=True)
