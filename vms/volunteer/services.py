@@ -30,6 +30,14 @@ def get_volunteers_by_first_name():
     volunteer_list = Volunteer.objects.all().order_by('first_name')
     return volunteer_list
 
+#delete any corresponding resumes
+def delete_volunteer(volunteer_id):
+    volunteer = get_volunteer_by_id(volunteer_id)
+    if volunteer:
+        volunteer.delete()
+    else:
+        print "return some error here"
+
 def delete_volunteer_resume(volunteer_id):
     volunteer = get_volunteer_by_id(volunteer_id)
     volunteer.resume_file.delete()

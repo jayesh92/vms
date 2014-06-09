@@ -15,11 +15,14 @@ def create(request):
     if request.method == 'POST':
         form = VolunteerForm(request.POST, request.FILES)
         if form.is_valid():
-            my_file = form.cleaned_data['resume_file']
-            if validate_file(my_file):
-                #save the volunteer
-                form.save()
-                return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+            #if a resume has been uploaded
+            if 'resume_file' in request.FILES:
+                my_file = form.cleaned_data['resume_file']
+                if not validate_file(my_file):
+                    return render(request, 'volunteer/create.html', {'form' : form,})        
+            #save the volunteer
+            form.save()
+            return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
     else:
         form = VolunteerForm()
     return render(request, 'volunteer/create.html', {'form' : form,})        
@@ -94,7 +97,9 @@ def list_options(request):
             elif option == 'edit':
                 return HttpResponseRedirect(reverse('volunteer:edit', args=(volunteer_id,))) 
             elif option == 'delete':
-                print "to implement later"
+                #return HttpResponseRedirect(reverse('volunteer:delete', args=(volunteer_id,))) 
+                delete_volunteer(volunteer_id)
+                return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
             else:
                 return HttpResponseRedirect(reverse('volunteer:error'))
         else:
