@@ -67,7 +67,7 @@ class VolunteerMethodTests(TestCase):
         self.assertNotEqual(get_volunteer_by_id(300), v2)
         self.assertNotEqual(get_volunteer_by_id(400), v2)
 
-    def test_get_volunteer_resume_file(self):
+    def test_has_resume_file(self):
  
         v1 = Volunteer(first_name = "John",
                         last_name = "Doe",
@@ -80,15 +80,37 @@ class VolunteerMethodTests(TestCase):
                         email = "john@test.com",
                         resume_file = "MyResume.pdf")
 
+        v2 = Volunteer(first_name = "James",
+                        last_name = "Doe",
+                        address = "7 Alpine Street",
+                        city = "Maplegrove",
+                        state = "Wyoming",
+                        country = "USA",
+                        phone_number = "23454545",
+                        company = "Google",
+                        email = "james@test.com")
+
+        v3 = Volunteer(first_name = "Jane",
+                        last_name = "Doe",
+                        address = "7 Alpine Street",
+                        city = "Maplegrove",
+                        state = "Wyoming",
+                        country = "USA",
+                        phone_number = "23454545",
+                        company = "Google",
+                        email = "jane@test.com",
+                        resume_file = "")
+
         v1.save()
+        v2.save()
+        v3.save()
 
         #test typical cases
-        self.assertIsNotNone(get_volunteer_resume_file(v1.id))
-        self.assertEquals(get_volunteer_resume_file(v1.id), v1.resume_file)
+        self.assertTrue(has_resume_file(v1.id))
 
         #test nonexistant cases
-        self.assertNotEquals(get_volunteer_resume_file(v1.id), "DifferentResume.pdf")
-        self.assertNotEquals(get_volunteer_resume_file(v1.id), "AnotherResume.pdf")
+        self.assertFalse(has_resume_file(v2.id))
+        self.assertFalse(has_resume_file(v3.id))
 
     def test_get_volunteer_resume_file_url(self):
 

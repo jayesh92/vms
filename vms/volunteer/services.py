@@ -16,15 +16,25 @@ def get_volunteer_by_id(volunteer_id):
 
     return result  
 
-def get_volunteer_resume_file(volunteer_id):
+def has_resume_file(volunteer_id):
+    
+    result = False 
     volunteer = get_volunteer_by_id(volunteer_id)
-    resume_file = volunteer.resume_file
-    return resume_file
+
+    if volunteer and volunteer.resume_file:
+        result = True 
+
+    return result
     
 def get_volunteer_resume_file_url(volunteer_id):
+
+    result = None
     volunteer = get_volunteer_by_id(volunteer_id)
-    path = volunteer.resume_file.url
-    return path
+
+    if volunteer and volunteer.resume_file:
+        result = volunteer.resume_file.url
+
+    return result 
 
 def get_volunteers_by_first_name():
     volunteer_list = Volunteer.objects.all().order_by('first_name')
@@ -39,8 +49,16 @@ def delete_volunteer(volunteer_id):
         print "return some error here"
 
 def delete_volunteer_resume(volunteer_id):
+
+    result = False 
     volunteer = get_volunteer_by_id(volunteer_id)
-    volunteer.resume_file.delete()
+
+    if volunteer and volunteer.resume_file:
+        volunteer.resume_file.delete()
+        result = True
+
+    return result
+
 
 def search_volunteers(first_name, last_name, city, state, country, company):
     
@@ -62,24 +80,3 @@ def search_volunteers(first_name, last_name, city, state, country, company):
         search_query = search_query.filter(company__icontains=company)
 
     return search_query 
-
-def validate_file(my_file):
-    MAX_FILENAME_LENGTH = 40
-    MAX_FILESIZE_BYTES = 5243000
-    VALID_CONTENT_TYPES = [
-        "application/pdf", 
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "application/vnd.oasis.opendocument.text"
-    ]
-
-    is_valid = True
-
-    if len(my_file.name) > MAX_FILENAME_LENGTH:
-        is_valid = False
-    if my_file.size > MAX_FILESIZE_BYTES:
-        is_valid = False
-    if my_file.content_type not in VALID_CONTENT_TYPES:
-        is_valid = False
-           
-    return is_valid

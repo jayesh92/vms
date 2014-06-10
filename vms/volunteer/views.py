@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
@@ -6,7 +7,7 @@ from django.shortcuts import get_object_or_404, render
 from volunteer.forms import SearchVolunteerForm, VolunteerForm
 from volunteer.models import Volunteer
 from volunteer.services import * 
-import os
+from volunteer.validation import *
 
 def index(request):
     return HttpResponseRedirect(reverse('volunteer:create'))
@@ -23,15 +24,16 @@ def create(request):
             #save the volunteer
             form.save()
             return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+        else:
+            return render(request, 'volunteer/create.html', {'form' : form,})        
     else:
         form = VolunteerForm()
-    return render(request, 'volunteer/create.html', {'form' : form,})        
+        return render(request, 'volunteer/create.html', {'form' : form,})        
 
 def download_resume(request, volunteer_id):
-    volunteer = get_volunteer_by_id(volunteer_id)
-    if volunteer:
-        if request.method == 'POST':
-            basename = get_volunteer_resume_file_url(volunteer_id)
+    if request.method == 'POST':
+        basename = get_volunteer_resume_file_url(volunteer_id)
+        if basename:
             filename = settings.MEDIA_ROOT + basename 
             wrapper = FileWrapper(file(filename))
             response = HttpResponse(wrapper)
@@ -44,10 +46,9 @@ def download_resume(request, volunteer_id):
         return HttpResponseRedirect(reverse('volunteer:error'))
 
 def delete_resume(request, volunteer_id):
-    volunteer = get_volunteer_by_id(volunteer_id)
-    if volunteer:
-        if request.method == 'POST':
-            delete_volunteer_resume(volunteer_id)
+    if request.method == 'POST':
+        result = delete_volunteer_resume(volunteer_id)
+        if result:
             return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
         else:
             return HttpResponseRedirect(reverse('volunteer:error'))
@@ -55,6 +56,7 @@ def delete_resume(request, volunteer_id):
         return HttpResponseRedirect(reverse('volunteer:error'))
 
 def edit(request, volunteer_id):
+    #check that volunteer_id is valid since we may potentially have to pass it back to the template
     volunteer = get_volunteer_by_id(volunteer_id)
     if volunteer:
         if request.method == 'POST':
@@ -65,18 +67,22 @@ def edit(request, volunteer_id):
                     my_file = form.cleaned_data['resume_file']
                     if validate_file(my_file):
                         #delete an old uploaded resume if it exists
-                        resume_file = get_volunteer_resume_file(volunteer_id)
-                        if resume_file:
-                            delete_volunteer_resume(volunteer_id)
+                        has_file = has_resume_file(volunteer_id)
+                        if has_file:
+                            result = delete_volunteer_resume(volunteer_id)
+                            if not result:
+                                return HttpResponseRedirect(reverse('volunteer:error'))
                     else:
                         return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
                 #update the volunteer
                 form.save()
                 return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+            else:
+                return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
         else:
             #create a form to change an existing volunteer
             form = VolunteerForm(instance=volunteer)
-        return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
+            return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
     else:
         return HttpResponseRedirect(reverse('volunteer:error'))
 
@@ -89,17 +95,18 @@ def list_options(request):
         option = request.POST.get('option')
         volunteer_id = request.POST.get('volunteer_id')
         
-        #need to use more proper validation here (such as a regex)
         if option and volunteer_id:
-
-            if option == 'profile':
-                return HttpResponseRedirect(reverse('volunteer:profile', args=(volunteer_id,)))
-            elif option == 'edit':
-                return HttpResponseRedirect(reverse('volunteer:edit', args=(volunteer_id,))) 
-            elif option == 'delete':
-                #return HttpResponseRedirect(reverse('volunteer:delete', args=(volunteer_id,))) 
-                delete_volunteer(volunteer_id)
-                return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+            volunteer = get_volunteer_by_id(volunteer_id)
+            if volunteer:
+                if option == 'profile':
+                    return HttpResponseRedirect(reverse('volunteer:profile', args=(volunteer_id,)))
+                elif option == 'edit':
+                    return HttpResponseRedirect(reverse('volunteer:edit', args=(volunteer_id,))) 
+                elif option == 'delete':
+                    delete_volunteer(volunteer_id)
+                    return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+                else:
+                    return HttpResponseRedirect(reverse('volunteer:error'))
             else:
                 return HttpResponseRedirect(reverse('volunteer:error'))
         else:
