@@ -1,0 +1,37 @@
+{% extends "vms/base.html" %}
+{% block content %}
+    <h3 class="ui black block header">
+        Create Job
+    </h3>    
+    <form action="{% url 'job:create' %}" method="post">
+        {% csrf_token %}
+        <div class="ui form segment">
+            <div class="field">
+                <label>Job Title</label>
+                <div class="ui input">
+                    <input placeholder="Job Title" type="text" name="job_title">
+                </div>
+            </div>
+            <div class="field">
+                <label>Start Date</label>
+                <div class="ui input">
+                    <input placeholder="Start Date" type="text" name="start_date">
+                </div>
+            </div>
+            <div class="field">
+                <label>End Date</label>
+                <div class="ui input">
+                    <input placeholder="End Date" type="text" name="end_date">
+                </div>
+            </div>
+            <div class="field">
+                <label>Job Description</label>
+                <div class="ui input">
+                    <textarea placeholder="Enter a job description" type="text" name="description"></textarea>
+                </div>
+            </div>
+            <button class="ui blue button" type="submit">Create</button>
+            <button class="ui button" type="reset">Clear</button>
+        </div>
+    </form>
+{% endblock %}
