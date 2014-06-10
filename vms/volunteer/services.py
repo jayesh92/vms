@@ -40,25 +40,33 @@ def get_volunteers_by_first_name():
     volunteer_list = Volunteer.objects.all().order_by('first_name')
     return volunteer_list
 
-#delete any corresponding resumes
 def delete_volunteer(volunteer_id):
+
+    is_valid = True
     volunteer = get_volunteer_by_id(volunteer_id)
+
     if volunteer:
-        volunteer.delete()
+        #if the volunteer uploaded a resume, delete it as well
+        if has_resume_file(volunteer_id):
+            if not delete_volunteer_resume(volunteer_id):
+                is_valid = False
+        if is_valid:
+            volunteer.delete()
     else:
-        print "return some error here"
+        is_valid = False
+
+    return is_valid 
 
 def delete_volunteer_resume(volunteer_id):
 
-    result = False 
+    is_valid = False 
     volunteer = get_volunteer_by_id(volunteer_id)
 
     if volunteer and volunteer.resume_file:
         volunteer.resume_file.delete()
-        result = True
+        is_valid = True
 
-    return result
-
+    return is_valid 
 
 def search_volunteers(first_name, last_name, city, state, country, company):
     

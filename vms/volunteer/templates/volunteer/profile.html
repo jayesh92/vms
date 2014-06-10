@@ -52,7 +52,9 @@
             <h5 class="ui dividing header">
                 Other Profiles
             </h5>
-            {{ volunteer.websites }}
+            <pre>
+                {{ volunteer.websites }}
+            </pre>
         </div>
     {% endif %}
     {% if volunteer.resume %}
@@ -62,9 +64,7 @@
                 View Resume
             </div>
             <div class="content">
-                <pre>
-                    {{ volunteer.resume }}    
-                </pre>
+                {{ volunteer.resume }}    
             </div>
         </div>
     {% endif %}

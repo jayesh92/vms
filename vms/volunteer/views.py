@@ -45,10 +45,20 @@ def download_resume(request, volunteer_id):
     else:
         return HttpResponseRedirect(reverse('volunteer:error'))
 
+def delete(request, volunteer_id):
+    if request.method == 'POST':
+        #any type of deletion should be done on a POST (not a GET)
+        result = delete_volunteer(volunteer_id)
+        if result:
+            return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+        else:
+            return HttpResponseRedirect(reverse('volunteer:error'))
+    else:
+        return render(request, 'volunteer/delete.html', {'id' : volunteer_id,})
+
 def delete_resume(request, volunteer_id):
     if request.method == 'POST':
-        result = delete_volunteer_resume(volunteer_id)
-        if result:
+        if delete_volunteer_resume(volunteer_id):
             return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
         else:
             return HttpResponseRedirect(reverse('volunteer:error'))
@@ -69,8 +79,7 @@ def edit(request, volunteer_id):
                         #delete an old uploaded resume if it exists
                         has_file = has_resume_file(volunteer_id)
                         if has_file:
-                            result = delete_volunteer_resume(volunteer_id)
-                            if not result:
+                            if not delete_volunteer_resume(volunteer_id):
                                 return HttpResponseRedirect(reverse('volunteer:error'))
                     else:
                         return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
@@ -103,8 +112,7 @@ def list_options(request):
                 elif option == 'edit':
                     return HttpResponseRedirect(reverse('volunteer:edit', args=(volunteer_id,))) 
                 elif option == 'delete':
-                    delete_volunteer(volunteer_id)
-                    return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+                    return HttpResponseRedirect(reverse('volunteer:delete', args=(volunteer_id,)))
                 else:
                     return HttpResponseRedirect(reverse('volunteer:error'))
             else:
