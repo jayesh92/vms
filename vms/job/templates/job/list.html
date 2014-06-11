@@ -5,24 +5,29 @@
         <h3 class="ui black block header">
             Job List
         </h3>
-        <table class="ui table segment">
-            <thead>
-                <tr>
-                    <th>Job Title</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for job in job_list %}
+        <form action="{% url 'job:confirmation' %}" method="post">
+            {% csrf_token %}
+            <table class="ui table segment">
+                <thead>
                     <tr>
-                        <td>{{ job.job_title }}</td>
-                        <td>{{ job.start_date }}</td>
-                        <td>{{ job.end_date }}</td>
+                        <th>Job Title</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Sign Up</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for job in job_list %}
+                        <tr>
+                            <td>{{ job.job_title }}</td>
+                            <td>{{ job.start_date }}</td>
+                            <td>{{ job.end_date }}</td>
+                            <td><button type="submit" class="tiny ui green button" name="job_id" value="{{ job.id }}">Sign Up</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
     {% else %}
         <div class="ui icon error message">
             <i class="attention icon"></i>
