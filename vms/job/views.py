@@ -40,7 +40,15 @@ def confirmation(request):
 
 def sign_up(request):
     if request.method == 'POST':
-        print "do something"
+        job_id = request.POST.get('job_id')
+        if job_id:
+            #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
+            #we cannot do this right now because I do not have Jayesh's authentication code
+            #use a test value for now
+            volunteer_id = 10
+            sign_up(volunteer_id, job_id)
+        else:
+            return HttpResponseRedirect(reverse('job:error'))
     else:
         return HttpResponseRedirect(reverse('job:error'))
 
