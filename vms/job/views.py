@@ -45,8 +45,12 @@ def sign_up(request):
             #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
             #we cannot do this right now because I do not have Jayesh's authentication code
             #use a test value for now
-            volunteer_id = 10
-            sign_up(volunteer_id, job_id)
+            volunteer_id = 1
+            result = register(volunteer_id, job_id)
+            if result:
+                return render(request, 'job/message.html')
+            else:
+                return HttpResponseRedirect(reverse('job:error'))
         else:
             return HttpResponseRedirect(reverse('job:error'))
     else:
