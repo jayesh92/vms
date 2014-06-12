@@ -50,7 +50,7 @@ def sign_up(request):
             if result:
                 return render(request, 'job/message.html')
             else:
-                return HttpResponseRedirect(reverse('job:error'))
+                return render(request, 'job/error_code.html')
         else:
             return HttpResponseRedirect(reverse('job:error'))
     else:
