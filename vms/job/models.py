@@ -8,7 +8,11 @@ class Job(models.Model):
     end_date = models.DateTimeField()
     description = models.TextField()
 
-class VolunteerJob(models.Model):
+class JobHoursLog(models.Model):
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    hours_worked = models.FloatField()
+    #Volunteer to JobHoursLog is a one-to-many relationship
     volunteer = models.ForeignKey(Volunteer)
     job = models.ForeignKey(Job)
-    hours_worked = models.FloatField()
