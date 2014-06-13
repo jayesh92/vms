@@ -21,23 +21,30 @@ def get_jobs_by_title():
     job_list = Job.objects.all().order_by('job_title')
     return job_list
 
-def register(_volunteer_id, _job_id):
+def is_signed_up(v_id, j_id):
+
+    result = True
+    
+    try:
+        obj = VolunteerJob.objects.get(volunteer_id=v_id, job_id=j_id)
+    except ObjectDoesNotExist:
+        result = False          
+
+    return result
+
+def register(v_id, j_id):
 
     is_valid = True
-    is_already_registered = True
 
     #a volunteer must not be allowed to register for a job that they are already registered for
-    try:
-        registration_obj = VolunteerJob.objects.get(volunteer_id=_volunteer_id, job_id=_job_id)
-    except ObjectDoesNotExist:
-        is_already_registered = False
+    signed_up = is_signed_up(v_id, j_id)
 
-    if not is_already_registered:
-        _volunteer = get_volunteer_by_id(_volunteer_id)
-        _job = get_job_by_id(_job_id) 
+    if not signed_up:
+        volunteer_obj = get_volunteer_by_id(v_id)
+        job_obj = get_job_by_id(j_id) 
 
-        if _volunteer and _job:
-            registration_obj = VolunteerJob(volunteer=_volunteer, job=_job)
+        if volunteer_obj and job_obj:
+            registration_obj = VolunteerJob(volunteer=volunteer_obj, job=job_obj)
             registration_obj.save()
         else:
             is_valid = False

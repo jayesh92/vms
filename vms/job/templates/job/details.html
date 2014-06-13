@@ -1,0 +1,36 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <h3 class="ui black block header">
+        Job Sign Up
+    </h3>
+    <div class="ui divided selection list">
+        <a class="item">
+            <div class="ui horizontal label">Job Title</div>
+            {{ job.job_title }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal label">Job Description</div>
+            {{ job.description }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal label">Start Date</div>
+            {{ job.start_date }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal label">End Date</div>
+            {{ job.end_date }}
+        </a>
+    </div>
+    <form action="{% url 'job:sign_up' %}" method="post">
+        {% csrf_token %}
+        <div class="ui form segment">
+            {% if signed_up %}
+                <button class="ui small disabled button" disabled>Signed Up</button>
+            {% else %}
+                <button class="ui small green button" type="submit" name="job_id" value="{{ job.id }}">Sign Up for this Job</button>
+            {% endif %}
+            <a class="ui small button" href="{% url 'job:list_jobs' %}">Back</a>
+        </div>
+    </form>
+{% endblock %}

@@ -5,7 +5,7 @@
         <h3 class="ui black block header">
             Job List
         </h3>
-        <form action="{% url 'job:confirmation' %}" method="post">
+        <form action="{% url 'job:details' %}" method="post">
             {% csrf_token %}
             <table class="ui table segment">
                 <thead>
@@ -13,7 +13,7 @@
                         <th>Job Title</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Sign Up</th>
+                        <th>View Details/Sign Up</th>
                     </tr>
                 </thead>
                 <tbody>

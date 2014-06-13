@@ -4,8 +4,10 @@ from volunteer.models import Volunteer
 
 class Job(models.Model):
     job_title = models.CharField(max_length=45)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    start_time = models.TimeField()
+    end_date = models.DateField()
+    end_time = models.TimeField()
     description = models.TextField()
     #VolunteerJob is the intermediary model for the many-to-many relationship between Volunteer and Jobs
     volunteers = models.ManyToManyField(Volunteer, through='VolunteerJob')
