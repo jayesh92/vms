@@ -18,8 +18,16 @@
             {{ job.start_date }}
         </a>
         <a class="item">
+            <div class="ui horizontal label">Start Time</div>
+            {{ job.start_time }}
+        </a>
+        <a class="item">
             <div class="ui horizontal label">End Date</div>
             {{ job.end_date }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal label">End Time</div>
+            {{ job.end_time }}
         </a>
     </div>
     <form action="{% url 'job:sign_up' %}" method="post">
