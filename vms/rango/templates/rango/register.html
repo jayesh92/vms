@@ -1,4 +1,4 @@
-{% extends "mysite/base.html" %}
+{% extends "vms/base.html" %}
 
 {% block content %}
     <div class="ui fluid form segment">
@@ -10,9 +10,6 @@
             <a href="/rango/">Return to homepage</a>
             <br>
         {% else %}
-            <strong>Register here!</strong>
-            <br>
-
             <form id="user_form" method="post" action="{% url 'rango:register' %}" enctype="mutipart/form-data">
                 {% csrf_token %}
                 <div class="ui segment attached">
