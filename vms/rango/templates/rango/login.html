@@ -1,21 +1,19 @@
 {% extends "vms/base.html" %}
 
 {% block content %}
-    <div class="ui fluid form segment">
-        <h2 class="ui top attached header">
-            Login
-        </h2>
-        <form method="post" action="{% url 'rango:user_login' %}">
-            {% csrf_token %}
-            <div class="ui segment attached">
-                <div class="field">
-                    <input placeholder="Username" type="text" name="username">
-                </div>
-                <div class="field">
-                    <input placeholder="Password" type="text" name="password">
-                </div>
-                <button type="submit" class="ui blue button">Login</button>
+    <h3 class="ui black block header">
+        Login
+    </h3>
+    <form method="post" action="{% url 'rango:user_login' %}">
+        {% csrf_token %}
+        <div class="ui form segment">
+            <div class="field">
+                <input placeholder="Username" type="text" name="username">
             </div>
-        </form>
-    </div>
+            <div class="field">
+                <input placeholder="Password" type="password" name="password">
+            </div>
+            <button type="submit" class="ui blue button">Login</button>
+        </div>
+    </form>
 {% endblock %}

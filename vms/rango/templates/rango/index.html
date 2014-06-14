@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <h1>Hello {{ user.username }}!</h1>
+        <h1>Hello {{ user.volunteer.first_name }}!</h1>
     {% else %}
         <h1>Hello anyone there? You are not logged in!</h1>
     {% endif %}

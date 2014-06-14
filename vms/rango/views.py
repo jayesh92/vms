@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from rango.forms import UserForm, UserProfileForm
 from volunteer.forms import VolunteerForm
+from volunteer.models import Volunteer #Volunteer model needs to be imported so that input type file renders properly
 from volunteer.validation import validate_file
 
 # Create your views here.
@@ -59,15 +60,20 @@ def register_volunteer(request):
     registered = False
     if request.method == 'POST':
 
-        user_form = UserForm(request.POST)
-        volunteer_form = VolunteerForm(request.POST, request.FILES)
+        #each form must have it's own namespace (prefix) if multiple forms are to be put inside one <form> tag
+        user_form = UserForm(request.POST, prefix="usr")
+        volunteer_form = VolunteerForm(request.POST, request.FILES, prefix="vol")
 
         if user_form.is_valid() and volunteer_form.is_valid():
 
             if 'resume_file' in request.FILES:
                 my_file = volunteer_form.cleaned_data['resume_file']
                 if not validate_file(my_file):
-                    return render(request, 'volunteer/create.html', {'form' : volunteer_form,}) 
+                    return render(
+                        request,
+                        'rango/register.html',
+                        {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered,}
+                    )
 
             user = user_form.save();
 
@@ -83,8 +89,8 @@ def register_volunteer(request):
         else:
             print user_form.errors, volunteer_form.errors
     else:
-        user_form = UserForm()
-        volunteer_form = VolunteerForm() 
+        user_form = UserForm(prefix="usr")
+        volunteer_form = VolunteerForm(prefix="vol") 
 
     return render(
         request,

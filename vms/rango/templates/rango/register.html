@@ -1,36 +1,34 @@
 {% extends "vms/base.html" %}
 
 {% block content %}
-    <h3 class="ui black block header">
-        VMS Registration
-    </h3>
     {% if registered %}
-        <strong>Thank you for registering!</strong>
-        <a href="/rango/">Return to homepage</a>
-        <br>
+        <h1>Thank you for registering!</h1>
     {% else %}
-        <form id="user_form" method="post" action="{% url 'rango:register_volunteer' %}" enctype="mutipart/form-data">
+        <h3 class="ui black block header">
+            VMS Registration
+        </h3>
+        <form method="post" action="{% url 'rango:register_volunteer' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="ui form segment">
                 <div class="field">
                     <label>Username</label>
                     <div class="ui input">
-                        <input placeholder="Username" type="text" name="username">
+                        <input placeholder="Username" type="text" name="usr-username">
                     </div>
                 </div>
                 <div class="field">
                     <label>Password</label>
                     <div class="ui input">
-                        <input placeholder="Password" type="password" name="password">
+                        <input placeholder="Password" type="password" name="usr-password">
                     </div>
                 </div>                   
                 <div class="field">
                     <label>About</label>
                     <div class="ui input">
                         {% if volunteeer_form.description.value %}
-                            <textarea placeholder="Include a short biography about yourself" name="description">{{ volunteeer_form.description.value }}</textarea>
+                            <textarea placeholder="Include a short biography about yourself" name="vol-description">{{ volunteeer_form.description.value }}</textarea>
                         {% else %}
-                            <textarea placeholder="Include a short biography about yourself" name="description"></textarea>
+                            <textarea placeholder="Include a short biography about yourself" name="vol-description"></textarea>
                         {% endif %}
                         {% if volunteeer_form.description.errors %}
                             <div class="ui red pointing above ui label">Enter a valid biography</div>
@@ -42,9 +40,9 @@
                         <label>First Name</label>
                         <div class="ui input">
                             {% if volunteeer_form.first_name.value %}
-                                <input placeholder="First Name" type="text" name="first_name" value="{{ volunteeer_form.first_name.value }}">
+                                <input placeholder="First Name" type="text" name="vol-first_name" value="{{ volunteeer_form.first_name.value }}">
                             {% else %}
-                                <input placeholder="First Name" type="text" name="first_name">
+                                <input placeholder="First Name" type="text" name="vol-first_name">
                             {% endif %}
                             {% if volunteeer_form.first_name.errors %}
                                 <div class="ui red pointing above ui label">Enter a valid first name</div>
@@ -55,9 +53,9 @@
                         <label>Last Name</label>
                         <div class="ui input">
                             {% if volunteeer_form.last_name.value %}
-                                <input placeholder="Last Name" type="text" name="last_name" value="{{ volunteeer_form.last_name.value }}">
+                                <input placeholder="Last Name" type="text" name="vol-last_name" value="{{ volunteeer_form.last_name.value }}">
                             {% else %}
-                                <input placeholder="Last Name" type="text" name="last_name">
+                                <input placeholder="Last Name" type="text" name="vol-last_name">
                             {% endif %}
                             {% if volunteeer_form.last_name.errors %}
                                 <div class="ui red pointing above ui label">Enter a valid last name</div>
@@ -69,9 +67,9 @@
                     <label>Address</label>
                     <div class="ui input">
                         {% if volunteeer_form.address.value %}
-                            <input placeholder="Address" type="text" name="address" value="{{ volunteeer_form.address.value }}">
+                            <input placeholder="Address" type="text" name="vol-address" value="{{ volunteeer_form.address.value }}">
                         {% else %}
-                            <input placeholder="Address" type="text" name="address">
+                            <input placeholder="Address" type="text" name="vol-address">
                         {% endif %}
                         {% if volunteeer_form.address.errors %}
                             <div class="ui red pointing above ui label">Enter a valid address</div>
@@ -82,9 +80,9 @@
                     <label>City</label>
                     <div class="ui input">
                         {% if volunteeer_form.city.value %}
-                            <input placeholder="City" type="text" name="city" value="{{ volunteeer_form.city.value }}">
+                            <input placeholder="City" type="text" name="vol-city" value="{{ volunteeer_form.city.value }}">
                         {% else %}
-                            <input placeholder="City" type="text" name="city">
+                            <input placeholder="City" type="text" name="vol-city">
                         {% endif %}
                         {% if volunteeer_form.city.errors %}
                             <div class="ui red pointing above ui label">Enter a valid city</div>
@@ -95,9 +93,9 @@
                     <label>State/Province</label>
                     <div class="ui input">
                         {% if volunteeer_form.state.value %}
-                            <input placeholder="State/Province" type="text" name="state" value="{{ volunteeer_form.state.value }}">
+                            <input placeholder="State/Province" type="text" name="vol-state" value="{{ volunteeer_form.state.value }}">
                         {% else %}
-                            <input placeholder="State/Province" type="text" name="state">
+                            <input placeholder="State/Province" type="text" name="vol-state">
                         {% endif %}
                         {% if volunteeer_form.state.errors %}
                             <div class="ui red pointing above ui label">Enter a valid state/province</div>
@@ -108,9 +106,9 @@
                     <label>Country</label>
                     <div class="ui input">
                         {% if volunteeer_form.country.value %}
-                            <input placeholder="Country" type="text" name="country" value="{{ volunteeer_form.country.value }}">
+                            <input placeholder="Country" type="text" name="vol-country" value="{{ volunteeer_form.country.value }}">
                         {% else %}
-                            <input placeholder="Country" type="text" name="country">
+                            <input placeholder="Country" type="text" name="vol-country">
                         {% endif %}
                         {% if volunteeer_form.country.errors %}
                             <div class="ui red pointing above ui label">Enter a valid country</div>
@@ -121,9 +119,9 @@
                     <label>Phone Number</label>
                     <div class="ui input">
                         {% if volunteeer_form.phone_number.value %}
-                            <input placeholder="Phone Number" type="text" name="phone_number" value="{{ volunteeer_form.phone_number.value }}">
+                            <input placeholder="Phone Number" type="text" name="vol-phone_number" value="{{ volunteeer_form.phone_number.value }}">
                         {% else %}
-                            <input placeholder="Phone Number" type="text" name="phone_number">
+                            <input placeholder="Phone Number" type="text" name="vol-phone_number">
                         {% endif %}
                         {% if volunteeer_form.phone_number.errors %}
                             <div class="ui red pointing above ui label">Enter a valid phone number</div>
@@ -134,9 +132,9 @@
                     <label>Company</label>
                     <div class="ui input">
                         {% if volunteeer_form.company.value %}
-                            <input placeholder="Company/Employer" type="text" name="company" value="{{ volunteeer_form.company.value }}">
+                            <input placeholder="Company/Employer" type="text" name="vol-company" value="{{ volunteeer_form.company.value }}">
                         {% else %}
-                            <input placeholder="Company/Employer" type="text" name="company">
+                            <input placeholder="Company/Employer" type="text" name="vol-company">
                         {% endif %}
                         {% if volunteeer_form.company.errors %}
                             <div class="ui red pointing above ui label">Enter a valid company/employer</div>
@@ -147,9 +145,9 @@
                     <label>Email</label>
                     <div class="ui input">
                         {% if volunteeer_form.email.value %}
-                            <input placeholder="Email" type="text" name="email" value="{{ volunteeer_form.email.value }}">
+                            <input placeholder="Email" type="text" name="vol-email" value="{{ volunteeer_form.email.value }}">
                         {% else %}
-                            <input placeholder="Email" type="text" name="email">
+                            <input placeholder="Email" type="text" name="vol-email">
                         {% endif %}
                         {% if volunteeer_form.email.errors %}
                             <div class="ui red pointing above ui label">Enter a valid email address</div>
@@ -160,9 +158,9 @@
                     <label>Profiles</label>
                     <div class="ui input">
                         {% if volunteeer_form.websites.value %}
-                            <textarea placeholder="Include links to any online profiles here" name="websites">{{ volunteeer_form.websites.value }}</textarea>
+                            <textarea placeholder="Include links to any online profiles here" name="vol-websites">{{ volunteeer_form.websites.value }}</textarea>
                         {% else %}
-                            <textarea placeholder="Include links to any online profiles here" name="websites"></textarea>
+                            <textarea placeholder="Include links to any online profiles here" name="vol-websites"></textarea>
                         {% endif %}
                         {% if volunteeer_form.websites.errors %}
                             <div class="ui red pointing above ui label">Enter valid online profiles</div>
@@ -171,7 +169,7 @@
                 </div>
                 <div class="field">
                     <label>Upload a Resume</label>
-                    <input id="id_resume_file" name="resume_file" type="file"/>
+                    {{ volunteer_form.resume_file }}
                     {% if volunteeer_form.resume_file.errors %}
                         <div class="ui red pointing left ui label">Upload a valid resume</div>
                     {% endif %}
@@ -180,9 +178,9 @@
                     <label>Resume</label>
                     <div class="ui input">
                         {% if volunteeer_form.resume.value %}
-                            <textarea placeholder="Include your resume here" name="resume">{{ volunteeer_form.resume.value }}</textarea>
+                            <textarea placeholder="Include your resume here" name="vol-resume">{{ volunteeer_form.resume.value }}</textarea>
                         {% else %}
-                            <textarea placeholder="Include your resume here" name="resume"></textarea>
+                            <textarea placeholder="Include your resume here" name="vol-resume"></textarea>
                         {% endif %}
                         {% if volunteeer_form.resume.errors %}
                             <div class="ui red pointing above ui label">Enter a valid resume</div>
@@ -190,6 +188,7 @@
                     </div>
                 </div>
                 <button type="submit" class="ui blue button">Register</button>
+                <button type="reset" class="ui button">Clear</button>
             </div>
         </form>
     {% endif %}
