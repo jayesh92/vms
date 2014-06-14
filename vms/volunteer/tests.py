@@ -1,4 +1,5 @@
 import datetime
+from django.contrib.auth.models import User
 from django.test import TestCase
 from volunteer.models import Volunteer
 from volunteer.services import *
@@ -6,6 +7,10 @@ from volunteer.services import *
 class VolunteerMethodTests(TestCase):
 
     def test_get_volunteer_by_id(self):
+
+        u1 = User.objects.create_user('John')
+        u2 = User.objects.create_user('James')
+        u3 = User.objects.create_user('George')
 
         v1 = Volunteer(first_name = "John",
                         last_name = "Doe",
@@ -15,7 +20,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "Google",
-                        email = "john@test.com")
+                        email = "john@test.com",
+                        user = u1)
 
         v2 = Volunteer(first_name = "James",
                         last_name = "Doe",
@@ -25,7 +31,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "IBM",
-                        email = "james@test.com")
+                        email = "james@test.com",
+                        user = u2)
 
         v3 = Volunteer(id = 999,
                         first_name = "George",
@@ -36,7 +43,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "IBM",
-                        email = "george@test.com")
+                        email = "george@test.com",
+                        user = u3)
 
         v1.save()
         v2.save()
@@ -69,6 +77,10 @@ class VolunteerMethodTests(TestCase):
 
     def test_has_resume_file(self):
  
+        u1 = User.objects.create_user('John')
+        u2 = User.objects.create_user('James')
+        u3 = User.objects.create_user('Jane')
+
         v1 = Volunteer(first_name = "John",
                         last_name = "Doe",
                         address = "7 Alpine Street",
@@ -78,7 +90,8 @@ class VolunteerMethodTests(TestCase):
                         phone_number = "23454545",
                         company = "Google",
                         email = "john@test.com",
-                        resume_file = "MyResume.pdf")
+                        resume_file = "MyResume.pdf",
+                        user = u1)
 
         v2 = Volunteer(first_name = "James",
                         last_name = "Doe",
@@ -88,7 +101,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "Google",
-                        email = "james@test.com")
+                        email = "james@test.com",
+                        user = u2)
 
         v3 = Volunteer(first_name = "Jane",
                         last_name = "Doe",
@@ -99,7 +113,8 @@ class VolunteerMethodTests(TestCase):
                         phone_number = "23454545",
                         company = "Google",
                         email = "jane@test.com",
-                        resume_file = "")
+                        resume_file = "",
+                        user = u3)
 
         v1.save()
         v2.save()
@@ -114,6 +129,8 @@ class VolunteerMethodTests(TestCase):
 
     def test_get_volunteer_resume_file_url(self):
 
+        u1 = User.objects.create_user('John')
+
         v1 = Volunteer(first_name = "John",
                         last_name = "Doe",
                         address = "7 Alpine Street",
@@ -123,7 +140,8 @@ class VolunteerMethodTests(TestCase):
                         phone_number = "23454545",
                         company = "Google",
                         email = "john@test.com",
-                        resume_file = "MyResume.pdf")
+                        resume_file = "MyResume.pdf",
+                        user = u1)
 
         v1.save()
 
@@ -137,6 +155,10 @@ class VolunteerMethodTests(TestCase):
 
     def test_get_volunteers_by_first_name(self):
 
+        u1 = User.objects.create_user('Yoshi')
+        u2 = User.objects.create_user('Ashley')
+        u3 = User.objects.create_user('Zelda')
+
         v1 = Volunteer(first_name = "Yoshi",
                         last_name = "Doe",
                         address = "7 Oak Street",
@@ -145,7 +167,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "IBM",
-                        email = "yoshi@test.com")
+                        email = "yoshi@test.com",
+                        user = u1)
 
         v2 = Volunteer(first_name = "Ashley",
                         last_name = "Doe",
@@ -155,7 +178,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "Google",
-                        email = "ashley@test.com")
+                        email = "ashley@test.com",
+                        user = u2)
 
         v3 = Volunteer(id = 999,
                         first_name = "Zelda",
@@ -166,7 +190,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "IBM",
-                        email = "zelda@test.com")
+                        email = "zelda@test.com",
+                        user = u3)
 
         v1.save()
         v2.save()
@@ -186,6 +211,10 @@ class VolunteerMethodTests(TestCase):
 
     def test_search_volunteers(self):
  
+        u1 = User.objects.create_user('Yoshi')
+        u2 = User.objects.create_user('Ashley')
+        u3 = User.objects.create_user('Zelda')
+
         v1 = Volunteer(first_name = "Yoshi",
                         last_name = "Doe",
                         address = "7 Oak Street",
@@ -194,7 +223,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "IBM",
-                        email = "yoshi@test.com")
+                        email = "yoshi@test.com",
+                        user = u1)
 
         v2 = Volunteer(first_name = "Ashley",
                         last_name = "Doe",
@@ -204,7 +234,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "Google",
-                        email = "ashley@test.com")
+                        email = "ashley@test.com",
+                        user = u2)
 
         v3 = Volunteer(id = 999,
                         first_name = "Zelda",
@@ -215,7 +246,8 @@ class VolunteerMethodTests(TestCase):
                         country = "USA",
                         phone_number = "23454545",
                         company = "IBM",
-                        email = "zelda@test.com")               
+                        email = "zelda@test.com",
+                        user = u3)               
 
         v1.save()
         v2.save()
