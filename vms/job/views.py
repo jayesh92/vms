@@ -34,8 +34,10 @@ def details(request):
     if request.method == 'POST':
         job_id = request.POST.get('job_id')
         if job_id:
-            #use a test value for now
-            volunteer_id = 1
+            #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
+            #for now, use rango to provide authentication and authorization functionality
+            user = request.user
+            volunteer_id = user.volunteer.id
             signed_up = is_signed_up(volunteer_id, job_id)
             job = get_job_by_id(job_id)
             if job:
@@ -59,9 +61,9 @@ def sign_up(request):
         job_id = request.POST.get('job_id')
         if job_id:
             #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
-            #we cannot do this right now because I do not have Jayesh's authentication code
-            #use a test value for now
-            volunteer_id = 1
+            #for now, use rango to provide authentication and authorization functionality
+            user = request.user
+            volunteer_id = user.volunteer.id
             result = register(volunteer_id, job_id)
             if result:
                 return render(request, 'job/message.html')

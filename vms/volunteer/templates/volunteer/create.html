@@ -154,7 +154,7 @@
             </div>
             <div class="field">
                 <label>Upload a Resume</label>
-                {{ form.resume_file }}
+                <input id="id_resume_file" name="resume_file" type="file"/>
                 {% if form.resume_file.errors %}
                     <div class="ui red pointing left ui label">Upload a valid resume</div>
                 {% endif %}

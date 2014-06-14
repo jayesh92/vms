@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
 
@@ -86,3 +87,4 @@ class Volunteer(models.Model):
     )
     resume = models.TextField(blank=True)
     resume_file = models.FileField(upload_to='resumes/', max_length=40, blank=True)
+    user = models.OneToOneField(User)
