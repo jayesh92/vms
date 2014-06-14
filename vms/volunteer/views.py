@@ -1,5 +1,6 @@
 import os
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect

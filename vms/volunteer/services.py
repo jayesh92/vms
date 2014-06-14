@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from volunteer.models import Volunteer
 
@@ -51,6 +52,12 @@ def delete_volunteer(volunteer_id):
             if not delete_volunteer_resume(volunteer_id):
                 is_valid = False
         if is_valid:
+            #Django docs recommend to set associated user to not active instead of deleting the user
+            user = volunteer.user
+            user.is_active = False
+            #make a call to update the user
+            user.save()
+            #then delete the volunteer
             volunteer.delete()
     else:
         is_valid = False

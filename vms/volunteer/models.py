@@ -28,7 +28,7 @@ class Volunteer(models.Model):
         ],
     )
     city = models.CharField(
-        max_length=20,
+        max_length=30,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(\s)]+$',
@@ -36,7 +36,7 @@ class Volunteer(models.Model):
         ],
     )
     state = models.CharField(
-        max_length=20,
+        max_length=30,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(\s)]+$',
@@ -44,7 +44,7 @@ class Volunteer(models.Model):
         ],
     )
     country = models.CharField(
-        max_length=20,
+        max_length=30,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(\s)]+$',
@@ -60,7 +60,7 @@ class Volunteer(models.Model):
         ],
     )
     company = models.CharField(
-        max_length=20,
+        max_length=75,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(\s)]+$',
