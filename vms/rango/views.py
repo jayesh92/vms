@@ -8,7 +8,6 @@ from volunteer.forms import VolunteerForm
 from volunteer.models import Volunteer #Volunteer model needs to be imported so that input type file renders properly
 from volunteer.validation import validate_file
 
-# Create your views here.
 def register(request):
 
     registered = False

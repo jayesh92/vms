@@ -38,7 +38,7 @@
             {% else %}
                 <button class="ui small green button" type="submit" name="job_id" value="{{ job.id }}">Sign Up for this Job</button>
             {% endif %}
-            <a class="ui small button" href="{% url 'job:list_jobs' %}">Back</a>
+            <a class="ui small button" href="{% url 'job:list' %}">Back</a>
         </div>
     </form>
 {% endblock %}

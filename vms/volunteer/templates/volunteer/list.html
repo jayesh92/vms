@@ -5,7 +5,7 @@
         <h3 class="ui black block header">
             Manage Volunteers
         </h3>
-        <form action="{% url 'volunteer:list_options' %}" method="post">
+        <form action="{% url 'volunteer:options' %}" method="post">
             {% csrf_token %}
             <div class="ui tertiary segment">
                 Options:

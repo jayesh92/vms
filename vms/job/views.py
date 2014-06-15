@@ -6,7 +6,7 @@ from job.forms import JobForm
 from job.services import *
 
 def index(request):
-    return HttpResponseRedirect(reverse('job:list_jobs'))
+    return HttpResponseRedirect(reverse('job:list'))
 
 def confirmation(request):
     if request.method == 'POST':
@@ -23,7 +23,7 @@ def create(request):
         form = JobForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('job:list_jobs'))
+            return HttpResponseRedirect(reverse('job:list'))
         else:
             return render(request, 'job/create.html', {'form' : form,})
     else:
@@ -37,22 +37,25 @@ def details(request):
             #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
             #for now, use rango to provide authentication and authorization functionality
             user = request.user
-            volunteer_id = user.volunteer.id
-            signed_up = is_signed_up(volunteer_id, job_id)
-            job = get_job_by_id(job_id)
-            if job:
-                return render(request, 'job/details.html', {'job' : job, 'signed_up' : signed_up})
+            if user.is_authenticated():
+                volunteer_id = user.volunteer.id
+                signed_up = is_signed_up(volunteer_id, job_id)
+                job = get_job_by_id(job_id)
+                if job:
+                    return render(request, 'job/details.html', {'job' : job, 'signed_up' : signed_up})
+                else:
+                    return HttpResponseRedirect(reverse('job:error'))
             else:
-                return render(request, 'job/error.html')
+                return HttpResponseRedirect(reverse('job:error'))
         else:
-            return render(request, 'job/error.html')
+            return HttpResponseRedirect(reverse('job:error'))
     else:
-        return render(request, 'job/error.html')
+        return HttpResponseRedirect(reverse('job:error'))
 
 def error(request):
-    return render(request, 'job/error.html')
+    return render(request, 'vms/error.html')
 
-def list_jobs(request):
+def list(request):
     job_list = get_jobs_by_title()
     return render(request, 'job/list.html', {'job_list' : job_list})
 
@@ -63,14 +66,16 @@ def sign_up(request):
             #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
             #for now, use rango to provide authentication and authorization functionality
             user = request.user
-            volunteer_id = user.volunteer.id
-            result = register(volunteer_id, job_id)
-            if result:
-                return render(request, 'job/message.html')
+            if user.is_authenticated():
+                volunteer_id = user.volunteer.id
+                result = register(volunteer_id, job_id)
+                if result:
+                    return render(request, 'job/sign_up_success.html')
+                else:
+                    return render(request, 'job/sign_up_error.html')
             else:
-                return render(request, 'job/error_code.html')
+                return HttpResponseRedirect(reverse('job:error'))
         else:
             return HttpResponseRedirect(reverse('job:error'))
     else:
         return HttpResponseRedirect(reverse('job:error'))
-

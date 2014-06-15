@@ -24,7 +24,7 @@ def create(request):
                     return render(request, 'volunteer/create.html', {'form' : form,})        
             #save the volunteer
             form.save()
-            return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+            return HttpResponseRedirect(reverse('volunteer:list'))
         else:
             return render(request, 'volunteer/create.html', {'form' : form,})        
     else:
@@ -51,7 +51,7 @@ def delete(request, volunteer_id):
         #any type of deletion should be done on a POST (not a GET)
         result = delete_volunteer(volunteer_id)
         if result:
-            return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+            return HttpResponseRedirect(reverse('volunteer:list'))
         else:
             return HttpResponseRedirect(reverse('volunteer:error'))
     else:
@@ -60,7 +60,7 @@ def delete(request, volunteer_id):
 def delete_resume(request, volunteer_id):
     if request.method == 'POST':
         if delete_volunteer_resume(volunteer_id):
-            return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+            return HttpResponseRedirect(reverse('volunteer:list'))
         else:
             return HttpResponseRedirect(reverse('volunteer:error'))
     else:
@@ -86,7 +86,7 @@ def edit(request, volunteer_id):
                         return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
                 #update the volunteer
                 form.save()
-                return HttpResponseRedirect(reverse('volunteer:list_volunteers'))
+                return HttpResponseRedirect(reverse('volunteer:list'))
             else:
                 return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
         else:
@@ -97,9 +97,9 @@ def edit(request, volunteer_id):
         return HttpResponseRedirect(reverse('volunteer:error'))
 
 def error(request):
-    return render(request, 'volunteer/error.html')
+    return render(request, 'vms/error.html')
 
-def list_options(request):
+def options(request):
     if request.method == 'POST':
 
         option = request.POST.get('option')
@@ -121,7 +121,7 @@ def list_options(request):
         else:
             return HttpResponseRedirect(reverse('volunteer:error'))
             
-def list_volunteers(request):
+def list(request):
     volunteer_list = get_volunteers_by_first_name() 
     return render(request, 'volunteer/list.html', {'volunteer_list' : volunteer_list})
 
