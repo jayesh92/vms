@@ -17,19 +17,27 @@
 </head>
 
 <body>
-    <div class="ui tiered menu">
+    <div class="ui small menu">
         <div class="menu">
-            <a class="active item">
+            <a class="item" href="{% url 'volunteer:create' %}">
+                <i class="user icon"></i>
+                Create Volunteer
+            </a>
+            <a class="item" href="{% url 'volunteer:list_volunteers' %}">
                 <i class="users icon"></i>
-                Volunteers
+                Manage Volunteers
             </a>
-            <a class="item">
-                <i class="globe icon"></i>
-                Events
+            <a class="item" href="{% url 'volunteer:search' %}">
+                <i class="search icon"></i>
+                Search Volunteers
             </a>
-            <a class="item">
+            <a class="item" href="{% url 'job:create' %}">
                 <i class="suitcase icon"></i>
-                Jobs
+                Create Job
+            </a>
+            <a class="item" href="{% url 'job:list_jobs' %}">
+                <i class="browser icon"></i>
+                Job Sign Up
             </a>
             <div class="right item">
                 <a class="ui button" href="{% url 'rango:user_login' %}">Login</a>
@@ -37,26 +45,6 @@
             <div class="right item">
                 <a class="ui teal button" href="{% url 'rango:register_volunteer' %}">Register</a>
             </div>
-            <!--<div class="right menu">
-                <div class="item">
-                    <div class="ui icon input">
-                        <input placeholder="Search..." type="text">
-                        <i class="search icon"></i>
-                    </div>
-                </div>
-                <div class="ui dropdown item">
-                    More <i class="icon dropdown"></i>
-                    <div class="menu">
-                        <a class="item"><i class="edit icon"></i> Edit Profile</a>
-                        <a class="item"><i class="settings icon"></i> Account Settings</a>
-                    </div>
-                </div>
-            </div>-->
-        </div>
-        <div class="ui sub menu">
-            <a class="item" href="{% url 'volunteer:create' %}">Create</a>
-            <a class="item" href="{% url 'volunteer:list_volunteers' %}">Manage</a>
-            <a class="item" href="{% url 'volunteer:search' %}">Search</a>
         </div>
     </div>
     <div id="content">
