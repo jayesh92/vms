@@ -147,6 +147,7 @@ def restricted(request):
 @login_required
 def user_logout(request):
     #since the user is logged in, we can now just log them out
+    #a call to logout will clean out all the session data for the current request
     logout(request)
 
     #take the user back to login page

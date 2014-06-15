@@ -3,6 +3,7 @@ from job import views
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
+    url(r'^authorization_error/$', views.authorization_error, name='authorization_error'),
     url(r'^confirmation/$', views.confirmation, name='confirmation'),
     url(r'^create/$', views.create, name='create'),
     url(r'^details/$', views.details, name='details'),

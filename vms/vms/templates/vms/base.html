@@ -39,12 +39,18 @@
                 <i class="browser icon"></i>
                 Job Sign Up
             </a>
-            <div class="right item">
-                <a class="ui button" href="{% url 'rango:user_login' %}">Login</a>
-            </div>
-            <div class="right item">
-                <a class="ui teal button" href="{% url 'rango:register_volunteer' %}">Register</a>
-            </div>
+            {% if user.is_authenticated %}
+                <div class="right item">
+                    <a class="ui button" href="{% url 'rango:user_logout' %}">Log out</a>
+                </div>
+            {% else %}
+                <div class="right item">
+                    <a class="ui button" href="{% url 'rango:user_login' %}">Log in</a>
+                </div>
+                <div class="right item">
+                    <a class="ui teal button" href="{% url 'rango:register_volunteer' %}">Register</a>
+                </div>
+            {% endif %}
         </div>
     </div>
     <div id="content">

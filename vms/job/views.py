@@ -46,11 +46,14 @@ def details(request):
                 else:
                     return HttpResponseRedirect(reverse('job:error'))
             else:
-                return HttpResponseRedirect(reverse('job:error'))
+                return HttpResponseRedirect(reverse('job:authorization_error'))
         else:
             return HttpResponseRedirect(reverse('job:error'))
     else:
         return HttpResponseRedirect(reverse('job:error'))
+
+def authorization_error(request):
+    return render(request, 'rango/error.html')
 
 def error(request):
     return render(request, 'vms/error.html')
@@ -74,7 +77,7 @@ def sign_up(request):
                 else:
                     return render(request, 'job/sign_up_error.html')
             else:
-                return HttpResponseRedirect(reverse('job:error'))
+                return HttpResponseRedirect(reverse('job:authorization_error'))
         else:
             return HttpResponseRedirect(reverse('job:error'))
     else:
