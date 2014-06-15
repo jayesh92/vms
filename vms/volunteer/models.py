@@ -7,7 +7,7 @@ class Volunteer(models.Model):
         max_length=20,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(\s)]+$',
+                r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
             ),
         ],
     )
@@ -15,7 +15,7 @@ class Volunteer(models.Model):
         max_length=20,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(\s)]+$',
+                r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
             ),
         ],
     )
@@ -23,7 +23,7 @@ class Volunteer(models.Model):
         max_length=30,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(0-9)|(\s)]+$',
+                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\-)]+$',
             ),
         ],
     )
@@ -31,7 +31,7 @@ class Volunteer(models.Model):
         max_length=30,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(\s)]+$',
+                r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
             ),
         ],
     )
@@ -39,7 +39,7 @@ class Volunteer(models.Model):
         max_length=30,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(\s)]+$',
+                r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
             ),
         ],
     )
@@ -47,7 +47,7 @@ class Volunteer(models.Model):
         max_length=30,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(\s)]+$',
+                r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
             ),
         ],
     )
@@ -63,7 +63,7 @@ class Volunteer(models.Model):
         max_length=75,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(\s)]+$',
+                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\-)]+$',
             ),
         ],
     )
@@ -73,7 +73,7 @@ class Volunteer(models.Model):
         blank=True,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(\s)|(\.)]+$',
+                r'^[(A-Z)|(a-z)|(\s)|(\.)|(\-)|(?)|(=)|(#)|(:)|(/)|(_)|(&)]+$',
             ),
         ],
     )
@@ -81,10 +81,17 @@ class Volunteer(models.Model):
         blank=True,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(\s)|(\.)]+$',
+                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\.)|(,)|(\-)|(!)]+$',
             ),
         ],
     )
-    resume = models.TextField(blank=True)
+    resume = models.TextField(
+        blank=True,
+        validators=[
+            RegexValidator(
+                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\.)|(,)|(\-)|(!)]+$',
+            ),
+        ],
+    )
     resume_file = models.FileField(upload_to='resumes/', max_length=40, blank=True)
     user = models.OneToOneField(User)
