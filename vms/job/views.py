@@ -8,6 +8,28 @@ from job.services import *
 def index(request):
     return HttpResponseRedirect(reverse('job:list'))
 
+def add_shift(request):
+
+    if request.method == 'POST':
+        job_id = request.POST.get('job_id')
+        if job_id:
+            job = get_job_by_id(job_id)
+            if job:
+                form = ShiftForm(request.POST)
+                if form.is_valid():
+                    shift = form.save(commit=False)
+                    shift.job = job
+                    shift.save()
+                    return HttpResponse("Shift added")
+                else:
+                    return HttpResponseRedirect(reverse('job:error'))
+            else:
+                return HttpResponseRedirect(reverse('job:error'))
+        else:
+            return HttpResponseRedirect(reverse('job:error'))
+    else:
+        return HttpResponseRedirect(reverse('job:error'))
+
 def confirmation(request):
     if request.method == 'POST':
         job_id = request.POST.get('job_id')
@@ -30,29 +52,15 @@ def create(request):
         form = JobForm()
         return render(request, 'job/create.html', {'form' : form,})
 
-#still working on this
-def add_shift(request):
-    job_id = request.POST.get('job_id')
-    if job_id:
-        if request.method == 'POST':
-            job = get_job_by_id(job_id)
-            if job:
-                form = ShiftForm(request.POST)
-                if form.is_valid():
-                    form.save(commit=False)
-                    form.job = job
-                    form.save()
-                    form.save_m2m()
-                    return HttpResponse("Shift added")
-                else:
-#                    return render(request, 'job/add_shift.html', {'form' : form, 'job_id' : job_id,})
-            else:
-                return HttpResponse("Error 1")
-        else:
+def create_shift(request):
+
+    if request.method == 'POST':
+        job_id = request.POST.get('job_id')
+        if job_id:
             form = ShiftForm()
-            return render(request, 'job/add_shift.html', {'form' : form, 'job_id' : job_id,})
+            return render(request, 'job/create_shift.html', {'form' : form, 'job_id' : job_id,})
     else:
-        return HttpResponse("Error 2")
+        return HttpResponseRedirect(reverse('job:error'))
 
 def details(request):
     if request.method == 'POST':

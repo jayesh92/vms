@@ -41,7 +41,6 @@ class VolunteerShift(models.Model):
     #Shift to VolunteerShift is a one-to-many relationship
     shift = models.ForeignKey(Shift)
 
-
 #remove this model later
 class VolunteerJob(models.Model):
     #Volunteer to VolunteerJob is a one-to-many relationship

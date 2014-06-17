@@ -11,4 +11,4 @@ class JobForm(ModelForm):
 class ShiftForm(ModelForm):
     class Meta:
         model = Shift
-        fields = ['date', 'start_time', 'end_time', 'max_volunteers', 'job']        
+        fields = ['date', 'start_time', 'end_time', 'max_volunteers']        
