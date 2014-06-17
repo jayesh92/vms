@@ -35,9 +35,13 @@
                 <i class="suitcase icon"></i>
                 Create Job
             </a>
+            <a class="item" href="{% url 'job:manage' %}">
+                <i class="empty calendar icon"></i>
+                Create Job Shift
+            </a>
             <a class="item" href="{% url 'job:list' %}">
                 <i class="browser icon"></i>
-                Job Sign Up
+                Shift Sign Up
             </a>
             {% if user.is_authenticated %}
                 <div class="right item">

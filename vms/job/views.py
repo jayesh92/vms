@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from job.models import Job
-from job.forms import JobForm
+from job.models import Job, Shift
+from job.forms import JobForm, ShiftForm
 from job.services import *
 
 def index(request):
@@ -29,6 +29,30 @@ def create(request):
     else:
         form = JobForm()
         return render(request, 'job/create.html', {'form' : form,})
+
+#still working on this
+def add_shift(request):
+    job_id = request.POST.get('job_id')
+    if job_id:
+        if request.method == 'POST':
+            job = get_job_by_id(job_id)
+            if job:
+                form = ShiftForm(request.POST)
+                if form.is_valid():
+                    form.save(commit=False)
+                    form.job = job
+                    form.save()
+                    form.save_m2m()
+                    return HttpResponse("Shift added")
+                else:
+#                    return render(request, 'job/add_shift.html', {'form' : form, 'job_id' : job_id,})
+            else:
+                return HttpResponse("Error 1")
+        else:
+            form = ShiftForm()
+            return render(request, 'job/add_shift.html', {'form' : form, 'job_id' : job_id,})
+    else:
+        return HttpResponse("Error 2")
 
 def details(request):
     if request.method == 'POST':
@@ -61,6 +85,10 @@ def error(request):
 def list(request):
     job_list = get_jobs_by_title()
     return render(request, 'job/list.html', {'job_list' : job_list})
+
+def manage(request):
+    job_list = get_jobs_by_title()
+    return render(request, 'job/job_manage_list.html', {'job_list' : job_list})
 
 def sign_up(request):
     if request.method == 'POST':

@@ -12,9 +12,7 @@ class Job(models.Model):
         ],
     )
     start_date = models.DateField()
-    start_time = models.TimeField()
     end_date = models.DateField()
-    end_time = models.TimeField()
     description = models.TextField(
         blank=True,
         validators=[
@@ -26,19 +24,27 @@ class Job(models.Model):
     #VolunteerJob is the intermediary model for the many-to-many relationship between Volunteer and Jobs
     volunteers = models.ManyToManyField(Volunteer, through='VolunteerJob')
 
-#this model tells us the jobs that a volunteer is signed up for
+class Shift(models.Model):
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    max_volunteers = models.PositiveSmallIntegerField()
+    #Job to Shift is a one-to-many relationship
+    job = models.ForeignKey(Job)
+    #VolunteerShift is the intermediary model for the many-to-many relationship between Volunteer and Shift
+    volunteers = models.ManyToManyField(Volunteer, through='VolunteerShift')
+
+class VolunteerShift(models.Model):
+    hours_worked = models.FloatField()
+    #Volunteer to VolunteerShift is a one-to-many relationship
+    volunteer = models.ForeignKey(Volunteer)
+    #Shift to VolunteerShift is a one-to-many relationship
+    shift = models.ForeignKey(Shift)
+
+
+#remove this model later
 class VolunteerJob(models.Model):
     #Volunteer to VolunteerJob is a one-to-many relationship
     volunteer = models.ForeignKey(Volunteer)
     #Job to VolunteerJob is a one-to-many relationship
-    job = models.ForeignKey(Job)
-
-#this model is for keeping track of hours worked
-class JobHoursLog(models.Model):
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    hours_worked = models.FloatField()
-    #Volunteer to JobHoursLog is a one-to-many relationship
-    volunteer = models.ForeignKey(Volunteer)
     job = models.ForeignKey(Job)
