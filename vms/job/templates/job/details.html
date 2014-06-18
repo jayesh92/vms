@@ -43,7 +43,11 @@
                             <td>{{ shift.end_time }}</td>
                             <td></td>
                             <td>
-                                <button class="ui tiny green button" type="submit" name="shift_id" value="{{ shift.id }}">Sign Up</button>
+                                {% if shift in signed_up_list %}
+                                    <button class="ui tiny disabled button" disabled>Signed Up</button>
+                                {% else %}
+                                    <button class="ui tiny green button" type="submit" name="shift_id" value="{{ shift.id }}">Sign Up</button>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -57,15 +61,4 @@
             </div>
         </div>
     {% endif %}
-    <form action="{% url 'job:sign_up' %}" method="post">
-        {% csrf_token %}
-        <div class="ui form segment">
-            {% if signed_up %}
-                <button class="ui small disabled button" disabled>Signed Up</button>
-            {% else %}
-                <button class="ui small green button" type="submit" name="job_id" value="{{ job.id }}">Sign Up for this Job</button>
-            {% endif %}
-            <a class="ui small button" href="{% url 'job:list' %}">Back</a>
-        </div>
-    </form>
 {% endblock %}

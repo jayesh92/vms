@@ -71,11 +71,11 @@ def details(request):
             user = request.user
             if user.is_authenticated():
                 volunteer_id = user.volunteer.id
-                signed_up = is_signed_up(volunteer_id, job_id)
                 job = get_job_by_id(job_id)
                 shift_list = get_shifts_by_date(job_id)
+                signed_up_list = get_shifts_signed_up_for(volunteer_id)
                 if job:
-                    return render(request, 'job/details.html', {'job' : job, 'shift_list' : shift_list, 'signed_up' : signed_up,})
+                    return render(request, 'job/details.html', {'job' : job, 'shift_list' : shift_list, 'signed_up_list' : signed_up_list,})
                 else:
                     return HttpResponseRedirect(reverse('job:error'))
             else:
