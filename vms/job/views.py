@@ -20,7 +20,7 @@ def add_shift(request):
                     shift = form.save(commit=False)
                     shift.job = job
                     shift.save()
-                    return HttpResponse("Shift added")
+                    return render(request, 'job/add_shift_success.html')
                 else:
                     return HttpResponseRedirect(reverse('job:error'))
             else:
@@ -73,8 +73,9 @@ def details(request):
                 volunteer_id = user.volunteer.id
                 signed_up = is_signed_up(volunteer_id, job_id)
                 job = get_job_by_id(job_id)
+                shift_list = get_shifts_by_date(job_id)
                 if job:
-                    return render(request, 'job/details.html', {'job' : job, 'signed_up' : signed_up})
+                    return render(request, 'job/details.html', {'job' : job, 'shift_list' : shift_list, 'signed_up' : signed_up,})
                 else:
                     return HttpResponseRedirect(reverse('job:error'))
             else:
@@ -92,22 +93,22 @@ def error(request):
 
 def list(request):
     job_list = get_jobs_by_title()
-    return render(request, 'job/list.html', {'job_list' : job_list})
+    return render(request, 'job/sign_up_list.html', {'job_list' : job_list})
 
 def manage(request):
     job_list = get_jobs_by_title()
-    return render(request, 'job/job_manage_list.html', {'job_list' : job_list})
+    return render(request, 'job/add_shift_list.html', {'job_list' : job_list})
 
 def sign_up(request):
     if request.method == 'POST':
-        job_id = request.POST.get('job_id')
-        if job_id:
+        shift_id = request.POST.get('shift_id')
+        if shift_id:
             #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
             #for now, use rango to provide authentication and authorization functionality
             user = request.user
             if user.is_authenticated():
                 volunteer_id = user.volunteer.id
-                result = register(volunteer_id, job_id)
+                result = register(volunteer_id, shift_id)
                 if result:
                     return render(request, 'job/sign_up_success.html')
                 else:

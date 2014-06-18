@@ -3,7 +3,7 @@
 {% block content %}
     {% if job_list %}
         <h3 class="ui black block header">
-            Manage Jobs
+            Create Job Shift    
         </h3>
         <form action="{% url 'job:create_shift' %}" method="post">
             {% csrf_token %}

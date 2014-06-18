@@ -21,8 +21,6 @@ class Job(models.Model):
             ),
         ],
     )
-    #VolunteerJob is the intermediary model for the many-to-many relationship between Volunteer and Jobs
-    volunteers = models.ManyToManyField(Volunteer, through='VolunteerJob')
 
 class Shift(models.Model):
     date = models.DateField()
@@ -40,10 +38,3 @@ class VolunteerShift(models.Model):
     volunteer = models.ForeignKey(Volunteer)
     #Shift to VolunteerShift is a one-to-many relationship
     shift = models.ForeignKey(Shift)
-
-#remove this model later
-class VolunteerJob(models.Model):
-    #Volunteer to VolunteerJob is a one-to-many relationship
-    volunteer = models.ForeignKey(Volunteer)
-    #Job to VolunteerJob is a one-to-many relationship
-    job = models.ForeignKey(Job)

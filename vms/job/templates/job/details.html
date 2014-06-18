@@ -22,6 +22,41 @@
             {{ job.end_date }}
         </a>
     </div>
+    {% if shift_list %}
+        <form action="{% url 'job:sign_up' %}" method="post">
+            {% csrf_token %}
+            <table class="ui table segment">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Slots remaining</th>
+                        <th>Sign Up</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for shift in shift_list %}
+                        <tr>
+                            <td>{{ shift.date }}</td>
+                            <td>{{ shift.start_time }}</td>
+                            <td>{{ shift.end_time }}</td>
+                            <td></td>
+                            <td>
+                                <button class="ui tiny green button" type="submit" name="shift_id" value="{{ shift.id }}">Sign Up</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+    {% else %}
+        <div class="ui warning message">
+            <div class="header">
+                There are currently no shifts to sign up for!
+            </div>
+        </div>
+    {% endif %}
     <form action="{% url 'job:sign_up' %}" method="post">
         {% csrf_token %}
         <div class="ui form segment">
