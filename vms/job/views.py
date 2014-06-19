@@ -4,6 +4,7 @@ from django.shortcuts import render
 from job.models import Job, Shift
 from job.forms import JobForm, ShiftForm
 from job.services import *
+from volunteer.services import *
 
 def index(request):
     return HttpResponseRedirect(reverse('job:list'))
@@ -115,6 +116,17 @@ def sign_up(request):
                     return render(request, 'job/sign_up_error.html')
             else:
                 return HttpResponseRedirect(reverse('job:authorization_error'))
+        else:
+            return HttpResponseRedirect(reverse('job:error'))
+    else:
+        return HttpResponseRedirect(reverse('job:error'))
+
+def view_volunteer_shifts(request, volunteer_id):
+    if volunteer_id:
+        volunteer = get_volunteer_by_id(volunteer_id)
+        if volunteer:
+            shift_list = get_shifts_signed_up_for(volunteer_id)
+            return render(request, 'job/volunteer_shifts.html', {'shift_list' : shift_list,})
         else:
             return HttpResponseRedirect(reverse('job:error'))
     else:

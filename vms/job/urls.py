@@ -13,4 +13,5 @@ urlpatterns = patterns('',
     url(r'^list/$', views.list, name='list'),
     url(r'^manage/$', views.manage, name='manage'),
     url(r'^sign_up/$', views.sign_up, name='sign_up'),
+    url(r'^view_volunteer_shifts/(?P<volunteer_id>\d+)/$', views.view_volunteer_shifts, name='view_volunteer_shifts'),
 )

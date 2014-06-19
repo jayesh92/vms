@@ -9,11 +9,10 @@
             {% csrf_token %}
             <div class="ui tertiary segment">
                 Options:
-                <div class="ui buttons">
-                    <button type="submit" class="tiny ui blue button" name="option" value="profile">View Profile</button>
-                    <button type="submit" class="tiny ui teal button" name="option" value="edit">Edit Profile</button>
-                    <button type="submit" class="tiny ui red button" name="option" value="delete">Delete</button>
-                </div>
+                <button type="submit" class="tiny ui blue button" name="option" value="profile">View Profile</button>
+                <button type="submit" class="tiny ui teal button" name="option" value="edit">Edit Profile</button>
+                <button type="submit" class="tiny ui red button" name="option" value="delete">Delete</button>
+                <button type="submit" class="tiny ui button" name="option" value="view_shifts">View Shifts</button>
             </div>
             <table class="ui table segment">
                 <thead>
