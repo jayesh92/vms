@@ -45,12 +45,15 @@ def get_shifts_signed_up_for(v_id):
     #find a better way to do this (maybe there is a built in way to get a foreign
     #key after a filter
     list = VolunteerShift.objects.filter(volunteer_id=v_id)
-    signed_up_list = [] 
+    shift_signed_up_list = [] 
 
     for volunteershift in list:
-        signed_up_list.append(volunteershift.shift)
+        shift_signed_up_list.append(volunteershift.shift)
 
-    return signed_up_list
+    #sort by job title
+    shift_signed_up_list.sort(key=lambda x: x.job.job_title)
+
+    return shift_signed_up_list
 
 def is_signed_up(v_id, s_id):
 
