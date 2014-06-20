@@ -9,6 +9,7 @@
             <thead>
                 <tr>
                     <th>Job Title</th>
+                    <th>Location</th>
                     <th>Date</th>
                     <th>Start Time</th>
                     <th>End Time</th>
@@ -18,6 +19,7 @@
                 {% for shift in shift_list %}
                     <tr>
                         <td>{{ shift.job.job_title }}</td>
+                        <td>{{ shift.location }}</td>
                         <td>{{ shift.date }}</td>
                         <td>{{ shift.start_time }}</td>
                         <td>{{ shift.end_time }}</td>

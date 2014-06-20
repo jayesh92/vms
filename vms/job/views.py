@@ -31,6 +31,9 @@ def add_shift(request):
     else:
         return HttpResponseRedirect(reverse('job:error'))
 
+def authorization_error(request):
+    return render(request, 'rango/error.html')
+
 def confirmation(request):
     if request.method == 'POST':
         job_id = request.POST.get('job_id')
@@ -85,9 +88,6 @@ def details(request):
             return HttpResponseRedirect(reverse('job:error'))
     else:
         return HttpResponseRedirect(reverse('job:error'))
-
-def authorization_error(request):
-    return render(request, 'rango/error.html')
 
 def error(request):
     return render(request, 'vms/error.html')

@@ -29,6 +29,7 @@
                 <thead>
                     <tr>
                         <th>Date</th>
+                        <th>Location</th>
                         <th>Start Time</th>
                         <th>End Time</th>
                         <th>Slots remaining</th>
@@ -39,6 +40,7 @@
                     {% for shift in shift_list %}
                         <tr>
                             <td>{{ shift.date }}</td>
+                            <td>{{ shift.location }}</td>
                             <td>{{ shift.start_time }}</td>
                             <td>{{ shift.end_time }}</td>
                             <td></td>

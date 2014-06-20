@@ -50,8 +50,10 @@ def get_shifts_signed_up_for(v_id):
     for volunteershift in list:
         shift_signed_up_list.append(volunteershift.shift)
 
-    #sort by job title
-    shift_signed_up_list.sort(key=lambda x: x.job.job_title)
+    #sort by job title, shift date and shift start_time
+    shift_signed_up_list.sort(key=lambda x: (x.job.job_title,
+                                            x.date,
+                                            x.start_time))
 
     return shift_signed_up_list
 

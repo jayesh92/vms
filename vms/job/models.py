@@ -24,9 +24,23 @@ class Job(models.Model):
 
 class Shift(models.Model):
     date = models.DateField()
+    location = models.CharField(
+        max_length=75,
+        validators=[
+            RegexValidator(
+                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\-)]+$',
+            ),
+        ],
+    )
     start_time = models.TimeField()
     end_time = models.TimeField()
-    max_volunteers = models.PositiveSmallIntegerField()
+    max_volunteers = models.PositiveSmallIntegerField(
+        validators=[
+            RegexValidator(
+                r'^[0-9]+$',
+            ),
+        ],
+    )
     #Job to Shift is a one-to-many relationship
     job = models.ForeignKey(Job)
     #VolunteerShift is the intermediary model for the many-to-many relationship between Volunteer and Shift
