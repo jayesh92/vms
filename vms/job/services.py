@@ -57,6 +57,19 @@ def get_shifts_signed_up_for(v_id):
 
     return shift_signed_up_list
 
+def decrement_slots_remaining(shift):
+    shift.slots_remaining = shift.slots_remaining - 1
+    shift.save()
+
+def has_slots_remaining(shift):
+
+    has_slots = False 
+
+    if shift.slots_remaining >= 1:
+        has_slots = True
+
+    return has_slots
+
 def is_signed_up(v_id, s_id):
 
     result = True
@@ -80,12 +93,13 @@ def register(v_id, s_id):
         shift_obj = get_shift_by_id(s_id) 
 
         if volunteer_obj and shift_obj:
-            registration_obj = VolunteerShift(volunteer=volunteer_obj, shift=shift_obj, hours_worked=0)
-            registration_obj.save()
+            if has_slots_remaining(shift_obj):
+                registration_obj = VolunteerShift(volunteer=volunteer_obj, shift=shift_obj, hours_worked=0)
+                registration_obj.save()
 
-            #code for keeping track of slots remaining to be added later
-            #shift_obj.slots_remaining = shift_obj.slots_remaining - 1;
-            #shift_obj.save()
+                decrement_slots_remaining(shift_obj)
+            else:
+                is_valid = False
         else:
             is_valid = False
     else:

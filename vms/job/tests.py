@@ -123,6 +123,7 @@ class JobMethodTests(TestCase):
                     start_time = "9:00",
                     end_time = "3:00",
                     max_volunteers = 1,
+                    slots_remaining = 1,
                     job = j1)
 
         s2 = Shift(date = "2012-10-23",
@@ -130,6 +131,7 @@ class JobMethodTests(TestCase):
                     start_time = "10:00",
                     end_time = "4:00",
                     max_volunteers = 2,
+                    slots_remaining = 2,
                     job = j1)
 
         s3 = Shift(date = "2012-10-23",
@@ -137,6 +139,7 @@ class JobMethodTests(TestCase):
                     start_time = "12:00",
                     end_time = "6:00",
                     max_volunteers = 4,
+                    slots_remaining = 4,
                     job = j2)
 
         s1.save()
@@ -194,6 +197,7 @@ class JobMethodTests(TestCase):
                     start_time = "9:00",
                     end_time = "3:00",
                     max_volunteers = 1,
+                    slots_remaining = 1,
                     job = j1)
 
         s2 = Shift(date = "2012-10-23",
@@ -201,6 +205,7 @@ class JobMethodTests(TestCase):
                     start_time = "10:00",
                     end_time = "4:00",
                     max_volunteers = 2,
+                    slots_remaining = 2,
                     job = j1)
 
         s3 = Shift(date = "2012-10-23",
@@ -208,6 +213,7 @@ class JobMethodTests(TestCase):
                     start_time = "12:00",
                     end_time = "6:00",
                     max_volunteers = 4,
+                    slots_remaining = 4,
                     job = j2)
 
         s1.save()

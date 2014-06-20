@@ -43,9 +43,9 @@
                             <td>{{ shift.location }}</td>
                             <td>{{ shift.start_time }}</td>
                             <td>{{ shift.end_time }}</td>
-                            <td></td>
+                            <td>{{ shift.slots_remaining }}</td>
                             <td>
-                                {% if shift in signed_up_list %}
+                                {% if shift in signed_up_list or shift.slots_remaining <= 0 %}
                                     <button class="ui tiny disabled button" disabled>Signed Up</button>
                                 {% else %}
                                     <button class="ui tiny green button" type="submit" name="shift_id" value="{{ shift.id }}">Sign Up</button>
