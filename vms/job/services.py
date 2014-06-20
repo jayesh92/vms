@@ -82,6 +82,10 @@ def register(v_id, s_id):
         if volunteer_obj and shift_obj:
             registration_obj = VolunteerShift(volunteer=volunteer_obj, shift=shift_obj, hours_worked=0)
             registration_obj.save()
+
+            #code for keeping track of slots remaining to be added later
+            #shift_obj.slots_remaining = shift_obj.slots_remaining - 1;
+            #shift_obj.save()
         else:
             is_valid = False
     else:

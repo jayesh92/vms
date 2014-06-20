@@ -19,6 +19,8 @@ def add_shift(request):
                 form = ShiftForm(request.POST)
                 if form.is_valid():
                     shift = form.save(commit=False)
+                    #To be added later to keep track of number of open slots
+                    #shift.slots_remaining = shift.maximum_volunteers;
                     shift.job = job
                     shift.save()
                     return render(request, 'job/add_shift_success.html')

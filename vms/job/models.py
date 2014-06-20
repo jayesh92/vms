@@ -41,6 +41,13 @@ class Shift(models.Model):
             ),
         ],
     )
+    #slots_remaining = models.PositiveSmallIntegerField(
+    #    validators=[
+    #        RegexValidator(
+    #            r'^[0-9]+$',
+    #        ),
+    #    ],
+    #)
     #Job to Shift is a one-to-many relationship
     job = models.ForeignKey(Job)
     #VolunteerShift is the intermediary model for the many-to-many relationship between Volunteer and Shift
