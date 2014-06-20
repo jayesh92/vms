@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
-from job.models import Job, VolunteerJob
+from job.models import Job, VolunteerShift
 from job.services import *
 from volunteer.models import Volunteer
 from volunteer.services import *
@@ -11,23 +11,17 @@ class JobMethodTests(TestCase):
 
         j1 = Job(job_title = "Software Developer",
                 start_date = "2012-10-22",
-                start_time = "9:00",
                 end_date = "2012-10-23",
-                end_time = "10:00",
                 description = "A software job")
 
         j2 = Job(job_title = "Systems Administrator",
                 start_date = "2012-9-1",
-                start_time = "11:00",
                 end_date = "2012-10-26",
-                end_time = "12:00",
                 description = "A systems administrator job")
 
         j3 = Job(job_title = "Project Manager",
                 start_date = "2012-1-2",
-                start_time = "7:00",
                 end_date = "2012-2-2",
-                end_time = "9:00",
                 description = "A management job")
 
         j1.save()
@@ -63,23 +57,17 @@ class JobMethodTests(TestCase):
 
         j1 = Job(job_title = "Software Developer",
                 start_date = "2012-10-22",
-                start_time = "9:00",
                 end_date = "2012-10-23",
-                end_time = "10:00",
                 description = "A software job")
 
         j2 = Job(job_title = "Systems Administrator",
                 start_date = "2012-9-1",
-                start_time = "11:00",
                 end_date = "2012-10-26",
-                end_time = "12:00",
                 description = "A systems administrator job")
 
         j3 = Job(job_title = "Project Manager",
                 start_date = "2012-1-2",
-                start_time = "7:00",
                 end_date = "2012-2-2",
-                end_time = "9:00",
                 description = "A management job")
 
         j1.save()
@@ -119,42 +107,55 @@ class JobMethodTests(TestCase):
 
         j1 = Job(job_title = "Software Developer",
                 start_date = "2012-10-22",
-                start_time = "9:00",
                 end_date = "2012-10-23",
-                end_time = "10:00",
                 description = "A software job")
 
         j2 = Job(job_title = "Systems Administrator",
                 start_date = "2012-9-1",
-                start_time = "11:00",
                 end_date = "2012-10-26",
-                end_time = "12:00",
                 description = "A systems administrator job")
-
-        j3 = Job(job_title = "Project Manager",
-                start_date = "2012-1-2",
-                start_time = "7:00",
-                end_date = "2012-2-2",
-                end_time = "9:00",
-                description = "A management job")
         
         j1.save()
         j2.save()
-        j3.save()
+
+        s1 = Shift(date = "2012-10-23",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    job = j1)
+
+        s2 = Shift(date = "2012-10-23",
+                    location = "Infinite Loop",
+                    start_time = "10:00",
+                    end_time = "4:00",
+                    max_volunteers = 2,
+                    job = j1)
+
+        s3 = Shift(date = "2012-10-23",
+                    location = "Loopy Loop Road",
+                    start_time = "12:00",
+                    end_time = "6:00",
+                    max_volunteers = 4,
+                    job = j2)
+
+        s1.save()
+        s2.save()
+        s3.save()
     
         #test cases where not signed up
-        self.assertFalse(is_signed_up(v1.id, j1.id))
-        self.assertFalse(is_signed_up(v1.id, j2.id))
-        self.assertFalse(is_signed_up(v1.id, j3.id))
+        self.assertFalse(is_signed_up(v1.id, s1.id))
+        self.assertFalse(is_signed_up(v1.id, s2.id))
+        self.assertFalse(is_signed_up(v1.id, s3.id))
 
         #test cases where signed up
-        register(v1.id, j1.id)
-        register(v1.id, j2.id)
-        register(v1.id, j3.id)
+        register(v1.id, s1.id)
+        register(v1.id, s2.id)
+        register(v1.id, s3.id)
 
-        self.assertTrue(is_signed_up(v1.id, j1.id))
-        self.assertTrue(is_signed_up(v1.id, j2.id))
-        self.assertTrue(is_signed_up(v1.id, j3.id))
+        self.assertTrue(is_signed_up(v1.id, s1.id))
+        self.assertTrue(is_signed_up(v1.id, s2.id))
+        self.assertTrue(is_signed_up(v1.id, s3.id))
 
         #test case: can multiple volunteers sign up for the same job?
 
@@ -177,42 +178,55 @@ class JobMethodTests(TestCase):
 
         j1 = Job(job_title = "Software Developer",
                 start_date = "2012-10-22",
-                start_time = "9:00",
                 end_date = "2012-10-23",
-                end_time = "10:00",
                 description = "A software job")
 
         j2 = Job(job_title = "Systems Administrator",
                 start_date = "2012-9-1",
-                start_time = "11:00",
                 end_date = "2012-10-26",
-                end_time = "12:00",
                 description = "A systems administrator job")
-
-        j3 = Job(job_title = "Project Manager",
-                start_date = "2012-1-2",
-                start_time = "7:00",
-                end_date = "2012-2-2",
-                end_time = "9:00",
-                description = "A management job")
         
         j1.save()
         j2.save()
-        j3.save()
+
+        s1 = Shift(date = "2012-10-23",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    job = j1)
+
+        s2 = Shift(date = "2012-10-23",
+                    location = "Infinite Loop",
+                    start_time = "10:00",
+                    end_time = "4:00",
+                    max_volunteers = 2,
+                    job = j1)
+
+        s3 = Shift(date = "2012-10-23",
+                    location = "Loopy Loop Road",
+                    start_time = "12:00",
+                    end_time = "6:00",
+                    max_volunteers = 4,
+                    job = j2)
+
+        s1.save()
+        s2.save()
+        s3.save()
     
         #test typical cases
-        self.assertTrue(register(v1.id, j1.id))
-        self.assertIsNotNone(VolunteerJob.objects.get(volunteer_id=v1.id, job_id=j1.id))
+        self.assertTrue(register(v1.id, s1.id))
+        self.assertIsNotNone(VolunteerShift.objects.get(volunteer_id=v1.id, shift_id=s1.id))
 
-        self.assertTrue(register(v1.id, j2.id))
-        self.assertIsNotNone(VolunteerJob.objects.get(volunteer_id=v1.id, job_id=j2.id))
+        self.assertTrue(register(v1.id, s2.id))
+        self.assertIsNotNone(VolunteerShift.objects.get(volunteer_id=v1.id, shift_id=s2.id))
 
-        self.assertTrue(register(v1.id, j3.id))
-        self.assertIsNotNone(VolunteerJob.objects.get(volunteer_id=v1.id, job_id=j3.id))
+        self.assertTrue(register(v1.id, s3.id))
+        self.assertIsNotNone(VolunteerShift.objects.get(volunteer_id=v1.id, shift_id=s3.id))
 
-        #test cases where volunteer tries to sign up for a job they are already signed up for
-        self.assertFalse(register(v1.id, j1.id))
-        self.assertFalse(register(v1.id, j2.id))
-        self.assertFalse(register(v1.id, j3.id))
+        #test cases where volunteer tries to sign up for a shift they are already signed up for
+        self.assertFalse(register(v1.id, s1.id))
+        self.assertFalse(register(v1.id, s2.id))
+        self.assertFalse(register(v1.id, s3.id))
 
         #test case: can multiple volunteers sign up for the same job?
