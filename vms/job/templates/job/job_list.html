@@ -20,7 +20,6 @@
                         <td>{{ job.job_title }}</td>
                         <td>{{ job.start_date }}</td>
                         <td>{{ job.end_date }}</td>
-                        <!--<td><button type="submit" class="tiny ui green button" name="job_id" value="{{ job.id }}">Sign Up</button></td>-->
                         <td><a class="tiny ui green button" href="{% url 'job:details' job.id %}">Sign Up</a></td>
                     </tr>
                 {% endfor %}

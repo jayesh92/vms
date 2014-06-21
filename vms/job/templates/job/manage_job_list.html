@@ -24,7 +24,6 @@
                         <td>{{ job.job_title }}</td>
                         <td>{{ job.start_date }}</td>
                         <td>{{ job.end_date }}</td>
-                        <!--<td><button type="submit" class="tiny ui green button" name="job_id" value="{{ job.id }}">Add Shift</button></td>-->
                         <td><a class="tiny ui green button" href="{% url 'job:create_shift' job.id %}">Add Shift</a>
                     </tr>
                 {% endfor %}

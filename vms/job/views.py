@@ -49,6 +49,8 @@ def create_shift(request, job_id):
         return HttpResponseRedirect(reverse('job:error'))
 
 def details(request, job_id):
+    #it's fine to do the following processing after a GET request because we are just retrieving
+    #and not setting any data here
     if job_id:
         #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
         #for now, use rango to provide authentication and authorization functionality
