@@ -2,7 +2,7 @@
 
 {% block content %}
     <h3 class="ui black block header">
-        Job Sign Up
+        Job Details
     </h3>
     <div class="ui divided selection list">
         <a class="item">
@@ -23,39 +23,42 @@
         </a>
     </div>
     {% if shift_list %}
-        <form action="{% url 'job:sign_up' %}" method="post">
-            {% csrf_token %}
-            <table class="ui table segment">
-                <thead>
+        <h3 class="ui black block header">
+            Available Job Shifts
+        </h3>
+        <table class="ui table segment">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Slots remaining</th>
+                    <th>Sign Up</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shift in shift_list %}
                     <tr>
-                        <th>Date</th>
-                        <th>Location</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Slots remaining</th>
-                        <th>Sign Up</th>
+                        <td>{{ shift.date }}</td>
+                        <td>{{ shift.location }}</td>
+                        <td>{{ shift.start_time }}</td>
+                        <td>{{ shift.end_time }}</td>
+                        <td>{{ shift.slots_remaining }}</td>
+                        <td>
+                            {% if shift in signed_up_list %}
+                                <button class="ui tiny disabled button" disabled>Signed Up</button>
+                            {% elif shift.slots_remaining <= 0 %}
+                                <button class="ui tiny disabled button" disabled>All Slots Full</button>
+                            {% else %}
+                                <!--<button class="ui tiny green button" type="submit" name="shift_id" value="{{ shift.id }}">Sign Up</button>-->
+                                <a class="ui tiny green button" href="{% url 'job:shift_sign_up' shift.id %}">Sign Up</a>
+                            {% endif %}
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for shift in shift_list %}
-                        <tr>
-                            <td>{{ shift.date }}</td>
-                            <td>{{ shift.location }}</td>
-                            <td>{{ shift.start_time }}</td>
-                            <td>{{ shift.end_time }}</td>
-                            <td>{{ shift.slots_remaining }}</td>
-                            <td>
-                                {% if shift in signed_up_list or shift.slots_remaining <= 0 %}
-                                    <button class="ui tiny disabled button" disabled>Signed Up</button>
-                                {% else %}
-                                    <button class="ui tiny green button" type="submit" name="shift_id" value="{{ shift.id }}">Sign Up</button>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </form>
+                {% endfor %}
+            </tbody>
+        </table>
     {% else %}
         <div class="ui warning message">
             <div class="header">

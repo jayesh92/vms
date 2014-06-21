@@ -19,10 +19,10 @@
 <body>
     <div class="ui small menu">
         <div class="menu">
-            <a class="item" href="{% url 'volunteer:create' %}">
+            <!--<a class="item" href="{% url 'volunteer:create' %}">
                 <i class="user icon"></i>
                 Create Volunteer
-            </a>
+            </a>-->
             <a class="item" href="{% url 'volunteer:list' %}">
                 <i class="users icon"></i>
                 Manage Volunteers
@@ -31,17 +31,13 @@
                 <i class="search icon"></i>
                 Search Volunteers
             </a>
-            <a class="item" href="{% url 'job:create' %}">
+            <a class="item" href="{% url 'job:manage_jobs' %}">
                 <i class="suitcase icon"></i>
-                Create Job
+                Manage Jobs
             </a>
-            <a class="item" href="{% url 'job:manage' %}">
-                <i class="empty calendar icon"></i>
-                Create Job Shift
-            </a>
-            <a class="item" href="{% url 'job:list' %}">
+            <a class="item" href="{% url 'job:list_jobs' %}">
                 <i class="browser icon"></i>
-                Shift Sign Up
+                Available Jobs
             </a>
             {% if user.is_authenticated %}
                 <div class="right item">

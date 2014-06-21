@@ -1,0 +1,39 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    {% if job_list %}
+        <h3 class="ui black block header">
+            Available Jobs
+        </h3>
+        <table class="ui table segment">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>View Details/Sign Up</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in job_list %}
+                    <tr>
+                        <td>{{ job.job_title }}</td>
+                        <td>{{ job.start_date }}</td>
+                        <td>{{ job.end_date }}</td>
+                        <!--<td><button type="submit" class="tiny ui green button" name="job_id" value="{{ job.id }}">Sign Up</button></td>-->
+                        <td><a class="tiny ui green button" href="{% url 'job:details' job.id %}">Sign Up</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="ui icon error message">
+            <i class="attention icon"></i>
+            <div class="content">
+                <div class="header">
+                    There are currently no jobs!
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -3,7 +3,7 @@
     <h3 class="ui black block header">
         Create Job
     </h3>    
-    <form action="{% url 'job:create' %}" method="post">
+    <form action="{% url 'job:create_job' %}" method="post">
         {% csrf_token %}
         <div class="ui form segment">
             <div class="field">

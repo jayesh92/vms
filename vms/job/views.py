@@ -7,13 +7,27 @@ from job.services import *
 from volunteer.services import *
 
 def index(request):
-    return HttpResponseRedirect(reverse('job:list'))
+    return HttpResponseRedirect(reverse('job:list_jobs'))
 
-def add_shift(request):
+def authorization_error(request):
+    return render(request, 'rango/error.html')
 
+def create_job(request):
     if request.method == 'POST':
-        job_id = request.POST.get('job_id')
-        if job_id:
+        form = JobForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('job:manage_jobs'))
+        else:
+            return render(request, 'job/create_job.html', {'form' : form,})
+    else:
+        form = JobForm()
+        return render(request, 'job/create_job.html', {'form' : form,})
+
+def create_shift(request, job_id):
+
+    if job_id:
+        if request.method == 'POST':
             job = get_job_by_id(job_id)
             if job:
                 form = ShiftForm(request.POST)
@@ -23,89 +37,50 @@ def add_shift(request):
                     shift.slots_remaining = shift.max_volunteers;
                     shift.job = job
                     shift.save()
-                    return render(request, 'job/add_shift_success.html')
+                    return render(request, 'job/create_shift_success.html')
                 else:
                     return HttpResponseRedirect(reverse('job:error'))
             else:
                 return HttpResponseRedirect(reverse('job:error'))
         else:
-            return HttpResponseRedirect(reverse('job:error'))
-    else:
-        return HttpResponseRedirect(reverse('job:error'))
-
-def authorization_error(request):
-    return render(request, 'rango/error.html')
-
-def confirmation(request):
-    if request.method == 'POST':
-        job_id = request.POST.get('job_id')
-        if job_id:
-            return render(request, 'job/confirmation.html', {'id' : job_id,})
-        else:
-            return HttpResponseRedirect(reverse('job:error'))
-    else:
-        return HttpResponseRedirect(reverse('job:error'))
-
-def create(request):
-    if request.method == 'POST':
-        form = JobForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('job:list'))
-        else:
-            return render(request, 'job/create.html', {'form' : form,})
-    else:
-        form = JobForm()
-        return render(request, 'job/create.html', {'form' : form,})
-
-def create_shift(request):
-
-    if request.method == 'POST':
-        job_id = request.POST.get('job_id')
-        if job_id:
             form = ShiftForm()
             return render(request, 'job/create_shift.html', {'form' : form, 'job_id' : job_id,})
     else:
         return HttpResponseRedirect(reverse('job:error'))
 
-def details(request):
-    if request.method == 'POST':
-        job_id = request.POST.get('job_id')
-        if job_id:
-            #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
-            #for now, use rango to provide authentication and authorization functionality
-            user = request.user
-            if user.is_authenticated():
-                volunteer_id = user.volunteer.id
-                job = get_job_by_id(job_id)
-                shift_list = get_shifts_by_date(job_id)
-                signed_up_list = get_shifts_signed_up_for(volunteer_id)
-                if job:
-                    return render(request, 'job/details.html', {'job' : job, 'shift_list' : shift_list, 'signed_up_list' : signed_up_list,})
-                else:
-                    return HttpResponseRedirect(reverse('job:error'))
+def details(request, job_id):
+    if job_id:
+        #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
+        #for now, use rango to provide authentication and authorization functionality
+        user = request.user
+        if user.is_authenticated():
+            volunteer_id = user.volunteer.id
+            job = get_job_by_id(job_id)
+            shift_list = get_shifts_by_date(job_id)
+            signed_up_list = get_shifts_signed_up_for(volunteer_id)
+            if job:
+                return render(request, 'job/details.html', {'job' : job, 'shift_list' : shift_list, 'signed_up_list' : signed_up_list,})
             else:
-                return HttpResponseRedirect(reverse('job:authorization_error'))
+                return HttpResponseRedirect(reverse('job:error'))
         else:
-            return HttpResponseRedirect(reverse('job:error'))
+            return HttpResponseRedirect(reverse('job:authorization_error'))
     else:
         return HttpResponseRedirect(reverse('job:error'))
 
 def error(request):
     return render(request, 'vms/error.html')
 
-def list(request):
+def list_jobs(request):
     job_list = get_jobs_by_title()
-    return render(request, 'job/sign_up_list.html', {'job_list' : job_list})
+    return render(request, 'job/job_list.html', {'job_list' : job_list})
 
-def manage(request):
+def manage_jobs(request):
     job_list = get_jobs_by_title()
-    return render(request, 'job/add_shift_list.html', {'job_list' : job_list})
+    return render(request, 'job/manage_job_list.html', {'job_list' : job_list})
 
-def sign_up(request):
-    if request.method == 'POST':
-        shift_id = request.POST.get('shift_id')
-        if shift_id:
+def shift_sign_up(request, shift_id):
+    if shift_id:
+        if request.method == 'POST':
             #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
             #for now, use rango to provide authentication and authorization functionality
             user = request.user
@@ -119,7 +94,7 @@ def sign_up(request):
             else:
                 return HttpResponseRedirect(reverse('job:authorization_error'))
         else:
-            return HttpResponseRedirect(reverse('job:error'))
+            return render(request, 'job/sign_up_confirmation.html', {'shift_id' : shift_id,})
     else:
         return HttpResponseRedirect(reverse('job:error'))
 
