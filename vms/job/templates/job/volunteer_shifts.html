@@ -13,6 +13,7 @@
                     <th>Date</th>
                     <th>Start Time</th>
                     <th>End Time</th>
+                    <th>Cancel Shift</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +24,7 @@
                         <td>{{ shift.date }}</td>
                         <td>{{ shift.start_time }}</td>
                         <td>{{ shift.end_time }}</td>
+                        <td><a class="tiny ui red button" href="{% url 'job:cancel_shift' shift.id volunteer_id %}">Cancel Shift</a></td>
                     </tr>
                 {% endfor %}
             </tbody>

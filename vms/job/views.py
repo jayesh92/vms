@@ -12,6 +12,16 @@ def index(request):
 def authorization_error(request):
     return render(request, 'rango/error.html')
 
+#to do: must increment slots_remaining when cancel a shift
+def cancel_shift(request, shift_id, volunteer_id):
+    if shift_id and volunteer_id:
+        if request.method == 'POST':
+            print "do something"
+        else:            
+            return render(request, 'job/cancel_shift_confirmation.html', {'shift_id' : shift_id, 'volunteer_id' : volunteer_id})
+    else:
+        return HttpResponseRedirect(reverse('job:error'))
+
 def create_job(request):
     if request.method == 'POST':
         form = JobForm(request.POST)
@@ -105,7 +115,7 @@ def view_volunteer_shifts(request, volunteer_id):
         volunteer = get_volunteer_by_id(volunteer_id)
         if volunteer:
             shift_list = get_shifts_signed_up_for(volunteer_id)
-            return render(request, 'job/volunteer_shifts.html', {'shift_list' : shift_list,})
+            return render(request, 'job/volunteer_shifts.html', {'shift_list' : shift_list, 'volunteer_id' : volunteer_id,})
         else:
             return HttpResponseRedirect(reverse('job:error'))
     else:
