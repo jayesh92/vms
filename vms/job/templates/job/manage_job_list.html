@@ -1,14 +1,14 @@
 {% extends "vms/base.html" %}
 
 {% block content %}
+    <h3 class="ui black block header">
+        Manage Jobs
+    </h3>
+    <div class="ui tertiary segment">
+        Options:
+        <a class="tiny ui blue button" href="{% url 'job:create_job' %}">Create Job</a>
+    </div>
     {% if job_list %}
-        <h3 class="ui black block header">
-            Manage Jobs
-        </h3>
-        <div class="ui tertiary segment">
-            Options:
-            <a class="tiny ui blue button" href="{% url 'job:create_job' %}">Create Job</a>
-        </div>
         <table class="ui table segment">
             <thead>
                 <tr>
@@ -30,7 +30,7 @@
             </tbody>
         </table>
     {% else %}
-        <div class="ui icon error message">
+        <div class="ui icon warning message">
             <i class="attention icon"></i>
             <div class="content">
                 <div class="header">

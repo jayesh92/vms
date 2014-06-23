@@ -88,7 +88,120 @@ class JobMethodTests(TestCase):
         self.assertEqual(job_list[1].job_title, j1.job_title)
         self.assertEqual(job_list[2].job_title, j2.job_title)
 
-    def test_is_signed_up(self):
+    def test_get_shift_by_id(self):
+
+        j1 = Job(job_title = "Software Developer",
+                start_date = "2012-10-22",
+                end_date = "2012-10-23",
+                description = "A software job")
+        
+        j1.save()
+
+        s1 = Shift(date = "2012-10-23",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    slots_remaining = 1,
+                    job = j1)
+
+        s2 = Shift(date = "2012-10-23",
+                    location = "Infinite Loop",
+                    start_time = "10:00",
+                    end_time = "4:00",
+                    max_volunteers = 2,
+                    slots_remaining = 2,
+                    job = j1)
+
+        s3 = Shift(date = "2012-10-23",
+                    location = "Loopy Loop Road",
+                    start_time = "12:00",
+                    end_time = "6:00",
+                    max_volunteers = 4,
+                    slots_remaining = 4,
+                    job = j1)
+
+        s1.save()
+        s2.save()
+        s3.save()
+
+        #test typical cases
+        self.assertIsNotNone(get_shift_by_id(s1.id))
+        self.assertIsNotNone(get_shift_by_id(s2.id))
+        self.assertIsNotNone(get_shift_by_id(s3.id))
+
+        self.assertEqual(get_shift_by_id(s1.id), s1)
+        self.assertEqual(get_shift_by_id(s2.id), s2)
+        self.assertEqual(get_shift_by_id(s3.id), s3)
+
+        #test non-existant cases
+        self.assertIsNone(get_shift_by_id(100))
+        self.assertIsNone(get_shift_by_id(200))
+        self.assertIsNone(get_shift_by_id(300))
+        self.assertIsNone(get_shift_by_id(400))
+
+        self.assertNotEqual(get_shift_by_id(100), s1)
+        self.assertNotEqual(get_shift_by_id(100), s2)
+        self.assertNotEqual(get_shift_by_id(100), s3)
+        self.assertNotEqual(get_shift_by_id(200), s1)
+        self.assertNotEqual(get_shift_by_id(200), s2)
+        self.assertNotEqual(get_shift_by_id(200), s3)
+        self.assertNotEqual(get_shift_by_id(300), s1)
+        self.assertNotEqual(get_shift_by_id(300), s2)
+        self.assertNotEqual(get_shift_by_id(300), s3)
+
+    def get_shifts_by_date(self):
+
+        j1 = Job(job_title = "Software Developer",
+                start_date = "2012-10-22",
+                end_date = "2012-10-23",
+                description = "A software job")
+        
+        j1.save()
+
+        s1 = Shift(date = "2012-1-10",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    slots_remaining = 1,
+                    job = j1)
+
+        s2 = Shift(date = "2012-6-25",
+                    location = "Infinite Loop",
+                    start_time = "10:00",
+                    end_time = "4:00",
+                    max_volunteers = 2,
+                    slots_remaining = 2,
+                    job = j1)
+
+        s3 = Shift(date = "2012-12-9",
+                    location = "Loopy Loop Road",
+                    start_time = "12:00",
+                    end_time = "6:00",
+                    max_volunteers = 4,
+                    slots_remaining = 4,
+                    job = j1)
+
+        s1.save()
+        s2.save()
+        s3.save()
+
+        #test typical case
+        shift_list = get_shifts_by_date(j1.id)
+        self.assertIsNotNone(shift_list)
+        self.assertNotEqual(shift_list, False)
+        self.assertEqual(len(shift_list), 3)
+        self.assertIn(s1, shift_list)
+        self.assertIn(s2, shift_list)
+        self.assertIn(s3, shift_list)
+
+        #test order
+        self.assertEqual(shift_list[0].date, s1.date)
+        self.assertEqual(shift_list[1].date, s2.date)
+        self.assertEqual(shift_list[2].date, s3.date)
+
+    def test_get_shifts_signed_up_for(self):
 
         u1 = User.objects.create_user('Yoshi')     
 
@@ -146,7 +259,183 @@ class JobMethodTests(TestCase):
         s2.save()
         s3.save()
     
-        #test cases where not signed up
+        #sign up
+        register(v1.id, s1.id)
+        register(v1.id, s2.id)
+        register(v1.id, s3.id)
+
+        #test typical case
+        shift_list = get_shifts_signed_up_for(v1.id)
+        self.assertIsNotNone(shift_list)
+        self.assertNotEqual(shift_list, False)
+        self.assertEqual(len(shift_list), 3)
+        self.assertIn(s1, shift_list)
+        self.assertIn(s2, shift_list)
+        self.assertIn(s3, shift_list)
+
+    def test_decrement_slots_remaining(self):
+
+        j1 = Job(job_title = "Software Developer",
+                start_date = "2012-10-22",
+                end_date = "2012-10-23",
+                description = "A software job")
+
+        j1.save()
+
+        s1 = Shift(date = "2012-10-23",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    slots_remaining = 4,
+                    job = j1)
+
+        s1.save()
+
+        self.assertEqual(s1.slots_remaining, 4)
+        decrement_slots_remaining(s1)
+
+        self.assertEqual(s1.slots_remaining, 3)
+        decrement_slots_remaining(s1)
+
+        self.assertEqual(s1.slots_remaining, 2)
+        decrement_slots_remaining(s1)
+
+        self.assertEqual(s1.slots_remaining, 1)
+        decrement_slots_remaining(s1)
+
+        self.assertEqual(s1.slots_remaining, 0)
+
+    def test_has_slots_remaining(self):
+
+        j1 = Job(job_title = "Software Developer",
+                start_date = "2012-10-22",
+                end_date = "2012-10-23",
+                description = "A software job")
+        
+        j1.save()
+
+        s1 = Shift(date = "2012-10-23",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    slots_remaining = 1,
+                    job = j1)
+
+        s2 = Shift(date = "2012-10-23",
+                    location = "Infinite Loop",
+                    start_time = "10:00",
+                    end_time = "4:00",
+                    max_volunteers = 2,
+                    slots_remaining = 2,
+                    job = j1)
+
+        s3 = Shift(date = "2012-10-23",
+                    location = "Loopy Loop Road",
+                    start_time = "12:00",
+                    end_time = "6:00",
+                    max_volunteers = 4,
+                    slots_remaining = 4,
+                    job = j1)
+
+        s1.save()
+        s2.save()
+        s3.save()
+
+        self.assertTrue(has_slots_remaining(s1))
+        self.assertTrue(has_slots_remaining(s2))
+        self.assertTrue(has_slots_remaining(s3))
+
+        decrement_slots_remaining(s1)
+        self.assertFalse(has_slots_remaining(s1))
+
+        decrement_slots_remaining(s2)
+        self.assertTrue(has_slots_remaining(s2))
+        decrement_slots_remaining(s2)
+        self.assertFalse(has_slots_remaining(s2))
+
+        decrement_slots_remaining(s3)
+        self.assertTrue(has_slots_remaining(s3))
+        decrement_slots_remaining(s3)
+        self.assertTrue(has_slots_remaining(s3))
+        decrement_slots_remaining(s3)
+        self.assertTrue(has_slots_remaining(s3))
+        decrement_slots_remaining(s3)
+        self.assertFalse(has_slots_remaining(s3))
+
+    def test_is_signed_up(self):
+
+        u1 = User.objects.create_user('Yoshi')     
+        u2 = User.objects.create_user('John')     
+
+        v1 = Volunteer(first_name = "Yoshi",
+                        last_name = "Turtle",
+                        address = "Mario Land",
+                        city = "Nintendo Land",
+                        state = "Nintendo State",
+                        country = "Nintendo Nation",
+                        phone_number = "2374983247",
+                        company = "Turtle Corporation",
+                        email = "yoshi@nintendo.com",
+                        user = u1)
+
+        v2 = Volunteer(first_name = "John",
+                        last_name = "Doe",
+                        address = "7 Alpine Street",
+                        city = "Maplegrove",
+                        state = "Wyoming",
+                        country = "USA",
+                        phone_number = "23454545",
+                        company = "Google",
+                        email = "john@test.com",
+                        user = u2)
+
+        v1.save()
+        v2.save()
+
+        j1 = Job(job_title = "Software Developer",
+                start_date = "2012-10-22",
+                end_date = "2012-10-23",
+                description = "A software job")
+
+        j2 = Job(job_title = "Systems Administrator",
+                start_date = "2012-9-1",
+                end_date = "2012-10-26",
+                description = "A systems administrator job")
+        
+        j1.save()
+        j2.save()
+
+        s1 = Shift(date = "2012-10-23",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    slots_remaining = 1,
+                    job = j1)
+
+        s2 = Shift(date = "2012-10-23",
+                    location = "Infinite Loop",
+                    start_time = "10:00",
+                    end_time = "4:00",
+                    max_volunteers = 2,
+                    slots_remaining = 2,
+                    job = j1)
+
+        s3 = Shift(date = "2012-10-23",
+                    location = "Loopy Loop Road",
+                    start_time = "12:00",
+                    end_time = "6:00",
+                    max_volunteers = 4,
+                    slots_remaining = 4,
+                    job = j2)
+
+        s1.save()
+        s2.save()
+        s3.save()
+    
+        #test cases where not signed up yet
         self.assertFalse(is_signed_up(v1.id, s1.id))
         self.assertFalse(is_signed_up(v1.id, s2.id))
         self.assertFalse(is_signed_up(v1.id, s3.id))
@@ -160,11 +449,23 @@ class JobMethodTests(TestCase):
         self.assertTrue(is_signed_up(v1.id, s2.id))
         self.assertTrue(is_signed_up(v1.id, s3.id))
 
-        #test case: can multiple volunteers sign up for the same job?
+        #test case where more than one volunteer signs up for the same shift
+        self.assertFalse(is_signed_up(v2.id, s1.id))
+        self.assertFalse(is_signed_up(v2.id, s2.id))
+        self.assertFalse(is_signed_up(v2.id, s3.id))
+
+        register(v2.id, s1.id)
+        register(v2.id, s2.id)
+        register(v2.id, s3.id)
+
+        self.assertFalse(is_signed_up(v2.id, s1.id))
+        self.assertTrue(is_signed_up(v2.id, s2.id))
+        self.assertTrue(is_signed_up(v2.id, s3.id))
 
     def test_register(self):
 
         u1 = User.objects.create_user('Yoshi')     
+        u2 = User.objects.create_user('John')     
 
         v1 = Volunteer(first_name = "Yoshi",
                         last_name = "Turtle",
@@ -177,7 +478,19 @@ class JobMethodTests(TestCase):
                         email = "yoshi@nintendo.com",
                         user = u1)
 
+        v2 = Volunteer(first_name = "John",
+                        last_name = "Doe",
+                        address = "7 Alpine Street",
+                        city = "Maplegrove",
+                        state = "Wyoming",
+                        country = "USA",
+                        phone_number = "23454545",
+                        company = "Google",
+                        email = "john@test.com",
+                        user = u2)
+
         v1.save()
+        v2.save()
 
         j1 = Job(job_title = "Software Developer",
                 start_date = "2012-10-22",
@@ -235,4 +548,16 @@ class JobMethodTests(TestCase):
         self.assertFalse(register(v1.id, s2.id))
         self.assertFalse(register(v1.id, s3.id))
 
-        #test case: can multiple volunteers sign up for the same job?
+        #test case where more than one volunteer signs up for the same shift
+        #v2 can't sign up for s1 because there are no slots remaining
+        self.assertFalse(register(v2.id, s1.id))
+
+        self.assertTrue(register(v2.id, s2.id))
+        self.assertIsNotNone(VolunteerShift.objects.get(volunteer_id=v2.id, shift_id=s2.id))
+
+        self.assertTrue(register(v2.id, s3.id))
+        self.assertIsNotNone(VolunteerShift.objects.get(volunteer_id=v2.id, shift_id=s3.id))
+
+        #test cases where a volunteer tries to sign up for a shift they are already signed up for
+        self.assertFalse(register(v2.id, s2.id))
+        self.assertFalse(register(v2.id, s3.id))
