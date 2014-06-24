@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'job',
     'rango',
+    'organization',
     'vms',
     'volunteer',
 )

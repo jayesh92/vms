@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
+from organization.models import Organization
 
 class Volunteer(models.Model):
     first_name = models.CharField(
@@ -59,6 +60,7 @@ class Volunteer(models.Model):
             ),
         ],
     )
+    #to do: remove company field later
     company = models.CharField(
         max_length=75,
         validators=[
@@ -67,6 +69,16 @@ class Volunteer(models.Model):
             ),
         ],
     )
+    unlisted_organization = models.CharField(
+        max_length=75,
+        validators=[
+            RegexValidator(
+                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\-)]+$',
+            ),
+        ],
+    )
+    #Organization to Volunteer is a one-to-many relationship
+    organization = models.ForeignKey(Organization)
     #EmailField automatically checks if email address is a valid format 
     email = models.EmailField(max_length=20)
     websites = models.TextField(
