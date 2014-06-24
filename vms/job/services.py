@@ -2,6 +2,28 @@ from django.core.exceptions import ObjectDoesNotExist
 from job.models import Job, Shift, VolunteerShift
 from volunteer.services import get_volunteer_by_id
 
+def cancel_shift_registration(s_id, v_id):
+
+    is_valid = True
+
+    if s_id and v_id:
+        shift = Shift.objects.get(pk=s_id)
+        if shift:
+            try:
+                obj = VolunteerShift.objects.get(volunteer_id=v_id, shift_id=s_id)
+                #remove volunteer from being signed up for this shift
+                obj.delete()
+                #increment the slots remaining for this shift
+                increment_slots_remaining(shift)
+            except ObjectDoesNotExist:
+                is_valid = False
+        else:
+            is_valid = False
+    else:
+        is_valid = False
+
+    return is_valid
+
 def get_job_by_id(job_id):
 
     is_valid = True
@@ -47,8 +69,8 @@ def get_shifts_signed_up_for(v_id):
     list = VolunteerShift.objects.filter(volunteer_id=v_id)
     shift_signed_up_list = [] 
 
-    for volunteershift in list:
-        shift_signed_up_list.append(volunteershift.shift)
+    for volunteer_shift in list:
+        shift_signed_up_list.append(volunteer_shift.shift)
 
     #sort by job title, shift date and shift start_time
     shift_signed_up_list.sort(key=lambda x: (x.job.job_title,
@@ -69,6 +91,10 @@ def has_slots_remaining(shift):
         has_slots = True
 
     return has_slots
+
+def increment_slots_remaining(shift):
+    shift.slots_remaining = shift.slots_remaining + 1
+    shift.save()
 
 def is_signed_up(v_id, s_id):
 
