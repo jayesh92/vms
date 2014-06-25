@@ -46,6 +46,10 @@
                     View Shifts 
                 </a>
             {% endif %}
+            <a class="item" href="{% url 'organization:create' %}">
+                <i class="globe icon"></i>
+                Create Organization 
+            </a>
             {% if user.is_authenticated %}
                 <div class="right item">
                     <a class="ui button" href="{% url 'rango:user_logout' %}">Log out</a>

@@ -1,0 +1,20 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <h3 class="ui black block header">
+        Create Organization
+    </h3>
+    <form action="{% url 'organization:create' %}" method="post">
+        {% csrf_token %}
+        <div class="ui form segment">
+            <div class="field">
+                <label>Organization Name</label>
+                <div class="ui input">
+                    <input placeholder="Organization Name" type="text" name="organization_name">
+                </div>
+            </div>
+            <button class="ui blue button" type="submit">Create</button>
+            <button class="ui button" type="reset">Clear</button>
+        </div>
+    </form>
+{% endblock %}
