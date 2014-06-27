@@ -19,7 +19,6 @@ class VolunteerMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "Google",
                         email = "john@test.com",
                         user = u1)
 
@@ -30,7 +29,6 @@ class VolunteerMethodTests(TestCase):
                         state = "California",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "IBM",
                         email = "james@test.com",
                         user = u2)
 
@@ -42,7 +40,6 @@ class VolunteerMethodTests(TestCase):
                         state = "California",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "IBM",
                         email = "george@test.com",
                         user = u3)
 
@@ -88,7 +85,6 @@ class VolunteerMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "Google",
                         email = "john@test.com",
                         resume_file = "MyResume.pdf",
                         user = u1)
@@ -100,7 +96,6 @@ class VolunteerMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "Google",
                         email = "james@test.com",
                         user = u2)
 
@@ -111,7 +106,6 @@ class VolunteerMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "Google",
                         email = "jane@test.com",
                         resume_file = "",
                         user = u3)
@@ -138,7 +132,6 @@ class VolunteerMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "Google",
                         email = "john@test.com",
                         resume_file = "MyResume.pdf",
                         user = u1)
@@ -166,7 +159,6 @@ class VolunteerMethodTests(TestCase):
                         state = "California",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "IBM",
                         email = "yoshi@test.com",
                         user = u1)
 
@@ -177,7 +169,6 @@ class VolunteerMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "Google",
                         email = "ashley@test.com",
                         user = u2)
 
@@ -189,7 +180,6 @@ class VolunteerMethodTests(TestCase):
                         state = "California",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "IBM",
                         email = "zelda@test.com",
                         user = u3)
 
@@ -222,7 +212,6 @@ class VolunteerMethodTests(TestCase):
                         state = "California",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "IBM",
                         email = "yoshi@test.com",
                         user = u1)
 
@@ -233,7 +222,6 @@ class VolunteerMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "Google",
                         email = "ashley@test.com",
                         user = u2)
 
@@ -245,7 +233,6 @@ class VolunteerMethodTests(TestCase):
                         state = "California",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "IBM",
                         email = "zelda@test.com",
                         user = u3)               
 
@@ -254,14 +241,14 @@ class VolunteerMethodTests(TestCase):
         v3.save()
 
         #if no search parameters are given, it returns all volunteers 
-        search_list = search_volunteers("", "", "", "", "", "")
+        search_list = search_volunteers("", "", "", "", "")
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 3)
         self.assertIn(v1, search_list)
         self.assertIn(v2, search_list)
         self.assertIn(v3, search_list)
 
-        search_list = search_volunteers(None, None, None, None, None, None)
+        search_list = search_volunteers(None, None, None, None, None)
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 3)
         self.assertIn(v1, search_list)
@@ -269,7 +256,7 @@ class VolunteerMethodTests(TestCase):
         self.assertIn(v3, search_list)
 
         #test exact search
-        search_list = search_volunteers("Yoshi", "Doe", "Elmgrove", "California", "USA", "IBM")
+        search_list = search_volunteers("Yoshi", "Doe", "Elmgrove", "California", "USA")
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 1)
         self.assertIn(v1, search_list)
@@ -277,14 +264,14 @@ class VolunteerMethodTests(TestCase):
         self.assertNotIn(v3, search_list)
 
         #test partial search
-        search_list = search_volunteers("Yoshi", None, None, None, None, None)
+        search_list = search_volunteers("Yoshi", None, None, None, None)
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 1)
         self.assertIn(v1, search_list)
         self.assertNotIn(v2, search_list)
         self.assertNotIn(v3, search_list)
 
-        search_list = search_volunteers(None, "Doe", None, None, None, None)
+        search_list = search_volunteers(None, "Doe", None, None, None)
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 3)
         self.assertIn(v1, search_list)
@@ -292,7 +279,7 @@ class VolunteerMethodTests(TestCase):
         self.assertIn(v3, search_list)
 
         #test no search matches
-        search_list = search_volunteers("Billy", "Doe", "Montreal", "Quebec", "Canada", "Ubisoft")
+        search_list = search_volunteers("Billy", "Doe", "Montreal", "Quebec", "Canada")
         self.assertEqual(len(search_list), 0)
         self.assertNotIn(v1, search_list)
         self.assertNotIn(v2, search_list)

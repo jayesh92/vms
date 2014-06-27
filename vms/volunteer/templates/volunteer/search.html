@@ -76,19 +76,6 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="field">
-                <label>Company/Employer</label>
-                <div class="ui input">
-                    {% if form.company.value %}
-                        <input placeholder="Search by Company" type="text" name="company" value="{{ form.company.value }}">
-                    {% else %}
-                        <input placeholder="Search by Company" type="text" name="company">
-                    {% endif %}
-                    {% if form.company.errors %}
-                        <div class="ui red pointing above ui label">Enter a valid company</div>
-                    {% endif %}
-                </div>
-            </div>
             <button class="ui blue button" type="submit">Search</button>
             <button class="ui button" type="reset">Clear</button>
         </div>

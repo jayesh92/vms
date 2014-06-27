@@ -129,19 +129,6 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label>Company</label>
-                    <div class="ui input">
-                        {% if volunteeer_form.company.value %}
-                            <input placeholder="Company/Employer" type="text" name="vol-company" value="{{ volunteeer_form.company.value }}">
-                        {% else %}
-                            <input placeholder="Company/Employer" type="text" name="vol-company">
-                        {% endif %}
-                        {% if volunteeer_form.company.errors %}
-                            <div class="ui red pointing above ui label">Enter a valid company/employer</div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="field">
                     <label>Select your organization:</label>
                     <select name="organization_name">
                         <option value="0">-- Select --</option>

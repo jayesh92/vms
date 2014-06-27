@@ -60,16 +60,6 @@ class Volunteer(models.Model):
             ),
         ],
     )
-    #to do: remove company field later
-    company = models.CharField(
-        blank=True,
-        max_length=75,
-        validators=[
-            RegexValidator(
-                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\-)]+$',
-            ),
-        ],
-    )
     unlisted_organization = models.CharField(
         blank=True,
         max_length=75,

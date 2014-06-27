@@ -75,7 +75,7 @@ def delete_volunteer_resume(volunteer_id):
 
     return is_valid 
 
-def search_volunteers(first_name, last_name, city, state, country, company):
+def search_volunteers(first_name, last_name, city, state, country):
     
     #if no search parameters are given, it returns all volunteers
     search_query = Volunteer.objects.all()
@@ -91,7 +91,5 @@ def search_volunteers(first_name, last_name, city, state, country, company):
         search_query = search_query.filter(state__icontains=state)
     if country:
         search_query = search_query.filter(country__icontains=country)
-    if company:
-        search_query = search_query.filter(company__icontains=company)
 
     return search_query 

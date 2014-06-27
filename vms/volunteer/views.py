@@ -144,9 +144,8 @@ def search(request):
             city = form.cleaned_data['city']
             state = form.cleaned_data['state']
             country = form.cleaned_data['country']
-            company = form.cleaned_data['company']
 
-            search_result_list = search_volunteers(first_name, last_name, city, state, country, company)
+            search_result_list = search_volunteers(first_name, last_name, city, state, country)
             return render(request, 'volunteer/search_result.html', {'search_result_list' : search_result_list})
     else:
         form = SearchVolunteerForm()

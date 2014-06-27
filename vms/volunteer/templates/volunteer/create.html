@@ -115,19 +115,6 @@
                 </div>
             </div>
             <div class="field">
-                <label>Company</label>
-                <div class="ui input">
-                    {% if form.company.value %}
-                        <input placeholder="Company/Employer" type="text" name="company" value="{{ form.company.value }}">
-                    {% else %}
-                        <input placeholder="Company/Employer" type="text" name="company">
-                    {% endif %}
-                    {% if form.company.errors %}
-                        <div class="ui red pointing above ui label">Enter a valid company/employer</div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="field">
                 <label>Email</label>
                 <div class="ui input">
                     {% if form.email.value %}

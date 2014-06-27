@@ -212,7 +212,6 @@ class JobMethodTests(TestCase):
                         state = "Nintendo State",
                         country = "Nintendo Nation",
                         phone_number = "2374983247",
-                        company = "Turtle Corporation",
                         email = "yoshi@nintendo.com",
                         user = u1)
 
@@ -376,7 +375,6 @@ class JobMethodTests(TestCase):
                         state = "Nintendo State",
                         country = "Nintendo Nation",
                         phone_number = "2374983247",
-                        company = "Turtle Corporation",
                         email = "yoshi@nintendo.com",
                         user = u1)
 
@@ -387,7 +385,6 @@ class JobMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "Google",
                         email = "john@test.com",
                         user = u2)
 
@@ -474,7 +471,6 @@ class JobMethodTests(TestCase):
                         state = "Nintendo State",
                         country = "Nintendo Nation",
                         phone_number = "2374983247",
-                        company = "Turtle Corporation",
                         email = "yoshi@nintendo.com",
                         user = u1)
 
@@ -485,7 +481,6 @@ class JobMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
-                        company = "Google",
                         email = "john@test.com",
                         user = u2)
 
