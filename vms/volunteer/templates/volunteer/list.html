@@ -23,6 +23,7 @@
                         <th>City</th>
                         <th>State/Province</th>
                         <th>Country</th>
+                        <th>Organization</th>
                         <th>Phone Number</th>
                         <th>Email</th>
                         <th>Select volunteer for Options:</th>
@@ -37,6 +38,14 @@
                             <td>{{ volunteer.city }}</td>
                             <td>{{ volunteer.state }}</td>
                             <td>{{ volunteer.country }}</td>
+                            <td>
+                                {% if volunteer.organization.organization_name %}
+                                    {{ volunteer.organization.organization_name }}
+                                {% elif volunteer.unlisted_organization %}
+                                    {{ volunteer.unlisted_organization }}
+                                {% else %}
+                                {% endif %}
+                            </td>
                             <td>{{ volunteer.phone_number }}</td>
                             <td>{{ volunteer.email }}</td>
                             <td>

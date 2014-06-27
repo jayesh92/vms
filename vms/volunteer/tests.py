@@ -1,6 +1,7 @@
 import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
+from organization.models import Organization
 from volunteer.models import Volunteer
 from volunteer.services import *
 
@@ -206,6 +207,12 @@ class VolunteerMethodTests(TestCase):
         u2 = User.objects.create_user('Ashley')
         u3 = User.objects.create_user('Zelda')
 
+        o1 = Organization(organization_name = "Apple")
+        o2 = Organization(organization_name = "Google")
+
+        o1.save()
+        o2.save()
+
         v1 = Volunteer(first_name = "Yoshi",
                         last_name = "Doe",
                         address = "7 Oak Street",
@@ -213,6 +220,7 @@ class VolunteerMethodTests(TestCase):
                         state = "California",
                         country = "USA",
                         phone_number = "23454545",
+                        organization = o1,
                         email = "yoshi@test.com",
                         user = u1)
 
@@ -223,6 +231,7 @@ class VolunteerMethodTests(TestCase):
                         state = "Wyoming",
                         country = "USA",
                         phone_number = "23454545",
+                        organization = o2,
                         email = "ashley@test.com",
                         user = u2)
 
@@ -234,6 +243,7 @@ class VolunteerMethodTests(TestCase):
                         state = "California",
                         country = "USA",
                         phone_number = "23454545",
+                        unlisted_organization = "Government of Canada",
                         email = "zelda@test.com",
                         user = u3)               
 
@@ -242,14 +252,14 @@ class VolunteerMethodTests(TestCase):
         v3.save()
 
         #if no search parameters are given, it returns all volunteers 
-        search_list = search_volunteers("", "", "", "", "")
+        search_list = search_volunteers("", "", "", "", "", "")
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 3)
         self.assertIn(v1, search_list)
         self.assertIn(v2, search_list)
         self.assertIn(v3, search_list)
 
-        search_list = search_volunteers(None, None, None, None, None)
+        search_list = search_volunteers(None, None, None, None, None, None)
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 3)
         self.assertIn(v1, search_list)
@@ -257,7 +267,7 @@ class VolunteerMethodTests(TestCase):
         self.assertIn(v3, search_list)
 
         #test exact search
-        search_list = search_volunteers("Yoshi", "Doe", "Elmgrove", "California", "USA")
+        search_list = search_volunteers("Yoshi", "Doe", "Elmgrove", "California", "USA", "Apple")
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 1)
         self.assertIn(v1, search_list)
@@ -265,14 +275,14 @@ class VolunteerMethodTests(TestCase):
         self.assertNotIn(v3, search_list)
 
         #test partial search
-        search_list = search_volunteers("Yoshi", None, None, None, None)
+        search_list = search_volunteers("Yoshi", None, None, None, None, None)
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 1)
         self.assertIn(v1, search_list)
         self.assertNotIn(v2, search_list)
         self.assertNotIn(v3, search_list)
 
-        search_list = search_volunteers(None, "Doe", None, None, None)
+        search_list = search_volunteers(None, "Doe", None, None, None, None)
         self.assertNotEqual(search_list, False)
         self.assertEqual(len(search_list), 3)
         self.assertIn(v1, search_list)
@@ -280,7 +290,7 @@ class VolunteerMethodTests(TestCase):
         self.assertIn(v3, search_list)
 
         #test no search matches
-        search_list = search_volunteers("Billy", "Doe", "Montreal", "Quebec", "Canada")
+        search_list = search_volunteers("Billy", "Doe", "Montreal", "Quebec", "Canada", "Ubisoft")
         self.assertEqual(len(search_list), 0)
         self.assertNotIn(v1, search_list)
         self.assertNotIn(v2, search_list)
