@@ -188,16 +188,17 @@ class VolunteerMethodTests(TestCase):
         v3.save()
 
         #test typical cases
-        self.assertIsNotNone(get_volunteers_by_first_name())
-        self.assertIn(v1, get_volunteers_by_first_name())
-        self.assertIn(v2, get_volunteers_by_first_name())
-        self.assertIn(v3, get_volunteers_by_first_name())
-        self.assertEqual(len(get_volunteers_by_first_name()), 3)
+        volunteer_list = get_volunteers_by_first_name()
+        self.assertIsNotNone(volunteer_list)
+        self.assertIn(v1, volunteer_list)
+        self.assertIn(v2, volunteer_list)
+        self.assertIn(v3, volunteer_list)
+        self.assertEqual(len(volunteer_list), 3)
 
         #test if in correct order
-        self.assertEqual(get_volunteers_by_first_name()[0], v2)
-        self.assertEqual(get_volunteers_by_first_name()[1], v1)
-        self.assertEqual(get_volunteers_by_first_name()[2], v3)
+        self.assertEqual(volunteer_list[0], v2)
+        self.assertEqual(volunteer_list[1], v1)
+        self.assertEqual(volunteer_list[2], v3)
 
     def test_search_volunteers(self):
  
