@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
+from organization.services import *
 from rango.forms import UserForm, UserProfileForm
 from volunteer.forms import VolunteerForm
 from volunteer.models import Volunteer #Volunteer model needs to be imported so that input type file renders properly
@@ -81,20 +82,28 @@ def register_volunteer(request):
        
             volunteer = volunteer_form.save(commit=False)
             volunteer.user = user
+
+            organization_id = request.POST.get('organization_name')
+            organization = get_organization_by_id(organization_id)
+
+            if organization:
+                volunteer.organization = organization
+
             volunteer.save()
 
             registered = True
-
         else:
             print user_form.errors, volunteer_form.errors
     else:
         user_form = UserForm(prefix="usr")
         volunteer_form = VolunteerForm(prefix="vol") 
 
+    organization_list = get_organizations_by_name()
+
     return render(
         request,
         'rango/register.html',
-        {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered,}
+        {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered, 'organization_list' : organization_list,}
     )
     
 def user_login(request):

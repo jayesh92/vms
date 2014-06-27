@@ -42,6 +42,18 @@
             <div class="ui horizontal label">Company</div>
             {{ volunteer.company }}
         </a>
+        {% if volunteer.organization.organization_name %}
+            <a class="item">
+                <div class="ui horizontal label">Organization</div>
+                {{ volunteer.organization.organization_name }}
+            </a>
+        {% elif volunteer.unlisted_organization %}
+            <a class="item">
+                <div class="ui horizontal label">Organization</div>
+                {{ volunteer.unlisted_organization }}
+            </a>
+        {% else %}
+        {% endif %}
         <a class="item">
             <div class="ui horizontal label">Email Address</div>
             {{ volunteer.email }}

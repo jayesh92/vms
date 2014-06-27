@@ -142,6 +142,28 @@
                     </div>
                 </div>
                 <div class="field">
+                    <label>Select your organization:</label>
+                    <select name="organization_name">
+                        <option value="0">-- Select --</option>
+                        {% for organization in organization_list %}
+                        <option value="{{ organization.id }}">{{ organization.organization_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="field">
+                    <label>If your organization is not listed, please provide it here:</label>
+                    <div class="ui input">
+                        {% if volunteeer_form.unlisted_organization.value %}
+                            <input placeholder="Organization" type="text" name="vol-unlisted_organization" value="{{ volunteeer_form.unlisted_organization.value }}">
+                        {% else %}
+                            <input placeholder="Organization" type="text" name="vol-unlisted_organization">
+                        {% endif %}
+                        {% if volunteeer_form.unlisted_organization.errors %}
+                            <div class="ui red pointing above ui label">Enter a valid organization</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
                     <label>Email</label>
                     <div class="ui input">
                         {% if volunteeer_form.email.value %}

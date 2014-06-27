@@ -14,4 +14,4 @@ class SearchVolunteerForm(forms.Form):
 class VolunteerForm(ModelForm):
     class Meta:
         model = Volunteer
-        fields = ['first_name', 'last_name', 'address', 'city', 'state', 'country', 'phone_number', 'company', 'email', 'websites', 'description', 'resume', 'resume_file']
+        fields = ['first_name', 'last_name', 'address', 'city', 'state', 'country', 'phone_number', 'company', 'unlisted_organization', 'email', 'websites', 'description', 'resume', 'resume_file']

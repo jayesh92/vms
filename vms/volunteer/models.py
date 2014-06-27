@@ -62,6 +62,7 @@ class Volunteer(models.Model):
     )
     #to do: remove company field later
     company = models.CharField(
+        blank=True,
         max_length=75,
         validators=[
             RegexValidator(
@@ -70,6 +71,7 @@ class Volunteer(models.Model):
         ],
     )
     unlisted_organization = models.CharField(
+        blank=True,
         max_length=75,
         validators=[
             RegexValidator(
@@ -78,7 +80,7 @@ class Volunteer(models.Model):
         ],
     )
     #Organization to Volunteer is a one-to-many relationship
-    organization = models.ForeignKey(Organization)
+    organization = models.ForeignKey(Organization, null=True)
     #EmailField automatically checks if email address is a valid format 
     email = models.EmailField(max_length=20)
     websites = models.TextField(
