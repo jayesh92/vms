@@ -58,6 +58,8 @@ def register(request):
 def register_volunteer(request):
 
     registered = False
+    organization_list = get_organizations_by_name()
+
     if request.method == 'POST':
 
         #each form must have it's own namespace (prefix) if multiple forms are to be put inside one <form> tag
@@ -72,7 +74,7 @@ def register_volunteer(request):
                     return render(
                         request,
                         'auth/register.html',
-                        {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered,}
+                        {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered, 'organization_list' : organization_list,}
                     )
 
             user = user_form.save();
@@ -83,6 +85,7 @@ def register_volunteer(request):
             volunteer = volunteer_form.save(commit=False)
             volunteer.user = user
 
+            #if an organization isn't chosen from the dropdown, then organization_id will be 0
             organization_id = request.POST.get('organization_name')
             organization = get_organization_by_id(organization_id)
 
@@ -97,8 +100,6 @@ def register_volunteer(request):
     else:
         user_form = UserForm(prefix="usr")
         volunteer_form = VolunteerForm(prefix="vol") 
-
-    organization_list = get_organizations_by_name()
 
     return render(
         request,

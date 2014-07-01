@@ -4,7 +4,7 @@
     <h3 class="ui black block header">
         Edit Profile
     </h3>
-    <form action="{% url 'volunteer:edit' id %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'volunteer:edit' volunteer.id %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="ui form segment">
             <div class="field">
@@ -113,6 +113,35 @@
                     {% endif %}
                 </div>
             </div>
+            {% if volunteer.organization_id %}
+                <div class="field">
+                    <label>Edit your organization:</label>
+                    <select name="organization_name">
+                        {% for organization in organization_list %}
+                            {% if organization.organization_name == volunteer.organization.organization_name %}
+                                <option selected value="{{ organization.id }}">{{ organization.organization_name }}</option>
+                            {% else %}
+                                <option value="{{ organization.id }}">{{ organization.organization_name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+            {% if form.unlisted_organization.value %}
+                <div class="field">
+                    <label>Edit your organization:</label>
+                    <div class="ui input">
+                        {% if form.unlisted_organization.value %}
+                            <input placeholder="Organization" type="text" name="unlisted_organization" value="{{ form.unlisted_organization.value }}">
+                        {% else %}
+                            <input placeholder="Organization" type="text" name="unlisted_organization">
+                        {% endif %}
+                        {% if form.unlisted_organization.errors %}
+                            <div class="ui red pointing above ui label">Enter a valid organization</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
             <div class="field">
                 <label>Email</label>
                 <div class="ui input">
@@ -164,7 +193,7 @@
         </div>
     </form>
     {% if form.resume_file.value %}
-        <form action="{% url 'volunteer:delete_resume' id %}" method="post">
+        <form action="{% url 'volunteer:delete_resume' volunteer.id %}" method="post">
             {% csrf_token %}
             <div class="ui form segment">
                 <div class="field">

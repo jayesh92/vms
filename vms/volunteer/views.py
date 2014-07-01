@@ -5,6 +5,7 @@ from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from organization.services import *
 from volunteer.forms import SearchVolunteerForm, VolunteerForm
 from volunteer.models import Volunteer
 from volunteer.services import * 
@@ -67,9 +68,10 @@ def delete_resume(request, volunteer_id):
         return HttpResponseRedirect(reverse('volunteer:error'))
 
 def edit(request, volunteer_id):
-    #check that volunteer_id is valid since we may potentially have to pass it back to the template
+
     volunteer = get_volunteer_by_id(volunteer_id)
     if volunteer:
+        organization_list = get_organizations_by_name()
         if request.method == 'POST':
             form = VolunteerForm(request.POST, request.FILES, instance=volunteer)
             if form.is_valid():
@@ -83,16 +85,24 @@ def edit(request, volunteer_id):
                             if not delete_volunteer_resume(volunteer_id):
                                 return HttpResponseRedirect(reverse('volunteer:error'))
                     else:
-                        return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
+                        return render(request, 'volunteer/edit.html', {'form' : form, 'organization_list' : organization_list, 'volunteer' : volunteer,})
+                
+                volunteer_to_edit = form.save(commit=False)
+
+                organization_id = request.POST.get('organization_name')
+                organization = get_organization_by_id(organization_id)
+                if organization:
+                    volunteer_to_edit.organization = organization
+
                 #update the volunteer
-                form.save()
+                volunteer_to_edit.save()
                 return HttpResponseRedirect(reverse('volunteer:list'))
             else:
-                return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
+                return render(request, 'volunteer/edit.html', {'form' : form, 'organization_list' : organization_list, 'volunteer' : volunteer,})
         else:
             #create a form to change an existing volunteer
             form = VolunteerForm(instance=volunteer)
-            return render(request, 'volunteer/edit.html', {'form' : form, 'id' : volunteer_id,})
+            return render(request, 'volunteer/edit.html', {'form' : form, 'organization_list' : organization_list, 'volunteer' : volunteer,})
     else:
         return HttpResponseRedirect(reverse('volunteer:error'))
 

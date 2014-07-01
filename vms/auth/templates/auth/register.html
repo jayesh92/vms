@@ -131,9 +131,9 @@
                 <div class="field">
                     <label>Select your organization:</label>
                     <select name="organization_name">
-                        <option value="0">-- Select --</option>
+                        <option value="0">-- Select Organization --</option>
                         {% for organization in organization_list %}
-                        <option value="{{ organization.id }}">{{ organization.organization_name }}</option>
+                            <option value="{{ organization.id }}">{{ organization.organization_name }}</option>
                         {% endfor %}
                     </select>
                 </div>
