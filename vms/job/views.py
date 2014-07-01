@@ -10,7 +10,7 @@ def index(request):
     return HttpResponseRedirect(reverse('job:list_jobs'))
 
 def authorization_error(request):
-    return render(request, 'rango/error.html')
+    return render(request, 'auth/error.html')
 
 def cancel_shift(request, shift_id, volunteer_id):
     if shift_id and volunteer_id:
@@ -66,7 +66,7 @@ def details(request, job_id):
     #and not setting any data here
     if job_id:
         #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
-        #for now, use rango to provide authentication and authorization functionality
+        #for now, use auth app to provide authentication and authorization functionality
         user = request.user
         if user.is_authenticated():
             volunteer_id = user.volunteer.id
@@ -97,7 +97,7 @@ def shift_sign_up(request, shift_id):
     if shift_id:
         if request.method == 'POST':
             #retrieve the logged in user.id and from this retrieve the corresponding volunteer.id 
-            #for now, use rango to provide authentication and authorization functionality
+            #for now, use auth app to provide authentication and authorization functionality
             user = request.user
             if user.is_authenticated():
                 volunteer_id = user.volunteer.id

@@ -4,7 +4,7 @@
     <h3 class="ui black block header">
         Login
     </h3>
-    <form method="post" action="{% url 'rango:user_login' %}">
+    <form method="post" action="{% url 'auth:user_login' %}">
         {% csrf_token %}
         <div class="ui form segment">
             <div class="field">

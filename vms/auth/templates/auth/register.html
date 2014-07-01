@@ -7,7 +7,7 @@
         <h3 class="ui black block header">
             VMS Registration
         </h3>
-        <form method="post" action="{% url 'rango:register_volunteer' %}" enctype="multipart/form-data">
+        <form method="post" action="{% url 'auth:register_volunteer' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="ui form segment">
                 <div class="field">

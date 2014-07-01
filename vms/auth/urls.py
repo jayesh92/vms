@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from rango import views
+from auth import views
 
 urlpatterns = [
     url(r'^register/$', views.register, name='register'),

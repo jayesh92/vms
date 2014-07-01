@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from organization.services import *
-from rango.forms import UserForm, UserProfileForm
+from auth.forms import UserForm, UserProfileForm
 from volunteer.forms import VolunteerForm
 from volunteer.models import Volunteer #Volunteer model needs to be imported so that input type file renders properly
 from volunteer.validation import validate_file
@@ -51,7 +51,7 @@ def register(request):
 
     return render(
         request,
-        'rango/register.html',
+        'auth/register.html',
         {'user_form': user_form, 'profile_form' : profile_form, 'registered' : registered,}
     )
 
@@ -71,7 +71,7 @@ def register_volunteer(request):
                 if not validate_file(my_file):
                     return render(
                         request,
-                        'rango/register.html',
+                        'auth/register.html',
                         {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered,}
                     )
 
@@ -102,7 +102,7 @@ def register_volunteer(request):
 
     return render(
         request,
-        'rango/register.html',
+        'auth/register.html',
         {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered, 'organization_list' : organization_list,}
     )
     
@@ -128,7 +128,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect(reverse('rango:index'))
+                return HttpResponseRedirect(reverse('auth:index'))
             else:
                 # An inactive account was used - no logging in!
                 return HttpResponse("Your Rango account is disabled.")
@@ -142,11 +142,11 @@ def user_login(request):
     else:
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
-        return render(request, 'rango/login.html')       
+        return render(request, 'auth/login.html')       
 
 
 def index(request):
-    return render(request, 'rango/index.html')
+    return render(request, 'auth/index.html')
 
 @login_required
 def restricted(request):
@@ -160,4 +160,4 @@ def user_logout(request):
     logout(request)
 
     #take the user back to login page
-    return HttpResponseRedirect(reverse('rango:user_login'))
+    return HttpResponseRedirect(reverse('auth:user_login'))

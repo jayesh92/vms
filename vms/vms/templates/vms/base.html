@@ -52,14 +52,14 @@
             </a>
             {% if user.is_authenticated %}
                 <div class="right item">
-                    <a class="ui button" href="{% url 'rango:user_logout' %}">Log out</a>
+                    <a class="ui button" href="{% url 'auth:user_logout' %}">Log out</a>
                 </div>
             {% else %}
                 <div class="right item">
-                    <a class="ui button" href="{% url 'rango:user_login' %}">Log in</a>
+                    <a class="ui button" href="{% url 'auth:user_login' %}">Log in</a>
                 </div>
                 <div class="right item">
-                    <a class="ui teal button" href="{% url 'rango:register_volunteer' %}">Register</a>
+                    <a class="ui teal button" href="{% url 'auth:register_volunteer' %}">Register</a>
                 </div>
             {% endif %}
         </div>
