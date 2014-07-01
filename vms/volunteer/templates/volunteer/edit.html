@@ -113,35 +113,36 @@
                     {% endif %}
                 </div>
             </div>
-            {% if volunteer.organization_id %}
-                <div class="field">
-                    <label>Edit your organization:</label>
-                    <select name="organization_name">
-                        {% for organization in organization_list %}
+            <div class="field">
+                <label>Select your organization:</label>
+                <select name="organization_name">
+                    <option value="0">-- None --</option>
+                    {% for organization in organization_list %}
+                        {% if volunteer.organization_id %}
                             {% if organization.organization_name == volunteer.organization.organization_name %}
                                 <option selected value="{{ organization.id }}">{{ organization.organization_name }}</option>
                             {% else %}
                                 <option value="{{ organization.id }}">{{ organization.organization_name }}</option>
                             {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-            {% endif %}
-            {% if form.unlisted_organization.value %}
-                <div class="field">
-                    <label>Edit your organization:</label>
-                    <div class="ui input">
-                        {% if form.unlisted_organization.value %}
-                            <input placeholder="Organization" type="text" name="unlisted_organization" value="{{ form.unlisted_organization.value }}">
                         {% else %}
-                            <input placeholder="Organization" type="text" name="unlisted_organization">
+                            <option value="{{ organization.id }}">{{ organization.organization_name }}</option>
                         {% endif %}
-                        {% if form.unlisted_organization.errors %}
-                            <div class="ui red pointing above ui label">Enter a valid organization</div>
-                        {% endif %}
-                    </div>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label>If your organization is not listed, please provide it here:</label>
+                <div class="ui input">
+                    {% if form.unlisted_organization.value %}
+                        <input placeholder="Organization" type="text" name="unlisted_organization" value="{{ form.unlisted_organization.value }}">
+                    {% else %}
+                        <input placeholder="Organization" type="text" name="unlisted_organization">
+                    {% endif %}
+                    {% if form.unlisted_organization.errors %}
+                        <div class="ui red pointing above ui label">Enter a valid organization</div>
+                    {% endif %}
                 </div>
-            {% endif %}
+            </div>
             <div class="field">
                 <label>Email</label>
                 <div class="ui input">

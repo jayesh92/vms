@@ -93,6 +93,8 @@ def edit(request, volunteer_id):
                 organization = get_organization_by_id(organization_id)
                 if organization:
                     volunteer_to_edit.organization = organization
+                else:
+                    volunteer_to_edit.organization = None
 
                 #update the volunteer
                 volunteer_to_edit.save()

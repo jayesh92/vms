@@ -17,3 +17,6 @@ def create(request):
     else:
         form = OrganizationForm()
         return render(request, 'organization/create.html', {'form' : form,})
+
+def error(request):
+    return render(request, 'organization/error.html')

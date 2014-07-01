@@ -60,52 +60,57 @@ def register_volunteer(request):
     registered = False
     organization_list = get_organizations_by_name()
 
-    if request.method == 'POST':
+    if organization_list:
 
-        #each form must have it's own namespace (prefix) if multiple forms are to be put inside one <form> tag
-        user_form = UserForm(request.POST, prefix="usr")
-        volunteer_form = VolunteerForm(request.POST, request.FILES, prefix="vol")
+        if request.method == 'POST':
 
-        if user_form.is_valid() and volunteer_form.is_valid():
+            #each form must have it's own namespace (prefix) if multiple forms are to be put inside one <form> tag
+            user_form = UserForm(request.POST, prefix="usr")
+            volunteer_form = VolunteerForm(request.POST, request.FILES, prefix="vol")
 
-            if 'resume_file' in request.FILES:
-                my_file = volunteer_form.cleaned_data['resume_file']
-                if not validate_file(my_file):
-                    return render(
-                        request,
-                        'auth/register.html',
-                        {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered, 'organization_list' : organization_list,}
-                    )
+            if user_form.is_valid() and volunteer_form.is_valid():
 
-            user = user_form.save();
+                if 'resume_file' in request.FILES:
+                    my_file = volunteer_form.cleaned_data['resume_file']
+                    if not validate_file(my_file):
+                        return render(
+                            request,
+                            'auth/register.html',
+                            {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered, 'organization_list' : organization_list,}
+                        )
 
-            user.set_password(user.password)
-            user.save()
-       
-            volunteer = volunteer_form.save(commit=False)
-            volunteer.user = user
+                user = user_form.save();
 
-            #if an organization isn't chosen from the dropdown, then organization_id will be 0
-            organization_id = request.POST.get('organization_name')
-            organization = get_organization_by_id(organization_id)
+                user.set_password(user.password)
+                user.save()
+           
+                volunteer = volunteer_form.save(commit=False)
+                volunteer.user = user
 
-            if organization:
-                volunteer.organization = organization
+                #if an organization isn't chosen from the dropdown, then organization_id will be 0
+                organization_id = request.POST.get('organization_name')
+                organization = get_organization_by_id(organization_id)
 
-            volunteer.save()
+                if organization:
+                    volunteer.organization = organization
 
-            registered = True
+                volunteer.save()
+
+                registered = True
+            else:
+                print user_form.errors, volunteer_form.errors
         else:
-            print user_form.errors, volunteer_form.errors
-    else:
-        user_form = UserForm(prefix="usr")
-        volunteer_form = VolunteerForm(prefix="vol") 
+            user_form = UserForm(prefix="usr")
+            volunteer_form = VolunteerForm(prefix="vol") 
 
-    return render(
-        request,
-        'auth/register.html',
-        {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered, 'organization_list' : organization_list,}
-    )
+        return render(
+            request,
+            'auth/register.html',
+            {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered, 'organization_list' : organization_list,}
+        )
+
+    else:
+        return HttpResponseRedirect(reverse('organization:error'))
     
 def user_login(request):
 
