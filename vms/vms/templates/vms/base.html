@@ -43,7 +43,7 @@
             {% if user.is_authenticated %}
                 <a class="item" href="{% url 'job:view_volunteer_shifts' user.volunteer.id %}">
                     <i class="browser icon"></i>
-                    View Shifts 
+                    Manage Shifts
                 </a>
             {% endif %}
             <a class="item" href="{% url 'organization:create' %}">

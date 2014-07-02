@@ -9,6 +9,9 @@ from volunteer.services import *
 def index(request):
     return HttpResponseRedirect(reverse('job:list_jobs'))
 
+def add_hours(request):
+    return render(request, 'job/add_hours.html')
+
 def authorization_error(request):
     return render(request, 'auth/error.html')
 
