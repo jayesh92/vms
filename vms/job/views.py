@@ -2,15 +2,24 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from job.models import Job, Shift
-from job.forms import JobForm, ShiftForm
+from job.forms import HoursForm, JobForm, ShiftForm
 from job.services import *
 from volunteer.services import *
 
 def index(request):
     return HttpResponseRedirect(reverse('job:list_jobs'))
 
-def add_hours(request):
-    return render(request, 'job/add_hours.html')
+def add_hours(request, shift_id, volunteer_id):
+    if request.method == 'POST':
+        form = HoursForm(request.POST)
+        if form.is_valid():
+            start_time = form.cleaned_data['start_time']
+            end_time = form.cleaned_data['end_time']
+            add_shift_hours(volunteer_id, shift_id, start_time, end_time)
+            return render(request, 'job/add_hours_success.html')
+    else:
+        form = HoursForm()
+        return render(request, 'job/add_hours.html', {'form' : form, 'shift_id' : shift_id, 'volunteer_id' : volunteer_id,})
 
 def authorization_error(request):
     return render(request, 'auth/error.html')
@@ -18,7 +27,7 @@ def authorization_error(request):
 def cancel_shift(request, shift_id, volunteer_id):
     if shift_id and volunteer_id:
         if request.method == 'POST':
-            result = cancel_shift_registration(shift_id, volunteer_id)
+            result = cancel_shift_registration(volunteer_id, shift_id)
             if result:
                 return HttpResponseRedirect(reverse('job:view_volunteer_shifts', args=(volunteer_id,)))
             else:

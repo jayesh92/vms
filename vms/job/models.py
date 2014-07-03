@@ -54,7 +54,8 @@ class Shift(models.Model):
     volunteers = models.ManyToManyField(Volunteer, through='VolunteerShift')
 
 class VolunteerShift(models.Model):
-    hours_worked = models.FloatField()
+    start_time = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
     #Volunteer to VolunteerShift is a one-to-many relationship
     volunteer = models.ForeignKey(Volunteer)
     #Shift to VolunteerShift is a one-to-many relationship

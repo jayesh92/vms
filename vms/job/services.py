@@ -2,7 +2,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from job.models import Job, Shift, VolunteerShift
 from volunteer.services import get_volunteer_by_id
 
-def cancel_shift_registration(s_id, v_id):
+def add_shift_hours(v_id, s_id, start_time, end_time):
+    volunteer_shift = get_volunteer_shift_by_id(v_id, s_id)
+    volunteer_shift.start_time = start_time
+    volunteer_shift.end_time = end_time
+    volunteer_shift.save()
+
+def cancel_shift_registration(v_id, s_id):
 
     is_valid = True
 
@@ -79,6 +85,21 @@ def get_shifts_signed_up_for(v_id):
 
     return shift_signed_up_list
 
+def get_volunteer_shift_by_id(v_id, s_id):
+    
+    is_valid = True
+    result = None
+
+    try:
+        volunteer_shift = VolunteerShift.objects.get(volunteer_id=v_id, shift_id=s_id)
+    except ObjectDoesNotExist:
+        is_valid = False
+
+    if is_valid:
+        result = volunteer_shift
+
+    return result
+
 def decrement_slots_remaining(shift):
     shift.slots_remaining = shift.slots_remaining - 1
     shift.save()
@@ -99,11 +120,10 @@ def increment_slots_remaining(shift):
 def is_signed_up(v_id, s_id):
 
     result = True
-    
-    try:
-        obj = VolunteerShift.objects.get(volunteer_id=v_id, shift_id=s_id)
-    except ObjectDoesNotExist:
-        result = False          
+
+    volunteer_shift = get_volunteer_shift_by_id(v_id, s_id)
+    if not volunteer_shift:
+        result = False 
 
     return result
 
@@ -120,7 +140,7 @@ def register(v_id, s_id):
 
         if volunteer_obj and shift_obj:
             if has_slots_remaining(shift_obj):
-                registration_obj = VolunteerShift(volunteer=volunteer_obj, shift=shift_obj, hours_worked=0)
+                registration_obj = VolunteerShift(volunteer=volunteer_obj, shift=shift_obj)
                 registration_obj.save()
 
                 decrement_slots_remaining(shift_obj)

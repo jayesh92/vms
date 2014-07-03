@@ -3,6 +3,10 @@ from django.db import models
 from django.forms import ModelForm
 from job.models import Job, Shift
 
+class HoursForm(forms.Form):
+    start_time = forms.TimeField()
+    end_time = forms.TimeField()
+
 class JobForm(ModelForm):
     class Meta:
         model = Job

@@ -3,7 +3,7 @@ from job import views
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
-    url(r'^add_hours/$', views.add_hours, name='add_hours'),
+    url(r'^add_hours/(?P<shift_id>\d+)/(?P<volunteer_id>\d+)/$', views.add_hours, name='add_hours'),
     url(r'^authorization_error/$', views.authorization_error, name='authorization_error'),
     url(r'^cancel_job/(?P<shift_id>\d+)/(?P<volunteer_id>\d+)/$', views.cancel_shift, name='cancel_shift'),
     url(r'^create_job/$', views.create_job, name='create_job'),
