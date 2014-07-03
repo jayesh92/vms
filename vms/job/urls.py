@@ -14,4 +14,5 @@ urlpatterns = patterns('',
     url(r'^manage_jobs/$', views.manage_jobs, name='manage_jobs'),
     url(r'^shift_sign_up/(?P<shift_id>\d+)/$', views.shift_sign_up, name='shift_sign_up'),
     url(r'^view_volunteer_shifts/(?P<volunteer_id>\d+)/$', views.view_volunteer_shifts, name='view_volunteer_shifts'),
+    url(r'^view_hours/(?P<shift_id>\d+)/(?P<volunteer_id>\d+)/$', views.view_hours, name='view_hours'),
 )

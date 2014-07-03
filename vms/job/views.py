@@ -10,16 +10,25 @@ def index(request):
     return HttpResponseRedirect(reverse('job:list_jobs'))
 
 def add_hours(request, shift_id, volunteer_id):
-    if request.method == 'POST':
-        form = HoursForm(request.POST)
-        if form.is_valid():
-            start_time = form.cleaned_data['start_time']
-            end_time = form.cleaned_data['end_time']
-            add_shift_hours(volunteer_id, shift_id, start_time, end_time)
-            return render(request, 'job/add_hours_success.html')
+    if shift_id and volunteer_id:
+        if request.method == 'POST':
+            form = HoursForm(request.POST)
+            if form.is_valid():
+                start_time = form.cleaned_data['start_time']
+                end_time = form.cleaned_data['end_time']
+                result = add_shift_hours(volunteer_id, shift_id, start_time, end_time)
+                if result:
+                    return render(request, 'job/add_hours_success.html')
+                else:
+                    return HttpResponseRedirect(reverse('job:error'))
+            else:
+                form = HoursForm()
+                return render(request, 'job/add_hours.html', {'form' : form, 'shift_id' : shift_id, 'volunteer_id' : volunteer_id,})
+        else:
+            form = HoursForm()
+            return render(request, 'job/add_hours.html', {'form' : form, 'shift_id' : shift_id, 'volunteer_id' : volunteer_id,})
     else:
-        form = HoursForm()
-        return render(request, 'job/add_hours.html', {'form' : form, 'shift_id' : shift_id, 'volunteer_id' : volunteer_id,})
+        return HttpResponseRedirect(reverse('job:error'))
 
 def authorization_error(request):
     return render(request, 'auth/error.html')
@@ -64,7 +73,8 @@ def create_shift(request, job_id):
                     shift.save()
                     return render(request, 'job/create_shift_success.html')
                 else:
-                    return HttpResponseRedirect(reverse('job:error'))
+                    form = ShiftForm()
+                    return render(request, 'job/create_shift.html', {'form' : form, 'job_id' : job_id,})
             else:
                 return HttpResponseRedirect(reverse('job:error'))
         else:
@@ -122,6 +132,17 @@ def shift_sign_up(request, shift_id):
                 return HttpResponseRedirect(reverse('job:authorization_error'))
         else:
             return render(request, 'job/sign_up_confirmation.html', {'shift_id' : shift_id,})
+    else:
+        return HttpResponseRedirect(reverse('job:error'))
+
+def view_hours(request, shift_id, volunteer_id):
+    if shift_id and volunteer_id:
+        result = get_volunteer_shift_by_id(volunteer_id, shift_id)
+        #can there be multiple start and end times that a volunteer can enter?
+        volunteer_shift_list = []
+        if result:
+            volunteer_shift_list.append(result) 
+        return render(request, 'job/hours_list.html', {'volunteer_shift_list' : volunteer_shift_list,})
     else:
         return HttpResponseRedirect(reverse('job:error'))
 

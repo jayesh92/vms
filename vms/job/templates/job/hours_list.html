@@ -1,0 +1,36 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    {% if volunteer_shift_list %}
+        <h3 class="ui black block header">
+            Hours
+        </h3>
+        <table class="ui table segment">
+            <thead>
+                <tr>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for volunteer_shift in volunteer_shift_list %}
+                    <tr>
+                        <td>{{ volunteer_shift.start_time }}</td>
+                        <td>{{ volunteer_shift.end_time }}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="ui icon warning message">
+            <i class="attention icon"></i>
+            <div class="content">
+                <div class="header">
+                    You have not entered any hours yet!
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

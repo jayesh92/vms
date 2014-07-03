@@ -26,7 +26,7 @@
                         <td>{{ shift.date }}</td>
                         <td>{{ shift.start_time }}</td>
                         <td>{{ shift.end_time }}</td>
-                        <td><a class="tiny ui button" href="">View Hours</a></td>
+                        <td><a class="tiny ui button" href="{% url 'job:view_hours' shift.id volunteer_id %}">View Hours</a></td>
                         <td><a class="tiny ui green button" href="{% url 'job:add_hours' shift.id volunteer_id %}">Add Hours</a></td>
                         <td><a class="tiny ui red button" href="{% url 'job:cancel_shift' shift.id volunteer_id %}">Cancel Shift</a></td>
                     </tr>
