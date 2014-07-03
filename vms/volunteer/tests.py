@@ -201,6 +201,56 @@ class VolunteerMethodTests(TestCase):
         self.assertEqual(volunteer_list[1], v1)
         self.assertEqual(volunteer_list[2], v3)
 
+    def test_delete_volunteer(self):
+
+        u1 = User.objects.create_user('Yoshi')
+        u2 = User.objects.create_user('Ashley')
+        u3 = User.objects.create_user('Zelda')
+
+        v1 = Volunteer(first_name = "Yoshi",
+                        last_name = "Doe",
+                        address = "7 Oak Street",
+                        city = "Elmgrove",
+                        state = "California",
+                        country = "USA",
+                        phone_number = "23454545",
+                        email = "yoshi@test.com",
+                        user = u1)
+
+        v2 = Volunteer(first_name = "Ashley",
+                        last_name = "Doe",
+                        address = "7 Alpine Street",
+                        city = "Maplegrove",
+                        state = "Wyoming",
+                        country = "USA",
+                        phone_number = "23454545",
+                        email = "ashley@test.com",
+                        user = u2)
+
+        v3 = Volunteer(id = 999,
+                        first_name = "Zelda",
+                        last_name = "Doe",
+                        address = "7 Elm Street",
+                        city = "Oakgrove",
+                        state = "California",
+                        country = "USA",
+                        phone_number = "23454545",
+                        email = "zelda@test.com",
+                        user = u3)
+
+        v1.save()
+        v2.save()
+        v3.save()
+
+        self.assertTrue(delete_volunteer(v1.id))
+        self.assertTrue(delete_volunteer(v2.id))
+        self.assertTrue(delete_volunteer(v3.id))
+
+        #why is active not set to false?
+        #self.assertFalse(u1.is_active)
+        #self.assertFalse(u2.is_active)
+        #self.assertFalse(u3.is_active)
+
     def test_search_volunteers(self):
  
         u1 = User.objects.create_user('Yoshi')

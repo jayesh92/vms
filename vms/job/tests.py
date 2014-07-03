@@ -7,6 +7,99 @@ from volunteer.services import *
 
 class JobMethodTests(TestCase):
 
+    def test_cancel_shift_registration(self):
+
+        u1 = User.objects.create_user('Yoshi')     
+        u2 = User.objects.create_user('John')     
+
+        v1 = Volunteer(first_name = "Yoshi",
+                        last_name = "Turtle",
+                        address = "Mario Land",
+                        city = "Nintendo Land",
+                        state = "Nintendo State",
+                        country = "Nintendo Nation",
+                        phone_number = "2374983247",
+                        email = "yoshi@nintendo.com",
+                        user = u1)
+
+        v2 = Volunteer(first_name = "John",
+                        last_name = "Doe",
+                        address = "7 Alpine Street",
+                        city = "Maplegrove",
+                        state = "Wyoming",
+                        country = "USA",
+                        phone_number = "23454545",
+                        email = "john@test.com",
+                        user = u2)
+
+        v1.save()
+        v2.save()
+
+        j1 = Job(job_title = "Software Developer",
+                start_date = "2012-10-22",
+                end_date = "2012-10-23",
+                description = "A software job")
+
+        j2 = Job(job_title = "Systems Administrator",
+                start_date = "2012-9-1",
+                end_date = "2012-10-26",
+                description = "A systems administrator job")
+        
+        j1.save()
+        j2.save()
+
+        s1 = Shift(date = "2012-10-23",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    slots_remaining = 2,
+                    job = j1)
+
+        s2 = Shift(date = "2012-10-23",
+                    location = "Infinite Loop",
+                    start_time = "10:00",
+                    end_time = "4:00",
+                    max_volunteers = 2,
+                    slots_remaining = 2,
+                    job = j1)
+
+        s3 = Shift(date = "2012-10-23",
+                    location = "Loopy Loop Road",
+                    start_time = "12:00",
+                    end_time = "6:00",
+                    max_volunteers = 4,
+                    slots_remaining = 4,
+                    job = j2)
+
+        s1.save()
+        s2.save()
+        s3.save()
+
+        #test cases when try to cancel when they aren't signed up for a shift
+        self.assertFalse(cancel_shift_registration(v1.id, s1.id))
+        self.assertFalse(cancel_shift_registration(v1.id, s2.id))
+        self.assertFalse(cancel_shift_registration(v1.id, s3.id))
+        self.assertFalse(cancel_shift_registration(v2.id, s1.id))
+        self.assertFalse(cancel_shift_registration(v2.id, s2.id))
+        self.assertFalse(cancel_shift_registration(v2.id, s3.id))
+
+        #register volunteers to shifts
+        self.assertTrue(register(v1.id, s1.id))
+        self.assertTrue(register(v1.id, s2.id))
+        self.assertTrue(register(v1.id, s3.id))
+        self.assertTrue(register(v2.id, s1.id))
+        self.assertTrue(register(v2.id, s2.id))
+        self.assertTrue(register(v2.id, s3.id))
+
+        #test typical cases
+        self.assertTrue(cancel_shift_registration(v1.id, s1.id))
+        self.assertTrue(cancel_shift_registration(v1.id, s2.id))
+        self.assertTrue(cancel_shift_registration(v1.id, s3.id))
+        self.assertTrue(cancel_shift_registration(v2.id, s1.id))
+        self.assertTrue(cancel_shift_registration(v2.id, s2.id))
+        self.assertTrue(cancel_shift_registration(v2.id, s3.id))
+
     def test_get_job_by_id(self):
 
         j1 = Job(job_title = "Software Developer",
@@ -272,6 +365,92 @@ class JobMethodTests(TestCase):
         self.assertIn(s2, shift_list)
         self.assertIn(s3, shift_list)
 
+    def test_get_volunteer_shift_by_id(self):
+        
+        u1 = User.objects.create_user('Yoshi')     
+        u2 = User.objects.create_user('John')     
+
+        v1 = Volunteer(first_name = "Yoshi",
+                        last_name = "Turtle",
+                        address = "Mario Land",
+                        city = "Nintendo Land",
+                        state = "Nintendo State",
+                        country = "Nintendo Nation",
+                        phone_number = "2374983247",
+                        email = "yoshi@nintendo.com",
+                        user = u1)
+
+        v2 = Volunteer(first_name = "John",
+                        last_name = "Doe",
+                        address = "7 Alpine Street",
+                        city = "Maplegrove",
+                        state = "Wyoming",
+                        country = "USA",
+                        phone_number = "23454545",
+                        email = "john@test.com",
+                        user = u2)
+
+        v1.save()
+        v2.save()
+
+        j1 = Job(job_title = "Software Developer",
+                start_date = "2012-10-22",
+                end_date = "2012-10-23",
+                description = "A software job")
+
+        j2 = Job(job_title = "Systems Administrator",
+                start_date = "2012-9-1",
+                end_date = "2012-10-26",
+                description = "A systems administrator job")
+        
+        j1.save()
+        j2.save()
+
+        s1 = Shift(date = "2012-10-23",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    slots_remaining = 2,
+                    job = j1)
+
+        s2 = Shift(date = "2012-10-23",
+                    location = "Infinite Loop",
+                    start_time = "10:00",
+                    end_time = "4:00",
+                    max_volunteers = 2,
+                    slots_remaining = 2,
+                    job = j1)
+
+        s3 = Shift(date = "2012-10-23",
+                    location = "Loopy Loop Road",
+                    start_time = "12:00",
+                    end_time = "6:00",
+                    max_volunteers = 4,
+                    slots_remaining = 4,
+                    job = j2)
+
+        s1.save()
+        s2.save()
+        s3.save()
+    
+        #test cases where signed up
+        self.assertTrue(register(v1.id, s1.id))
+        self.assertTrue(register(v1.id, s2.id))
+        self.assertTrue(register(v1.id, s3.id))
+
+        self.assertTrue(register(v2.id, s1.id))
+        self.assertTrue(register(v2.id, s2.id))
+        self.assertTrue(register(v2.id, s3.id))
+
+        self.assertEqual(get_volunteer_shift_by_id(v1.id, s1.id), VolunteerShift.objects.get(volunteer_id=v1.id, shift_id=s1.id))
+        self.assertEqual(get_volunteer_shift_by_id(v1.id, s2.id), VolunteerShift.objects.get(volunteer_id=v1.id, shift_id=s2.id))
+        self.assertEqual(get_volunteer_shift_by_id(v1.id, s3.id), VolunteerShift.objects.get(volunteer_id=v1.id, shift_id=s3.id))
+
+        self.assertEqual(get_volunteer_shift_by_id(v2.id, s1.id), VolunteerShift.objects.get(volunteer_id=v2.id, shift_id=s1.id))
+        self.assertEqual(get_volunteer_shift_by_id(v2.id, s2.id), VolunteerShift.objects.get(volunteer_id=v2.id, shift_id=s2.id))
+        self.assertEqual(get_volunteer_shift_by_id(v2.id, s3.id), VolunteerShift.objects.get(volunteer_id=v2.id, shift_id=s3.id))
+
     def test_decrement_slots_remaining(self):
 
         j1 = Job(job_title = "Software Developer",
@@ -363,6 +542,43 @@ class JobMethodTests(TestCase):
         decrement_slots_remaining(s3)
         self.assertFalse(has_slots_remaining(s3))
 
+        self.assertEqual(s1.slots_remaining, 0)
+        self.assertEqual(s2.slots_remaining, 0)
+        self.assertEqual(s3.slots_remaining, 0)
+
+    def test_increment_slots_remaining(self):
+
+        j1 = Job(job_title = "Software Developer",
+                start_date = "2012-10-22",
+                end_date = "2012-10-23",
+                description = "A software job")
+
+        j1.save()
+
+        s1 = Shift(date = "2012-10-23",
+                    location = "Google Drive",
+                    start_time = "9:00",
+                    end_time = "3:00",
+                    max_volunteers = 1,
+                    slots_remaining = 0,
+                    job = j1)
+
+        s1.save()
+
+        self.assertEqual(s1.slots_remaining, 0)
+        increment_slots_remaining(s1)
+
+        self.assertEqual(s1.slots_remaining, 1)
+        increment_slots_remaining(s1)
+
+        self.assertEqual(s1.slots_remaining, 2)
+        increment_slots_remaining(s1)
+
+        self.assertEqual(s1.slots_remaining, 3)
+        increment_slots_remaining(s1)
+
+        self.assertEqual(s1.slots_remaining, 4)
+
     def test_is_signed_up(self):
 
         u1 = User.objects.create_user('Yoshi')     
@@ -438,9 +654,9 @@ class JobMethodTests(TestCase):
         self.assertFalse(is_signed_up(v1.id, s3.id))
 
         #test cases where signed up
-        register(v1.id, s1.id)
-        register(v1.id, s2.id)
-        register(v1.id, s3.id)
+        self.assertTrue(register(v1.id, s1.id))
+        self.assertTrue(register(v1.id, s2.id))
+        self.assertTrue(register(v1.id, s3.id))
 
         self.assertTrue(is_signed_up(v1.id, s1.id))
         self.assertTrue(is_signed_up(v1.id, s2.id))
@@ -451,9 +667,9 @@ class JobMethodTests(TestCase):
         self.assertFalse(is_signed_up(v2.id, s2.id))
         self.assertFalse(is_signed_up(v2.id, s3.id))
 
-        register(v2.id, s1.id)
-        register(v2.id, s2.id)
-        register(v2.id, s3.id)
+        self.assertFalse(register(v2.id, s1.id))
+        self.assertTrue(register(v2.id, s2.id))
+        self.assertTrue(register(v2.id, s3.id))
 
         self.assertFalse(is_signed_up(v2.id, s1.id))
         self.assertTrue(is_signed_up(v2.id, s2.id))
