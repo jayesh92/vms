@@ -51,7 +51,7 @@
                             {% elif shift.slots_remaining <= 0 %}
                                 <button class="ui tiny disabled button" disabled>All Slots Full</button>
                             {% else %}
-                                <a class="ui tiny green button" href="{% url 'job:shift_sign_up' shift.id %}">Sign Up</a>
+                                <a class="ui tiny green button" href="{% url 'shift:shift_sign_up' shift.id %}">Sign Up</a>
                             {% endif %}
                         </td>
                     </tr>

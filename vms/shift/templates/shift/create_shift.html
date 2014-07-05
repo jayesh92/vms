@@ -4,7 +4,7 @@
     <h3 class="ui black block header">
         Create Job Shift
     </h3>
-    <form action="{% url 'job:create_shift' job_id %}" method="post">
+    <form action="{% url 'shift:create_shift' job_id %}" method="post">
         {% csrf_token %}
         <div class="ui form segment">
             <div class="field">

@@ -127,7 +127,7 @@ def options(request):
                 elif option == 'delete':
                     return HttpResponseRedirect(reverse('volunteer:delete', args=(volunteer_id,)))
                 elif option == 'view_shifts':
-                    return HttpResponseRedirect(reverse('job:view_volunteer_shifts', args=(volunteer_id,)))
+                    return HttpResponseRedirect(reverse('shift:view_volunteer_shifts', args=(volunteer_id,)))
                 else:
                     return HttpResponseRedirect(reverse('volunteer:error'))
             else:

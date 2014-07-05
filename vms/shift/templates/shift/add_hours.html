@@ -4,7 +4,7 @@
     <h3 class="ui black block header">
         Add Shift Hours
     </h3>
-    <form action="{% url 'job:add_hours' shift_id volunteer_id %}" method="post">
+    <form action="{% url 'shift:add_hours' shift_id volunteer_id %}" method="post">
         {% csrf_token %}
         <div class="ui form segment">
             <div class="two fields">

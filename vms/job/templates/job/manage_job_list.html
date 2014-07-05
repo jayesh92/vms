@@ -24,7 +24,7 @@
                         <td>{{ job.job_title }}</td>
                         <td>{{ job.start_date }}</td>
                         <td>{{ job.end_date }}</td>
-                        <td><a class="tiny ui green button" href="{% url 'job:create_shift' job.id %}">Add Shift</a>
+                        <td><a class="tiny ui green button" href="{% url 'shift:create_shift' job.id %}">Add Shift</a>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -1,7 +1,7 @@
 {% extends "vms/base.html" %}
 
 {% block content %}
-    <form action="{% url 'job:shift_sign_up' shift_id %}" method="post">
+    <form action="{% url 'shift:shift_sign_up' shift_id %}" method="post">
         {% csrf_token %}
         <div class="ui icon message">
             <i class="attention icon"></i>

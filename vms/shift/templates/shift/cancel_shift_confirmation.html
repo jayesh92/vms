@@ -1,7 +1,7 @@
 {% extends "vms/base.html" %}
 
 {% block content %}
-    <form action="{% url 'job:cancel_shift' shift_id volunteer_id %}" method="post">
+    <form action="{% url 'shift:cancel_shift' shift_id volunteer_id %}" method="post">
         {% csrf_token %}
         <div class="ui icon message">
             <i class="attention icon"></i>
@@ -13,7 +13,7 @@
                 <p>Are you sure you want to cancel this shift you are signed up for?</p>
                 <br>
                 <button class="ui small green button" type="submit">Yes, Cancel this Shift</button>
-                <a class="ui small button" href="{% url 'job:view_volunteer_shifts' volunteer_id %}">No</a>
+                <a class="ui small button" href="{% url 'shift:view_volunteer_shifts' volunteer_id %}">No</a>
             </div>
         </div>
     </form>
