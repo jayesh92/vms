@@ -1,3 +1,4 @@
+import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from job.models import Job, Shift, VolunteerShift
 from volunteer.services import get_volunteer_by_id
@@ -15,6 +16,13 @@ def add_shift_hours(v_id, s_id, start_time, end_time):
         is_valid = False
 
     return is_valid
+
+def calculate_working_duration(start_time, end_time):
+
+    start_delta = datetime.timedelta(hours=start_time.hour, minutes=start_time.minute)
+    end_delta = datetime.timedelta(hours=end_time.hour, minutes=end_time.minute)
+    working_hours = (float((abs(end_delta - start_delta)).seconds) / 60) / 60
+    return working_hours
 
 def cancel_shift_registration(v_id, s_id):
 

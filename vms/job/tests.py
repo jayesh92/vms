@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
 from job.models import Job, VolunteerShift
@@ -6,6 +7,48 @@ from volunteer.models import Volunteer
 from volunteer.services import *
 
 class JobMethodTests(TestCase):
+
+    def test_calculate_working_duration(self):
+
+        start_time = datetime.time(hour=1, minute=0) 
+        end_time = datetime.time(hour=2, minute=0) 
+        delta_time_hours = 1
+        self.assertEqual(calculate_working_duration(start_time, end_time), delta_time_hours)
+
+        start_time = datetime.time(hour=1, minute=45) 
+        end_time = datetime.time(hour=2, minute=0) 
+        delta_time_hours = 0.25
+        self.assertEqual(calculate_working_duration(start_time, end_time), delta_time_hours)
+
+        start_time = datetime.time(hour=1, minute=0) 
+        end_time = datetime.time(hour=2, minute=30) 
+        delta_time_hours = 1.5
+        self.assertEqual(calculate_working_duration(start_time, end_time), delta_time_hours)
+
+        start_time = datetime.time(hour=1, minute=0) 
+        end_time = datetime.time(hour=1, minute=45) 
+        delta_time_hours = 0.75
+        self.assertEqual(calculate_working_duration(start_time, end_time), delta_time_hours)
+
+        start_time = datetime.time(hour=1, minute=0) 
+        end_time = datetime.time(hour=13, minute=0) 
+        delta_time_hours = 12
+        self.assertEqual(calculate_working_duration(start_time, end_time), delta_time_hours)
+
+        start_time = datetime.time(hour=1, minute=0) 
+        end_time = datetime.time(hour=5, minute=45) 
+        delta_time_hours = 4.75 
+        self.assertEqual(calculate_working_duration(start_time, end_time), delta_time_hours)
+
+        start_time = datetime.time(hour=1, minute=0) 
+        end_time = datetime.time(hour=1, minute=0) 
+        delta_time_hours = 0 
+        self.assertEqual(calculate_working_duration(start_time, end_time), delta_time_hours)
+
+        start_time = datetime.time(hour=1, minute=0) 
+        end_time = datetime.time(hour=23, minute=0) 
+        delta_time_hours = 22 
+        self.assertEqual(calculate_working_duration(start_time, end_time), delta_time_hours)
 
     def test_cancel_shift_registration(self):
 

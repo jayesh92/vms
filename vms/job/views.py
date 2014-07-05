@@ -137,12 +137,12 @@ def shift_sign_up(request, shift_id):
 
 def view_hours(request, shift_id, volunteer_id):
     if shift_id and volunteer_id:
-        result = get_volunteer_shift_by_id(volunteer_id, shift_id)
-        #can there be multiple start and end times that a volunteer can enter?
-        volunteer_shift_list = []
-        if result:
-            volunteer_shift_list.append(result) 
-        return render(request, 'job/hours_list.html', {'volunteer_shift_list' : volunteer_shift_list,})
+        volunteer_shift = get_volunteer_shift_by_id(volunteer_id, shift_id)
+        if volunteer_shift:
+            working_duration = "{0:.2f}".format(calculate_working_duration(volunteer_shift.start_time, volunteer_shift.end_time))
+            return render(request, 'job/hours_list.html', {'volunteer_shift' : volunteer_shift, 'working_duration' : working_duration,})
+        else:
+            return HttpResponseRedirect(reverse('job:error'))
     else:
         return HttpResponseRedirect(reverse('job:error'))
 

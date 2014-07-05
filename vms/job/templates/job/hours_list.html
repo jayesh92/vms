@@ -1,26 +1,24 @@
 {% extends "vms/base.html" %}
 
 {% block content %}
-    {% if volunteer_shift_list %}
+    {% if volunteer_shift %}
         <h3 class="ui black block header">
-            Hours
+            Shift Hours 
         </h3>
         <table class="ui table segment">
             <thead>
                 <tr>
                     <th>Start Time</th>
                     <th>End Time</th>
-                    <th>Hours</th>
+                    <th>Duration</th>
                 </tr>
             </thead>
             <tbody>
-                {% for volunteer_shift in volunteer_shift_list %}
-                    <tr>
-                        <td>{{ volunteer_shift.start_time }}</td>
-                        <td>{{ volunteer_shift.end_time }}</td>
-                        <td></td>
-                    </tr>
-                {% endfor %}
+                <tr>
+                    <td>{{ volunteer_shift.start_time }}</td>
+                    <td>{{ volunteer_shift.end_time }}</td>
+                    <td>{{ working_duration }} hours</td>
+                </tr>
             </tbody>
         </table>
     {% else %}
