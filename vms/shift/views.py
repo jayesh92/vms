@@ -101,8 +101,11 @@ def view_hours(request, shift_id, volunteer_id):
         volunteer_shift = get_volunteer_shift_by_id(volunteer_id, shift_id)
         if volunteer_shift:
             #need to first check that the volunteer entered hours first
-            working_duration = "{0:.2f}".format(calculate_working_duration(volunteer_shift.start_time, volunteer_shift.end_time))
-            return render(request, 'shift/hours_list.html', {'volunteer_shift' : volunteer_shift, 'working_duration' : working_duration,})
+            if volunteer_shift.start_time and volunteer_shift.end_time:
+                working_duration = "{0:.2f}".format(calculate_working_duration(volunteer_shift.start_time, volunteer_shift.end_time))
+                return render(request, 'shift/hours_list.html', {'volunteer_shift' : volunteer_shift, 'working_duration' : working_duration,})
+            else:
+                return render(request, 'shift/view_hours_error.html')
         else:
             return HttpResponseRedirect(reverse('shift:error'))
     else:
