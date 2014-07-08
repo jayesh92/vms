@@ -46,6 +46,20 @@ def cancel_shift_registration(v_id, s_id):
         is_valid = False
 
     return is_valid
+
+def delete_shift_hours(v_id, s_id):
+
+    is_valid = True
+    volunteer_shift = get_volunteer_shift_by_id(v_id, s_id)
+
+    if volunteer_shift:
+        volunteer_shift.start_time = None
+        volunteer_shift.end_time = None
+        volunteer_shift.save()
+    else:
+        is_valid = False
+
+    return is_valid
     
 def get_shift_by_id(shift_id):
     

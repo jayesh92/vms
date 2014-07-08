@@ -72,6 +72,20 @@ def create_shift(request, job_id):
             return render(request, 'shift/create_shift.html', {'form' : form, 'job_id' : job_id,})
     else:
         return HttpResponseRedirect(reverse('shift:error'))
+
+def delete_hours(request, shift_id, volunteer_id):
+
+    if shift_id and volunteer_id:
+        if request.method == 'POST':
+            result = delete_shift_hours(volunteer_id, shift_id)
+            if result:
+                return HttpResponseRedirect(reverse('shift:view_volunteer_shifts', args=(volunteer_id,)))
+            else:
+                return HttpResponseRedirect(reverse('shift:error'))
+        else:
+            return render(request, 'shift/delete_hours_confirmation.html', {'shift_id' : shift_id, 'volunteer_id' : volunteer_id,});
+    else:
+        return HttpResponseRedirect(reverse('shift:error'))
         
 def error(request):
     return render(request, 'vms/error.html')
