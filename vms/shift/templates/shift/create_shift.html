@@ -1,0 +1,47 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <h3 class="ui black block header">
+        Create Job Shift
+    </h3>
+    <form action="{% url 'shift:create_shift' job_id %}" method="post">
+        {% csrf_token %}
+        <div class="ui form segment">
+            <div class="field">
+                <label>Date</label>
+                <div class="ui input">
+                    <input placeholder="MM/DD/YYYY" type="text" name="date">
+                </div>
+            </div>
+            <div class="field">
+                <label>Location</label>
+                <div class="ui input">
+                    <input placeholder="Location" type="text" name="location">
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Start Time</label>
+                    <div class="ui input">
+                        <input placeholder="HH:MM" type="text" name="start_time">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>End Time</label>
+                    <div class="ui input">
+                        <input placeholder="HH:MM" type="text" name="end_time">
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Number of volunteers needed for this shift</label>
+                <div class="ui input">
+                    <input type="text" name="max_volunteers">
+                </div>
+            </div>
+            <input type="hidden" name="job_id" value="{{ job_id }}">
+            <button class="ui blue button" type="submit">Create</button>
+            <button class="ui button" type="reset">Clear</button>
+        </div>
+    </form>
+{% endblock %}

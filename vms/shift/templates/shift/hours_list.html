@@ -1,0 +1,38 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    {% if volunteer_shift %}
+        <h3 class="ui black block header">
+            Shift Hours 
+        </h3>
+        <table class="ui table segment">
+            <thead>
+                <tr>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Duration</th>
+                    <th>Edit Hours</th>
+                    <th>Delete Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ volunteer_shift.start_time }}</td>
+                    <td>{{ volunteer_shift.end_time }}</td>
+                    <td>{{ working_duration }} hours</td>
+                    <td><a class="tiny ui teal button" href="{% url 'shift:edit_hours' volunteer_shift.shift_id volunteer_shift.volunteer_id %}">Edit Hours</a></td>
+                    <td><a class="tiny ui red button" href="{% url 'shift:delete_hours' volunteer_shift.shift_id volunteer_shift.volunteer_id %}">Delete Hours</a></td>
+                </tr>
+            </tbody>
+        </table>
+    {% else %}
+        <div class="ui icon warning message">
+            <i class="attention icon"></i>
+            <div class="content">
+                <div class="header">
+                    You have not entered any hours yet!
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

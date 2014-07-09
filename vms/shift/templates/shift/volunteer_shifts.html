@@ -1,0 +1,46 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    {% if shift_list %}
+        <h3 class="ui black block header">
+            Shifts Signed Up For
+        </h3>
+        <table class="ui table segment">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>View Hours</th>
+                    <th>Add Hours</th>
+                    <th>Cancel Shift</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shift in shift_list %}
+                    <tr>
+                        <td>{{ shift.job.job_title }}</td>
+                        <td>{{ shift.location }}</td>
+                        <td>{{ shift.date }}</td>
+                        <td>{{ shift.start_time }}</td>
+                        <td>{{ shift.end_time }}</td>
+                        <td><a class="tiny ui button" href="{% url 'shift:view_hours' shift.id volunteer_id %}">View Hours</a></td>
+                        <td><a class="tiny ui green button" href="{% url 'shift:add_hours' shift.id volunteer_id %}">Add Hours</a></td>
+                        <td><a class="tiny ui red button" href="{% url 'shift:cancel_shift' shift.id volunteer_id %}">Cancel Shift</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="ui icon warning message">
+            <i class="attention icon"></i>
+            <div class="content">
+                <div class="header">
+                    You are not signed up for any shifts!
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

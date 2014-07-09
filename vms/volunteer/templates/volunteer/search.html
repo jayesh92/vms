@@ -1,0 +1,96 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <h3 class="ui black block header">
+        Search Volunteers
+    </h3>
+    <form action="{% url 'volunteer:search' %}" method="post">
+        {% csrf_token %}
+        <div class="ui form segment">
+            <div class="two fields">
+                <div class="field">
+                    <label>First Name</label>
+                    <div class="ui input">
+                        {% if form.first_name.value %}
+                            <input placeholder="Search by First Name" type="text" name="first_name" value="{{ form.first_name.value }}">
+                        {% else %}
+                            <input placeholder="Search by First Name" type="text" name="first_name">
+                        {% endif %}
+                        {% if form.first_name.errors %}
+                            <div class="ui red pointing above ui label">Enter a valid first name</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Last Name</label>
+                    <div class="ui input">
+                        {% if form.last_name.value %}
+                            <input placeholder="Search by Last Name" type="text" name="last_name" value="{{ form.last_name.value }}">
+                        {% else %}
+                            <input placeholder="Search by Last Name" type="text" name="last_name">
+                        {% endif %}
+                        {% if form.last_name.errors %}
+                            <div class="ui red pointing above ui label">Enter a valid last name</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>City</label>
+                    <div class="ui input">
+                        {% if form.city.value %}
+                            <input placeholder="Search by City" type="text" name="city" value="{{ form.city.value }}">
+                        {% else %}
+                            <input placeholder="Search by City" type="text" name="city">
+                        {% endif %}
+                        {% if form.city.errors %}
+                            <div class="ui red pointing above ui label">Enter a valid city</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <label>State/Province</label>
+                    <div class="ui input">
+                        {% if form.state.value %}
+                            <input placeholder="Search by State/Province" type="text" name="state" value="{{ form.state.value }}">
+                        {% else %}
+                            <input placeholder="Search by State/Province" type="text" name="state">
+                        {% endif %}
+                        {% if form.state.errors %}
+                            <div class="ui red pointing above ui label">Enter a valid state</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Country</label>
+                <div class="ui input">
+                    {% if form.country.value %}
+                        <input placeholder="Search by Country" type="text" name="country" value="{{ form.country.value }}">
+                    {% else %}
+                        <input placeholder="Search by Country" type="text" name="country">
+                    {% endif %}
+                    {% if form.country.errors %}
+                        <div class="ui red pointing above ui label">Enter a valid country</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="field">
+                <label>Organization</label>
+                <div class="ui input">
+                    {% if form.organization.value %}
+                        <input placeholder="Search by Organization" type="text" name="organization" value="{{ form.organization.value }}">
+                    {% else %}
+                        <input placeholder="Search by Organization" type="text" name="organization">
+                    {% endif %}
+                    {% if form.organization.errors %}
+                        <div class="ui red pointing above ui label">Enter a valid organization</div>
+                    {% endif %}
+                </div>
+            </div>
+            <button class="ui blue button" type="submit">Search</button>
+            <button class="ui button" type="reset">Clear</button>
+        </div>
+    </form>
+{% endblock %}

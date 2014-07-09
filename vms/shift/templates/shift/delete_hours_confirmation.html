@@ -1,0 +1,20 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="ui icon message">
+            <i class="attention icon"></i>
+            <div class="content">
+                <br>
+                <div class="header">
+                    Delete Hours Confirmation
+                </div>
+                <p>Are you sure that you want to delete these hours?</p>
+                <br>
+                <button class="ui small green button" type="submit">Yes, Delete these Hours</button>
+                <a class="ui small button" href="{% url 'shift:view_hours' shift_id volunteer_id %}">Cancel</a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

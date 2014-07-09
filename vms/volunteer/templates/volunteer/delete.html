@@ -1,0 +1,20 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <form action="{% url 'volunteer:delete' id %}" method="post">
+        {% csrf_token %}
+        <div class="ui icon warning message">
+            <i class="exclamation icon"></i>
+            <div class="content">
+                <br>
+                <div class="header">
+                    Are you sure you want to delete this volunteer?
+                </div>
+                <p>Please note that you cannot undo this change</p>
+                <br>
+                <button class="ui small red button" type="submit">Yes, Delete this Volunteer</button>
+                <a class="ui small button" href="{% url 'volunteer:list' %}">Cancel</a> 
+            </div>
+        </div>
+    </form>
+{% endblock %}

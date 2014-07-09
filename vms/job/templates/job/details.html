@@ -1,0 +1,68 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <h3 class="ui black block header">
+        Job Details
+    </h3>
+    <div class="ui divided selection list">
+        <a class="item">
+            <div class="ui horizontal label">Job Title</div>
+            {{ job.job_title }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal label">Job Description</div>
+            {{ job.description }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal label">Start Date</div>
+            {{ job.start_date }}
+        </a>
+        <a class="item">
+            <div class="ui horizontal label">End Date</div>
+            {{ job.end_date }}
+        </a>
+    </div>
+    {% if shift_list %}
+        <h3 class="ui black block header">
+            Available Job Shifts
+        </h3>
+        <table class="ui table segment">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Slots remaining</th>
+                    <th>Sign Up</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shift in shift_list %}
+                    <tr>
+                        <td>{{ shift.date }}</td>
+                        <td>{{ shift.location }}</td>
+                        <td>{{ shift.start_time }}</td>
+                        <td>{{ shift.end_time }}</td>
+                        <td>{{ shift.slots_remaining }}</td>
+                        <td>
+                            {% if shift in signed_up_list %}
+                                <button class="ui tiny disabled button" disabled>Signed Up</button>
+                            {% elif shift.slots_remaining <= 0 %}
+                                <button class="ui tiny disabled button" disabled>All Slots Full</button>
+                            {% else %}
+                                <a class="ui tiny green button" href="{% url 'shift:shift_sign_up' shift.id %}">Sign Up</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="ui warning message">
+            <div class="header">
+                There are currently no shifts to sign up for!
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
