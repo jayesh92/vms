@@ -89,6 +89,29 @@ def delete_hours(request, shift_id, volunteer_id):
         
 def error(request):
     return render(request, 'vms/error.html')
+
+def edit_hours(request, shift_id, volunteer_id):
+
+    if shift_id and volunteer_id:
+        volunteer_shift = get_volunteer_shift_by_id(volunteer_id, shift_id)
+        if request.method == 'POST':
+            form = HoursForm(request.POST)
+            if form.is_valid():
+                start_time = form.cleaned_data['start_time']
+                end_time = form.cleaned_data['end_time']
+                result = edit_shift_hours(volunteer_id, shift_id, start_time, end_time)
+                if result:
+                    return HttpResponseRedirect(reverse('shift:view_hours', args=(shift_id, volunteer_id,)))
+                else:
+                    return HttpResponseRedirect(reverse('shift:error'))
+            else:
+                return HttpResponse("form is not valid")
+                #return HttpResponseRedirect(reverse('shift:error'))
+        else:
+            form = HoursForm(initial={'start_time': volunteer_shift.start_time, 'end_time' : volunteer_shift.end_time})
+            return render(request, 'shift/edit_hours.html', {'form' : form, 'shift_id' : shift_id, 'volunteer_id' : volunteer_id,})
+    else:
+        return HttpResponseRedirect(reverse('shift:error'))
     
 def shift_sign_up(request, shift_id):
     if shift_id:

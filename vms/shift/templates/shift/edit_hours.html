@@ -1,0 +1,28 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <h3 class="ui black block header">
+        Edit Shift Hours
+    </h3>
+    <form action="{% url 'shift:edit_hours' shift_id volunteer_id %}" method="post">
+        {% csrf_token %}
+        <div class="ui form segment">
+            <div class="two fields">
+                <div class="field">
+                    <label>Start Time</label>
+                    <div class="ui input">
+                        <input placeholder="HH:MM" type="text" name="start_time" value="{{ form.start_time.value }}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>End Time</label>
+                    <div class="ui input">
+                        <input placeholder="HH:MM" type="text" name="end_time" value="{{ form.end_time.value }}">
+                    </div>
+                </div>
+            </div>
+            <button class="ui blue button" type="submit">Update</button>
+            <button class="ui button" type="reset">Reset</button>
+        </div>
+    </form>
+{% endblock %}
