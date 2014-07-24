@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Link to the Bootstrap CSS from a CDN -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+	    th,td{
+		    padding-left : 5%;
+	    }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h3 class="text-muted">VMS: Lists of Shifts</h3>
+      </div>
+       <div class="row" style="padding:20px;">
+	       <table>
+		       <tr>
+		 		<th> Event Name </th>
+				<th> Job Name </th>
+		 		<th> Volunteer Name </th>
+		 		<th> Hours </th>
+				<th> Edit </th>
+				<th> Delete </th>
+			</tr>
+
+			{% for shift in allShifts %}
+			<tr>
+				<td> {{ shift.event.eventName }} </td>
+				<td> {{ shift.job.jobName }} </td>
+				<td> {{ shift.volunteer }} </td>
+				<td> {{ shift.hours }} </td>
+				<td> <a href="/AdminUnit/shift/{{ shift.pk }}/">Edit</a> </td>
+				<td> <a href="/AdminUnit/deleteShift/{{ shift.pk }}/">Delete</a> </td>
+			</tr>
+			{% endfor %}
+		</table>
+      </div>
+    </div>
+  </body>
+</html>
