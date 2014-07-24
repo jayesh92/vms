@@ -118,7 +118,7 @@ class Shift(models.Model):
 	hours = models.IntegerField(
 			validators=[
 				RegexValidator(
-					r'[1-9]\d*',
+					r'^[1-9][0-9]*',
 				)
 			]
 		)
