@@ -37,11 +37,6 @@ class UserProfile(models.Model):
 
     	address = models.CharField(
 			max_length=128,
-			validators=[
-				RegexValidator(
-					r'^[(A-Z)|(a-z)|(\s)|(0-9)]+$',
-				)
-			]
 		)
     	location = models.CharField(
 			max_length=128,
@@ -64,7 +59,7 @@ class UserProfile(models.Model):
 			max_length=128,
 			validators=[
 				RegexValidator(
-					r'\d{10}',
+					r'^(\d{10})$',
 				)
 			]
 		)

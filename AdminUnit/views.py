@@ -291,6 +291,7 @@ def createShift(request, jobId=None, eventId=None, userName=None):
       	shift = Shift(event=Event.objects.get(pk=eventId),job=Job.objects.get(pk=jobId),volunteer=UserProfile.objects.get(user__username=userName),hours=1)
 	shift.save()
 
+@login_required
 def reportHoursByOrg(request):
 	if request.method == 'POST':
 		selectHoursForm = SelectHoursForm(request.POST)
@@ -314,6 +315,7 @@ def reportHoursByOrg(request):
 		selectHoursForm = SelectHoursForm()
 		return render(request, "AdminUnit/report_hours_by_org.html", {"values" : {}, "selectHoursForm" : selectHoursForm})
 
+@login_required
 def reportVolunteersByOrg(request):
 	users = UserProfile.objects.all()
 	counts = {}
@@ -329,6 +331,7 @@ def reportVolunteersByOrg(request):
 	values = { 'values' : data }
 	return render(request, "AdminUnit/report_volunteers_by_org.html", values)
 
+@login_required
 def reportHoursByEvent(request):
 	if request.method == 'POST':
 		selectEventForm = SelectEventForm(request.POST)
@@ -354,6 +357,7 @@ def reportHoursByEvent(request):
 		data = []
 		return render(request, "AdminUnit/report_hours_by_event.html", {"values" : data, "selectEventForm" : selectEventForm})
 
+@login_required
 def reportHoursByTime(request):
 	if request.method == 'POST':
 		selectTimeForm = SelectTimeForm(request.POST)
