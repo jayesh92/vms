@@ -39,3 +39,10 @@ Assuming, git is installed on your Linux or MAC OS machine, execute git clone ht
   - python manage.py runserver<br />
 
 Point your browser to 127.0.0.1:8000/AdminUnit<br />
+
+Login Details: <br />
+
+Username : vol1 <br />
+Password : vol1 <br />
+
+Replace 1 in username, password to any digit from 1 to 6 , all have been given admin access <br />
