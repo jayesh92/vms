@@ -290,6 +290,7 @@ def deleteShift(request,shiftId=None):
 def createShift(request, jobId=None, eventId=None, userName=None):
       	shift = Shift(event=Event.objects.get(pk=eventId),job=Job.objects.get(pk=jobId),volunteer=UserProfile.objects.get(user__username=userName),hours=1)
 	shift.save()
+	return HttpResponse("Shift Created");
 
 @login_required
 def reportHoursByOrg(request):

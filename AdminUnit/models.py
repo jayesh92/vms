@@ -102,6 +102,8 @@ class Job(models.Model):
 						)
 					]
 				)
+	class Meta:
+		unique_together = (('event', 'jobName'))
 
 	def __unicode__(self):
 		return self.jobName
@@ -117,6 +119,9 @@ class Shift(models.Model):
 				)
 			]
 		)
+
+	class Meta:
+		unique_together = (('event', 'volunteer', 'job'))
 
 class AllEvents(models.Model):
 	event = models.ForeignKey(Event)
