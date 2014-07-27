@@ -21,10 +21,10 @@ Future Work:<br />
 To Run: <br />
 
 Install Django:
-  - $> pip install Django==1.6.5 <br />
+  - $> sudo pip install Django==1.6.5 <br />
 
 Also Run:
-  - $> pip install django-google-charts
+  - $> sudo pip install django-google-charts
 
 Assuming, git is installed on your Linux or MAC OS machine, execute git clone https://github.com/jayesh92/vms-1.git <br />
 
