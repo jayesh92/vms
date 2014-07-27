@@ -24,26 +24,14 @@ Install Django: pip install Django==1.6.5 <br />
 
 Assuming, git is installed on your Linux or MAC OS machine, execute git clone https://github.com/jayesh92/vms-1.git <br />
 
-cd vms-1 <br />
-
-cd VMS/templates<br />
-
-pwd<br />
-Copy output of previous command
-
-cd .. <br />
-
-vim settings.py <br />
-Replace path on line number 34 to path copied from previously<br />
-
-cd ..<br />
-python manage.py runserver<br />
+  - $> cd vms-1 <br />
+  - $> cd VMS/templates<br />
+  - $> pwd<br />
+  - Copy output of previous command
+  - $> cd .. <br />
+  - $> vim settings.py <br />
+  - Replace path on line number 34 to path copied from previously<br />
+  - cd ..<br />
+  - python manage.py runserver<br />
 
 Point your browser to 127.0.0.1:8000/AdminUnit<br />
-
-If you have Django installed, clone this repo and run the following commands: <br/>
- - python manage.py syncdb<br />
- - python manage.py runserver<br />
- 
-If prompted for admin id/password during first command, enter yes and enter any credentials whom you want to be the super admin <br/>
-After second step, point your browser to 127.0.0.1:8000/admin or 127.0.0.1:8000/AdminUnit
