@@ -28,7 +28,10 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/jayesh/github/VMS/VMS/templates',
+    # Execute cd path_of_cloned_gihub_repo/VMS/templstes
+    # Execute pwd
+    # copy the output of previous command and replace the below path with the same
+    '/home/jayesh/github/vms-1/VMS/templates',
 )
 
 ALLOWED_HOSTS = []
