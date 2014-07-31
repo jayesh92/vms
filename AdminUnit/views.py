@@ -301,20 +301,25 @@ def reportHoursByOrg(request):
 			toHours = selectHoursForm.cleaned_data['toHours']
 			shifts = Shift.objects.all()
 			counts = {}
+			details = {}
 			for shift in shifts:
 				org = shift.volunteer.organization.name
 				if org in counts:
 					counts[org]+=shift.hours
+					details[org].append((shift.volunteer.user.username, shift.hours))
 				else:
 					counts[org]=shift.hours
+					details[org]=[]
+					details[org].append((shift.volunteer.user.username, shift.hours))
 			data = []
 			for org in counts:
 				if counts[org] >= fromHours and counts[org] <= toHours:
 					data.append([org,counts[org]])
-			return render(request, "AdminUnit/report_hours_by_org.html", {"values" : data, "selectHoursForm" : {}})
+			print details
+			return render(request, "AdminUnit/report_hours_by_org.html", {"values" : data, "selectHoursForm" : {}, "details" : details})
 	else:
 		selectHoursForm = SelectHoursForm()
-		return render(request, "AdminUnit/report_hours_by_org.html", {"values" : {}, "selectHoursForm" : selectHoursForm})
+		return render(request, "AdminUnit/report_hours_by_org.html", {"values" : {}, "selectHoursForm" : selectHoursForm, "details" : {}})
 
 @login_required
 def reportVolunteersByOrg(request):
@@ -340,23 +345,26 @@ def reportHoursByEvent(request):
 			eventName = selectEventForm.cleaned_data['event']
 			shifts = Shift.objects.filter(event__eventName=eventName)
 			counts = {}
-	
+			details = {}
 			for shift in shifts:
 				org = shift.volunteer.organization.name
 				if org in counts:
 					counts[org]+=shift.hours
+					details[org].append((shift.volunteer.user.username, shift.hours))
 				else:
 					counts[org]=shift.hours
+					details[org]=[]
+					details[org].append((shift.volunteer.user.username, shift.hours))
 		
 			data = []
 			for org in counts:
 				data.append([org,counts[org]])
 			selectEventForm = {}
-			return render(request, "AdminUnit/report_hours_by_event.html", {"values" : data, "selectEventForm" : selectEventForm})
+			return render(request, "AdminUnit/report_hours_by_event.html", {"values" : data, "selectEventForm" : selectEventForm, "details" : details})
 	else:
 		selectEventForm = SelectEventForm()
 		data = []
-		return render(request, "AdminUnit/report_hours_by_event.html", {"values" : data, "selectEventForm" : selectEventForm})
+		return render(request, "AdminUnit/report_hours_by_event.html", {"values" : data, "selectEventForm" : selectEventForm, "details" : {}})
 
 @login_required
 def reportHoursByTime(request):
@@ -367,20 +375,23 @@ def reportHoursByTime(request):
 			endTime = selectTimeForm.cleaned_data['endTime']
 			shifts = Shift.objects.filter(event__startDate__gte=startTime,event__endDate__lte=endTime)
 			counts = {}
-	
+			details = {}	
 			for shift in shifts:
 				org = shift.volunteer.organization.name
 				if org in counts:
 					counts[org]+=shift.hours
+					details[org].append((shift.volunteer.user.username, shift.hours))
 				else:
 					counts[org]=shift.hours
+					details[org]=[]
+					details[org].append((shift.volunteer.user.username, shift.hours))
 		
 			data = []
 			for org in counts:
 				data.append([org,counts[org]])
 			selectTimeForm = {}
-			return render(request, "AdminUnit/report_hours_by_time.html", {"values" : data, "selectTimeForm" : selectTimeForm})
+			return render(request, "AdminUnit/report_hours_by_time.html", {"values" : data, "selectTimeForm" : selectTimeForm, "details" : details})
 	else:
 		selectTimeForm = SelectTimeForm()
 		data = []
-		return render(request, "AdminUnit/report_hours_by_time.html", {"values" : data, "selectTimeForm" : selectTimeForm})
+		return render(request, "AdminUnit/report_hours_by_time.html", {"values" : data, "selectTimeForm" : selectTimeForm, "details" : {}})

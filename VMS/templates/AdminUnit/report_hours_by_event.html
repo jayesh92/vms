@@ -3,6 +3,11 @@
 	<head>
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
 		<title>VMS</title>
+		<style>
+			tr,th,td{
+				padding-left:10%;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -76,6 +81,23 @@
 		{# chart is assembled from container, data and options #}
 		{% graph "out" "out_data" "out_options" %}
 		{% endgooglecharts %}
+		{% for key, value in details.items %}
+			<b> {{ key }} </b>
+			<hr />
+			<table>
+				<tr>
+					<th> Volunteer Username </th>
+					<th> Hours Worked </th>
+				</tr>
+			{% for tuple in value %}
+				<tr>
+					<td> {{ tuple.0 }} </td>
+					<td> {{ tuple.1 }} </td>
+				</tr>
+			{% endfor %}
+			</table>
+			<br/>
+		{% endfor %}
 		{% endif %}
 	</body>
 </html>
