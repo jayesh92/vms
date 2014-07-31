@@ -260,8 +260,8 @@ def manageShift(request, shiftId=None):
   	if request.method == 'POST':
    		 shiftForm = ShiftForm(request.POST,instance = shiftInstance)
 		 if shiftForm.is_valid():
-      			newRecord = shiftForm.save()
-      			return HttpResponse("Shift Created/Edited")
+			 newRecord = shiftForm.save()
+			 return HttpResponse("Shift Created/Edited")
   	
 	# to handle a GET Request
 	else:
@@ -315,7 +315,6 @@ def reportHoursByOrg(request):
 			for org in counts:
 				if counts[org] >= fromHours and counts[org] <= toHours:
 					data.append([org,counts[org]])
-			print details
 			return render(request, "AdminUnit/report_hours_by_org.html", {"values" : data, "selectHoursForm" : {}, "details" : details})
 	else:
 		selectHoursForm = SelectHoursForm()

@@ -46,12 +46,11 @@
 		          </p>
 		        {% endif %}
             </div>
-          {% endfor %}
-
+	    {% endfor %}
+	    {{ jobsForm.non_field_errors }}
     		<input type="submit" class="btn btn-default" value="Submit" />
    	  </form>
       </div>
     </div>
   </body>
 </html>
-

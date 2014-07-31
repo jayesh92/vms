@@ -31,7 +31,6 @@ class UserForm(forms.Form):
 			return username
  		raise forms.ValidationError('Username "%s" is already in use.' % username)
 
-
 class UserProfileForm(ModelForm):
 	'''
 	As per the models, Registering a user involves two forms, user from auth models and custom-defined userProfile. This class is associated with forms for userProfile table.
@@ -40,14 +39,12 @@ class UserProfileForm(ModelForm):
 		model = UserProfile
 		fields = ['address','location','state','organization','phone']
 
-
 class EventForm(ModelForm):
 	'''
 	Class Responsible for displaying forms of Event Class, inheriting ModelForm Class.
 	'''
 	class Meta:
      		model = Event
-  
 
 class JobsForm(ModelForm):
 	'''
@@ -55,7 +52,6 @@ class JobsForm(ModelForm):
 	'''
 	class Meta:
 		model = Job
-
 
 class OrgForm(ModelForm):
 	'''
@@ -71,7 +67,6 @@ class ShiftForm(ModelForm):
 	'''
 	class Meta:
 		model = Shift
-
 
 class SelectEventForm(ModelForm):
 	class Meta:
