@@ -7,11 +7,28 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.db.models import Q
 
+import cStringIO as StringIO
+import ho.pisa as pisa
+from django.template.loader import get_template
+from django.template import Context
+from cgi import escape
+
 #from .forms import UserForm, UserProfileForm, EventForm, JobsForm, OrgForm
 #from .models import UserProfile, Event, Job, Organization
 
 from AdminUnit.forms import *
 from AdminUnit.models import *
+
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    context = Context(context_dict)
+    html  = template.render(context)
+    result = StringIO.StringIO()
+
+    pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), mimetype='application/pdf')
+    return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
 
 def index(request):
 	'''
@@ -315,7 +332,9 @@ def reportHoursByOrg(request):
 			for org in counts:
 				if counts[org] >= fromHours and counts[org] <= toHours:
 					data.append([org,counts[org]])
-			return render(request, "AdminUnit/report_hours_by_org.html", {"values" : data, "selectHoursForm" : {}, "details" : details})
+				else:
+					del(details[org])
+			return render(request, "AdminUnit/report_hours_by_org.html", {'pagesize':'A4', "values" : data, "selectHoursForm" : {}, "details" : details})
 	else:
 		selectHoursForm = SelectHoursForm()
 		return render(request, "AdminUnit/report_hours_by_org.html", {"values" : {}, "selectHoursForm" : selectHoursForm, "details" : {}})
