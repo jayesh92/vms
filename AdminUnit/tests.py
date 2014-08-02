@@ -1,9 +1,9 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 
 from django.contrib.auth.models import User
-from models import *
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
+from models import *
 
 class TestOrganization(TestCase):
 	def setUp(self):
@@ -120,7 +120,7 @@ class TestEvent(TestCase):
 				event.save()
 		self.assertEqual(0,Event.objects.filter(eventName='event1_test').count())
 
-class testJob(TestCase):
+class TestJob(TestCase):
 	def setUp(self):
 		event = Event.objects.create(eventName='event1',noOfVolunteersRequired=5,startDate='2015-05-05 05:05:05',endDate='2015-05-05 05:05:05')
 		Job.objects.create(event=event, jobName='Test Job Name', jobDescription='Test Job Description', noOfVolunteersRequired=5,startDate='2015-05-05 05:05:05',endDate='2015-05-05 05:05:05')
@@ -140,7 +140,7 @@ class testJob(TestCase):
 				job.save()
 		self.assertEqual(0,Job.objects.filter(event__eventName='event2').count())
 
-class testShift(TestCase):
+class TestShift(TestCase):
 	def setUp(self):
 		event = Event.objects.create(eventName='event1',noOfVolunteersRequired=5,startDate='2015-05-05 05:05:05',endDate='2015-05-05 05:05:05')
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
@@ -169,3 +169,127 @@ class testShift(TestCase):
 			if shift.full_clean():
 				shift.save()
 		self.assertEqual(previousCount, Shift.objects.filter(event__eventName='event1').count())
+
+class TestRegisterView(TestCase):
+	def test_invalid_value(self):
+		c = Client()
+		response = c.post('/AdminUnit/register/', {'firstname' : 'test', 'lastname' : 'test', 'email' : 'test', 'username' : 'test',
+			'password' : 'test', 'password2' : 'test', 'address' : 'test', 'location' : 'test', 'state' : 'test', 'organization' : 'test',
+			'phone' : '919581845730'})
+		self.assertEqual(200, response.status_code)
+		self.assertEqual(response.context['userForm']['email'].errors, ['Enter a valid email address.'])
+		self.assertEqual(response.context['userProfileForm']['organization'].errors,
+				['Select a valid choice. That choice is not one of the available choices.'])
+		self.assertEqual(response.context['userProfileForm']['phone'].errors, ['Enter a valid value.'])
+
+	def test_null_value(self):
+		c = Client()
+		response = c.post('/AdminUnit/register/', {})
+		self.assertEqual(200, response.status_code)
+		self.assertEqual(response.context['userProfileForm']['phone'].errors, ["This field is required."])
+		self.assertEqual(response.context['userProfileForm']['organization'].errors, ["This field is required."])
+		self.assertEqual(response.context['userProfileForm']['address'].errors, ["This field is required."])
+		self.assertEqual(response.context['userProfileForm']['location'].errors, ["This field is required."])
+		self.assertEqual(response.context['userProfileForm']['state'].errors, ["This field is required."])
+		self.assertEqual(response.context['userForm']['firstname'].errors, ["This field is required."])
+		self.assertEqual(response.context['userForm']['lastname'].errors, ["This field is required."])
+		self.assertEqual(response.context['userForm']['username'].errors, ["This field is required."])
+		self.assertEqual(response.context['userForm']['email'].errors, ["This field is required."])
+		self.assertEqual(response.context['userForm']['password'].errors, ["This field is required."])
+		self.assertEqual(response.context['userForm']['password2'].errors, ["This field is required."])
+
+class TestEventView(TestCase):
+	def test_invalid_value(self):
+		c = Client()
+		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
+		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		self.assertEqual(1, UserProfile.objects.filter(user__username='jlahori').count())
+
+		c.login(username='jlahori', password='password')
+
+		Event.objects.create(eventName='test_event', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
+		self.assertEqual(1, Event.objects.filter(eventName='test_event').count())
+
+		response = c.post('/AdminUnit/event/', {'eventName' : 'test_event', 'noOfVolunteersRequired' : '-1',
+			'startDate' : '2014-05-05 05-05-05', 'endDate' : '05-10-2014 05:05:05'})
+
+		self.assertEqual(200, response.status_code)
+		self.assertEqual(response.context['eventForm']['eventName'].errors, ['Event with this EventName already exists.'])
+		self.assertEqual(response.context['eventForm']['noOfVolunteersRequired'].errors, ['Enter a whole number.'])
+		self.assertEqual(response.context['eventForm']['startDate'].errors, ['Enter a valid date/time.'])
+		self.assertEqual(response.context['eventForm']['endDate'].errors, ['Enter a valid date/time.'])
+	
+	def test_null_value(self):
+		c = Client()
+		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
+		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		c.login(username='jlahori', password='password')
+
+		Event.objects.create(eventName='test_event', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
+		self.assertEqual(1, Event.objects.filter(eventName='test_event').count())
+
+		response = c.post('/AdminUnit/event/', {})
+		self.assertEqual(200, response.status_code)
+		self.assertEqual(response.context['eventForm']['eventName'].errors, ['This field is required.'])
+		self.assertEqual(response.context['eventForm']['noOfVolunteersRequired'].errors, ['This field is required.'])
+		self.assertEqual(response.context['eventForm']['startDate'].errors, ['This field is required.'])
+		self.assertEqual(response.context['eventForm']['endDate'].errors, ['This field is required.'])
+
+class TestJobView(TestCase):
+	def test_invalid_value(self):
+		Event.objects.create(eventName='test_event_1', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
+		self.assertEqual(1, Event.objects.filter(eventName='test_event_1').count())
+
+		c = Client()
+		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
+		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		self.assertEqual(1, UserProfile.objects.filter(user__username='jlahori').count())
+		c.login(username='jlahori', password='password')
+
+		response = c.post('/AdminUnit/job/',{'event' : 'test_event_2', 'jobName' : 'test_jobName',
+			'jobDescription' : 'test_jobDescription', 'startDate' : '2014-05-05 05-05-05', 'endDate' : '05-10-2014 05:05:05'})
+
+		self.assertEqual(200, response.status_code)
+		self.assertEqual(response.context['jobsForm']['event'].errors, ['Select a valid choice. That choice is not one of the available choices.'])
+		self.assertEqual(response.context['jobsForm']['startDate'].errors, ['Enter a valid date/time.'])
+		self.assertEqual(response.context['jobsForm']['endDate'].errors, ['Enter a valid date/time.'])
+
+	def test_null_value(self):
+		c = Client()
+		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
+		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		self.assertEqual(1, UserProfile.objects.filter(user__username='jlahori').count())
+		c.login(username='jlahori', password='password')
+
+		response = c.post('/AdminUnit/job/',{})
+
+		self.assertEqual(200, response.status_code)
+		self.assertEqual(response.context['jobsForm']['event'].errors, ['This field is required.'])
+		self.assertEqual(response.context['jobsForm']['jobName'].errors, ['This field is required.'])
+		self.assertEqual(response.context['jobsForm']['jobDescription'].errors, ['This field is required.'])
+		self.assertEqual(response.context['jobsForm']['startDate'].errors, ['This field is required.'])
+		self.assertEqual(response.context['jobsForm']['endDate'].errors, ['This field is required.'])
+
+	def test_duplicate_job_in_same_event(self):
+		# This test is not completed, POST request responding event does not exist but it has been asserted True previously
+		Event.objects.create(eventName='test_event', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
+		Job.objects.create(event=Event.objects.get(eventName='test_event'), jobName='test_jobName',
+				jobDescription='test_jobDescription_1', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05',
+				endDate='2014-05-05 05:05:05')
+
+		self.assertEqual(1, Event.objects.filter(eventName='test_event').count())
+		self.assertEqual(1, Job.objects.filter(event__eventName='test_event',jobName='test_jobName').count())
+
+		c = Client()
+		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
+		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',
+				organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+
+		self.assertEqual(1, UserProfile.objects.filter(user__username='jlahori').count())
+		c.login(username='jlahori', password='password')
+
+		response = c.post('/AdminUnit/job/',{'event' : 'test_event', 'jobName' : 'test_jobName',
+			'jobDescription' : 'test_jobDescription_2', 'startDate' : '2014-05-05 05:05:05',
+			'endDate' : '2014-05-05 05:05:05', 'noOfVolunteersRequired' : 5})
+
+		self.assertEqual(200, response.status_code)
