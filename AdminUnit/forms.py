@@ -31,12 +31,12 @@ class UserForm(forms.Form):
 			return username
  		raise forms.ValidationError('Username "%s" is already in use.' % username)
 
-class UserProfileForm(ModelForm):
+class AdminProfileForm(ModelForm):
 	'''
 	As per the models, Registering a user involves two forms, user from auth models and custom-defined userProfile. This class is associated with forms for userProfile table.
 	'''
 	class Meta:
-		model = UserProfile
+		model = AdminProfile
 		fields = ['address','location','state','organization','phone']
 
 class EventForm(ModelForm):

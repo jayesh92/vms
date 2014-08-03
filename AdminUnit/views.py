@@ -13,9 +13,6 @@ from django.template.loader import get_template
 from django.template import Context
 from cgi import escape
 
-#from .forms import UserForm, UserProfileForm, EventForm, JobsForm, OrgForm
-#from .models import UserProfile, Event, Job, Organization
-
 from AdminUnit.forms import *
 from AdminUnit.models import *
 
@@ -44,19 +41,19 @@ def register(request):
 	# POST Request, submitted form has come as a request
   	if request.method == 'POST':
     		userForm = UserForm(request.POST)
-    		userProfileForm = UserProfileForm(request.POST)
+    		adminProfileForm = AdminProfileForm(request.POST)
 
-    		if userForm.is_valid() and userProfileForm.is_valid():
+    		if userForm.is_valid() and adminProfileForm.is_valid():
       			user = User.objects.create_user(first_name=userForm.cleaned_data['firstname'],last_name=userForm.cleaned_data['lastname'],
 					  		email=userForm.cleaned_data['email'],username=userForm.cleaned_data['username'],
 							password=userForm.cleaned_data['password'])
 
-      			userProfile = UserProfile(user=user, address=userProfileForm.cleaned_data['address'],location=userProfileForm.cleaned_data['location'],
-        					 state=userProfileForm.cleaned_data['state'],organization=userProfileForm.cleaned_data['organization'],
-						 phone=userProfileForm.cleaned_data['phone'])
+      			adminProfile = AdminProfile(user=user, address=adminProfileForm.cleaned_data['address'],location=adminProfileForm.cleaned_data['location'],
+        					 state=adminProfileForm.cleaned_data['state'],organization=adminProfileForm.cleaned_data['organization'],
+						 phone=adminProfileForm.cleaned_data['phone'])
 
-      			userProfile.save()
-			orgObject=Organization.objects.get(Q(name=userProfileForm.cleaned_data['organization']))
+      			adminProfile.save()
+			orgObject=Organization.objects.get(Q(name=adminProfileForm.cleaned_data['organization']))
 			orgObject.noOfVolunteers += 1
 			orgObject.save()
       			return HttpResponse("You have registered, login available @ AdminUnit/")
@@ -64,9 +61,9 @@ def register(request):
   	# GET Request, render empty form
   	else:
   		 userForm = UserForm()
-  		 userProfileForm = UserProfileForm()
+  		 adminProfileForm = AdminProfileForm()
  
-  	return render(request, "AdminUnit/register.html",{ "userForm" : userForm , "userProfileForm" : userProfileForm })
+  	return render(request, "AdminUnit/register.html",{ "userForm" : userForm , "adminProfileForm" : adminProfileForm })
 
 def login_process(request):
 	'''
@@ -255,7 +252,7 @@ def searchEmployeeByOrg(request):
 		selectOrgForm = SelectOrgForm(request.POST)
 		if selectOrgForm.is_valid():
 			orgName = selectOrgForm.cleaned_data['org']
-			users = UserProfile.objects.filter(organization__name=orgName)
+			users = AdminProfile.objects.filter(organization__name=orgName)
 			selectOrgForm = {}
 			return render(request, "AdminUnit/search_by_org.html", {"users" : users, "selectOrgForm" : selectOrgForm});
 	else:
@@ -305,9 +302,12 @@ def deleteShift(request,shiftId=None):
 
 @login_required
 def createShift(request, jobId=None, eventId=None, userName=None):
-      	shift = Shift(event=Event.objects.get(pk=eventId),job=Job.objects.get(pk=jobId),volunteer=UserProfile.objects.get(user__username=userName),hours=1)
-	shift.save()
-	return HttpResponse("Shift Created");
+	if Shift.objects.filter(event__pk=eventId,job__pk=jobId,volunteer__user__username=userName).count() == 0:
+	      	shift = Shift(event=Event.objects.get(pk=eventId),job=Job.objects.get(pk=jobId),volunteer=AdminProfile.objects.get(user__username=userName),hours=1)
+		shift.save()
+		return HttpResponse("Shift Created");
+	else:
+		return HttpResponse("Shift with same username, eventname, jobname exists");
 
 @login_required
 def reportHoursByOrg(request):
@@ -341,7 +341,7 @@ def reportHoursByOrg(request):
 
 @login_required
 def reportVolunteersByOrg(request):
-	users = UserProfile.objects.all()
+	users = AdminProfile.objects.all()
 	counts = {}
 	for user in users:
 		org = user.organization.name

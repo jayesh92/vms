@@ -36,47 +36,47 @@ class TestUsers(TestCase):
 	def setUp(self):
 		Organization.objects.create(name='LinkedIn',location='Bangalore')
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
-		UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.get(name='LinkedIn'),phone='9581845730')
+		AdminProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.get(name='LinkedIn'),phone='9581845730')
 
 	def test_insertion(self):
-		self.assertEqual(1,UserProfile.objects.filter(user__username='jlahori').count())
+		self.assertEqual(1,AdminProfile.objects.filter(user__username='jlahori').count())
 
 	def test_duplication(self):
-		self.assertRaises(IntegrityError, lambda:  UserProfile.objects.create(user=User.objects.get(username='jlahori'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.get(name='LinkedIn'),phone='9581845730'))
+		self.assertRaises(IntegrityError, lambda:  AdminProfile.objects.create(user=User.objects.get(username='jlahori'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.get(name='LinkedIn'),phone='9581845730'))
 
 	def test_location(self):
 		# To test if city(location) name does not allow numbers or special characters
-		profile = UserProfile(user=User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test2',password='password'),address='IIIT-H',location='Hyderabad123!@#',state='Andhra Pradesh',organization=Organization.objects.get(name='LinkedIn'),phone='9581845730')
+		profile = AdminProfile(user=User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test2',password='password'),address='IIIT-H',location='Hyderabad123!@#',state='Andhra Pradesh',organization=Organization.objects.get(name='LinkedIn'),phone='9581845730')
 		with self.assertRaises(ValidationError):
 			if profile.full_clean():
 				profile.save()
-		self.assertEqual(0,UserProfile.objects.filter(user__username='jlahori_test2').count())
+		self.assertEqual(0,AdminProfile.objects.filter(user__username='jlahori_test2').count())
 
 	def test_state(self):
 		# To test if state does not allow numbers or special characters
-		profile = UserProfile(user=User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test2',password='password'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh 123 !@#',organization=Organization.objects.get(name='LinkedIn'),phone='9581845730')
+		profile = AdminProfile(user=User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test2',password='password'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh 123 !@#',organization=Organization.objects.get(name='LinkedIn'),phone='9581845730')
 		with self.assertRaises(ValidationError):
 			if profile.full_clean():
 				profile.save()
-		self.assertEqual(0,UserProfile.objects.filter(user__username='jlahori_test2').count())
+		self.assertEqual(0,AdminProfile.objects.filter(user__username='jlahori_test2').count())
 
 
 	def test_phone(self):
 		# To test if phone numbers does not allow anything except 10 numbers
-		profile = UserProfile(user=User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test2',password='password'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.get(name='LinkedIn'),phone='919581845730')
+		profile = AdminProfile(user=User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test2',password='password'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.get(name='LinkedIn'),phone='919581845730')
 		with self.assertRaises(ValidationError):
 			if profile.full_clean():
 				profile.save()
-		self.assertEqual(0,UserProfile.objects.filter(user__username='jlahori_test2').count())
+		self.assertEqual(0,AdminProfile.objects.filter(user__username='jlahori_test2').count())
 	
 	def test_organization_foreign_key(self):
 		# To test only registered organizations should be allowed as valid entries
 		org=Organization(name='Google',location='Hyderabad')
-		profile = UserProfile(user=User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test2',password='password'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=org,phone='9581845730')
+		profile = AdminProfile(user=User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test2',password='password'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=org,phone='9581845730')
 		with self.assertRaises(ValidationError):
 			if profile.full_clean():
 				profile.save()
-		self.assertEqual(0,UserProfile.objects.filter(user__username='jlahori_test2').count())
+		self.assertEqual(0,AdminProfile.objects.filter(user__username='jlahori_test2').count())
 
 class TestEvent(TestCase):
 	def setUp(self):
@@ -144,17 +144,20 @@ class TestShift(TestCase):
 	def setUp(self):
 		event = Event.objects.create(eventName='event1',noOfVolunteersRequired=5,startDate='2015-05-05 05:05:05',endDate='2015-05-05 05:05:05')
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
-		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		profile = AdminProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
 		job = Job.objects.create(event=event, jobName='Test Job Name', jobDescription='Test Job Description', noOfVolunteersRequired=5, startDate='2015-05-05 05:05:05', endDate='2015-05-05 05:05:05')
 		Shift.objects.create(event=event, volunteer=profile, job=job, hours=1)
 	
 	def test_insertion(self):
 		self.assertEqual(1,Shift.objects.filter(event__eventName='event1',volunteer__user__username='jlahori',job__event__eventName='event1').count())
+	
+	def test_duplication(self):
+		self.assertRaises(IntegrityError, lambda: Shift.objects.create(event=Event.objects.get(eventName='event1'), job=Job.objects.get(jobName='Test Job Name',event__eventName='event1'), volunteer=AdminProfile.objects.get(user__username='jlahori'),hours=2 ))
 
 	def test_event_foreign_key(self):
 		# To test if only registered events are allowed in creation of shifts
 		event = Event(eventName='event2',noOfVolunteersRequired=5,startDate='2015-05-05 05:05:05',endDate='2015-05-05 05:05:05')
-		shift = Shift(event=event, volunteer=UserProfile.objects.get(user__username='jlahori'), job=Job.objects.get(event__eventName='event1'), hours=1)
+		shift = Shift(event=event, volunteer=AdminProfile.objects.get(user__username='jlahori'), job=Job.objects.get(event__eventName='event1'), hours=1)
 		with self.assertRaises(ValidationError):
 			if shift.full_clean():
 				job.save()
@@ -163,7 +166,7 @@ class TestShift(TestCase):
 	def test_volunteer_foreign_key(self):
 		# To test if only registered volunteers are allowed in creation of shifts
 		previousCount = Shift.objects.filter(event__eventName='event1').count()
-		profile = UserProfile(user=User(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test',password='password'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',phone='9581845730',organization=Organization(name='Google', location='hyderabad'))
+		profile = AdminProfile(user=User(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_test',password='password'),address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',phone='9581845730',organization=Organization(name='Google', location='hyderabad'))
 		shift = Shift(event=Event.objects.get(eventName='event1'), volunteer=profile, job=Job.objects.get(event__eventName='event1'), hours=1)
 		with self.assertRaises(ValidationError):
 			if shift.full_clean():
@@ -178,19 +181,19 @@ class TestRegisterView(TestCase):
 			'phone' : '919581845730'})
 		self.assertEqual(200, response.status_code)
 		self.assertEqual(response.context['userForm']['email'].errors, ['Enter a valid email address.'])
-		self.assertEqual(response.context['userProfileForm']['organization'].errors,
+		self.assertEqual(response.context['adminProfileForm']['organization'].errors,
 				['Select a valid choice. That choice is not one of the available choices.'])
-		self.assertEqual(response.context['userProfileForm']['phone'].errors, ['Enter a valid value.'])
+		self.assertEqual(response.context['adminProfileForm']['phone'].errors, ['Enter a valid value.'])
 
 	def test_null_value(self):
 		c = Client()
 		response = c.post('/AdminUnit/register/', {})
 		self.assertEqual(200, response.status_code)
-		self.assertEqual(response.context['userProfileForm']['phone'].errors, ["This field is required."])
-		self.assertEqual(response.context['userProfileForm']['organization'].errors, ["This field is required."])
-		self.assertEqual(response.context['userProfileForm']['address'].errors, ["This field is required."])
-		self.assertEqual(response.context['userProfileForm']['location'].errors, ["This field is required."])
-		self.assertEqual(response.context['userProfileForm']['state'].errors, ["This field is required."])
+		self.assertEqual(response.context['adminProfileForm']['phone'].errors, ["This field is required."])
+		self.assertEqual(response.context['adminProfileForm']['organization'].errors, ["This field is required."])
+		self.assertEqual(response.context['adminProfileForm']['address'].errors, ["This field is required."])
+		self.assertEqual(response.context['adminProfileForm']['location'].errors, ["This field is required."])
+		self.assertEqual(response.context['adminProfileForm']['state'].errors, ["This field is required."])
 		self.assertEqual(response.context['userForm']['firstname'].errors, ["This field is required."])
 		self.assertEqual(response.context['userForm']['lastname'].errors, ["This field is required."])
 		self.assertEqual(response.context['userForm']['username'].errors, ["This field is required."])
@@ -202,8 +205,8 @@ class TestEventView(TestCase):
 	def test_invalid_value(self):
 		c = Client()
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
-		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
-		self.assertEqual(1, UserProfile.objects.filter(user__username='jlahori').count())
+		profile = AdminProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		self.assertEqual(1, AdminProfile.objects.filter(user__username='jlahori').count())
 
 		c.login(username='jlahori', password='password')
 
@@ -222,7 +225,7 @@ class TestEventView(TestCase):
 	def test_null_value(self):
 		c = Client()
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
-		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		profile = AdminProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
 		c.login(username='jlahori', password='password')
 
 		Event.objects.create(eventName='test_event', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
@@ -242,8 +245,8 @@ class TestJobView(TestCase):
 
 		c = Client()
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
-		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
-		self.assertEqual(1, UserProfile.objects.filter(user__username='jlahori').count())
+		profile = AdminProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		self.assertEqual(1, AdminProfile.objects.filter(user__username='jlahori').count())
 		c.login(username='jlahori', password='password')
 
 		response = c.post('/AdminUnit/job/',{'event' : 'test_event_2', 'jobName' : 'test_jobName',
@@ -257,8 +260,8 @@ class TestJobView(TestCase):
 	def test_null_value(self):
 		c = Client()
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
-		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
-		self.assertEqual(1, UserProfile.objects.filter(user__username='jlahori').count())
+		profile = AdminProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		self.assertEqual(1, AdminProfile.objects.filter(user__username='jlahori').count())
 		c.login(username='jlahori', password='password')
 
 		response = c.post('/AdminUnit/job/',{})
@@ -269,10 +272,9 @@ class TestJobView(TestCase):
 		self.assertEqual(response.context['jobsForm']['jobDescription'].errors, ['This field is required.'])
 		self.assertEqual(response.context['jobsForm']['startDate'].errors, ['This field is required.'])
 		self.assertEqual(response.context['jobsForm']['endDate'].errors, ['This field is required.'])
-
+	
 	def test_duplicate_job_in_same_event(self):
-		# This test is not completed, POST request responding event does not exist but it has been asserted True previously
-		Event.objects.create(eventName='test_event', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
+		event = Event.objects.create(eventName='test_event', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
 		Job.objects.create(event=Event.objects.get(eventName='test_event'), jobName='test_jobName',
 				jobDescription='test_jobDescription_1', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05',
 				endDate='2014-05-05 05:05:05')
@@ -282,14 +284,16 @@ class TestJobView(TestCase):
 
 		c = Client()
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
-		profile = UserProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',
+		profile = AdminProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',
 				organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
 
-		self.assertEqual(1, UserProfile.objects.filter(user__username='jlahori').count())
+		self.assertEqual(1, AdminProfile.objects.filter(user__username='jlahori').count())
 		c.login(username='jlahori', password='password')
 
-		response = c.post('/AdminUnit/job/',{'event' : 'test_event', 'jobName' : 'test_jobName',
+		response = c.post('/AdminUnit/job/',{'event' : event.id, 'jobName' : 'test_jobName',
 			'jobDescription' : 'test_jobDescription_2', 'startDate' : '2014-05-05 05:05:05',
 			'endDate' : '2014-05-05 05:05:05', 'noOfVolunteersRequired' : 5})
 
 		self.assertEqual(200, response.status_code)
+		self.assertEqual(len(response.context['jobsForm'].non_field_errors()), 1)
+		self.assertEqual(response.context['jobsForm'].non_field_errors()[0], "Job with this Event and JobName already exists.")

@@ -49,15 +49,15 @@
             </div>
           {% endfor %}
 
-          {% if UserProfileForm.non_field_errors %}
+          {% if AdminProfileForm.non_field_errors %}
             <p class="error">
-              {% for error in userProfileForm.non_field_errors %}
+              {% for error in adminProfileForm.non_field_errors %}
                 {{ error }}
               {% endfor %}
             </p>
            {% endif %}
            <!-- Iterate over the fields in a userForm and render them  -->
-           {% for field in userProfileForm %}
+           {% for field in adminProfileForm %}
             <div class="form-group">
               <!-- Render the field label tag -->
               {{ field.label_tag }}

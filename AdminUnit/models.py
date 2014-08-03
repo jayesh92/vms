@@ -29,9 +29,9 @@ class Organization(models.Model):
 	def __unicode__(self):
 		return self.name
 
-class UserProfile(models.Model):
+class AdminProfile(models.Model):
 	'''
-	Model for UserProfile, each record is a one-to-one mapping ro user model from auth and also contains few other parameters
+	Model for AdminProfile, each record is a one-to-one mapping ro user model from auth and also contains few other parameters
 	'''
     	user = models.OneToOneField(User)
 
@@ -110,7 +110,7 @@ class Job(models.Model):
 
 class Shift(models.Model):
 	event = models.ForeignKey(Event)
-	volunteer = models.ForeignKey(UserProfile)
+	volunteer = models.ForeignKey(AdminProfile)
 	job = models.ForeignKey(Job)
 	hours = models.IntegerField(
 			validators=[
