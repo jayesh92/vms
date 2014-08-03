@@ -93,8 +93,8 @@ class Job(models.Model):
 
 	jobName = models.CharField(max_length=128)
 	jobDescription = models.CharField(max_length=256)
-    	startDate = models.DateTimeField()
-    	endDate = models.DateTimeField()
+	startDate = models.DateTimeField()
+	endDate = models.DateTimeField()
     	noOfVolunteersRequired = models.IntegerField(
 					validators=[
 						RegexValidator(

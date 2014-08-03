@@ -30,4 +30,5 @@ urlpatterns = patterns('',
 		url(r'^reportHoursByEvent/$', views.reportHoursByEvent),
 		url(r'^reportHoursByTime/$', views.reportHoursByTime),
 		url(r'^reportVolunteersByOrg/$', views.reportVolunteersByOrg),
+		url(r'^reporting/$', views.reportHoursByTimeAndOrg),
 		)

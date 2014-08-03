@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from AdminUnit.models import *
-from django.forms import ModelForm
+from django.forms import ModelForm, TextInput
+from django.contrib.admin import widgets
 
 class UserForm(forms.Form):
 	'''
@@ -45,6 +46,10 @@ class EventForm(ModelForm):
 	'''
 	class Meta:
      		model = Event
+		widgets = {
+				'startDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+				'endDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+			}
 
 class JobsForm(ModelForm):
 	'''
@@ -52,6 +57,10 @@ class JobsForm(ModelForm):
 	'''
 	class Meta:
 		model = Job
+		widgets = {
+				'startDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+				'endDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+			}
 
 class OrgForm(ModelForm):
 	'''

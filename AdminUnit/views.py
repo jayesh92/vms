@@ -413,3 +413,37 @@ def reportHoursByTime(request):
 		selectTimeForm = SelectTimeForm()
 		data = []
 		return render(request, "AdminUnit/report_hours_by_time.html", {"values" : data, "selectTimeForm" : selectTimeForm, "details" : {}})
+
+@login_required
+def reportHoursByTimeAndOrg(request):
+	if request.method == 'POST':
+		selectTimeForm = SelectTimeForm(request.POST)
+		selectOrgForm = SelectOrgForm(request.POST)
+		if selectTimeForm.is_valid() and selectOrgForm.is_valid():
+			startTime = selectTimeForm.cleaned_data['startTime']
+			endTime = selectTimeForm.cleaned_data['endTime']
+			organization = selectOrgForm.cleaned_data['org']
+			shifts = Shift.objects.filter(event__startDate__gte=startTime,event__endDate__lte=endTime,volunteer__organization__name=organization)
+			counts = {}
+			details = {}
+			for shift in shifts:
+				eventname = shift.event.eventName
+				username = shift.volunteer.user.username
+				if username in counts:
+					counts[username]+=shift.hours
+					details[username].append((eventname, shift.hours))
+				else:
+					counts[username]=shift.hours
+					details[username]=[]
+					details[username].append((eventname, shift.hours))
+		
+			data = []
+			for username in counts:
+				data.append([username,counts[username]])
+			selectTimeForm = {}
+			return render(request, "AdminUnit/report_hours_by_time_and_org.html", {"values" : data, "selectTimeForm" : {}, "selectOrgForm" : {},  "details" : details})
+	else:
+		selectTimeForm = SelectTimeForm()
+		selectOrgForm = SelectOrgForm()
+		data = []
+		return render(request, "AdminUnit/report_hours_by_time_and_org.html", {"values" : data, "selectTimeForm" : selectTimeForm, "selectOrgForm" : selectOrgForm,  "details" : {}})
