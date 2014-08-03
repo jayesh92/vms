@@ -6,6 +6,11 @@ from django.core.exceptions import ValidationError
 from models import *
 
 class TestOrganization(TestCase):
+	"""
+	This class serves to creating a Test Suite for testing the organization model.
+	The methods in this class test insertion of valid values, errors in duplicate entries and
+	Validators for fields of Organization class
+	"""
 	def setUp(self):
 		org = Organization(name='LinkedIn',location='blr')
 		org.save()
@@ -32,7 +37,13 @@ class TestOrganization(TestCase):
 		self.assertEqual(Organization.objects.filter(name='LinkedInTest').count(), 0)
 
 
-class TestUsers(TestCase):
+class TestAdmins(TestCase):
+	"""
+	This class serves to creating a Test Suite for testing the AdminProfile model.
+	The methods in this class test insertion of valid values, errors in duplicate entries,
+	Foregin Key relationship with Organization class
+	Validators for fields of AdminProfile class
+	"""
 	def setUp(self):
 		Organization.objects.create(name='LinkedIn',location='Bangalore')
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
@@ -79,6 +90,11 @@ class TestUsers(TestCase):
 		self.assertEqual(0,AdminProfile.objects.filter(user__username='jlahori_test2').count())
 
 class TestEvent(TestCase):
+	"""
+	This class serves to creating a Test Suite for testing the event model.
+	The methods in this class test insertion of valid values, errors in duplicate entries and
+	Validators for fields of Event class
+	"""
 	def setUp(self):
 		Event.objects.create(eventName='event1',noOfVolunteersRequired=5,startDate='2015-05-05 05:05:05',endDate='2015-05-05 05:05:05')
 	
@@ -121,6 +137,12 @@ class TestEvent(TestCase):
 		self.assertEqual(0,Event.objects.filter(eventName='event1_test').count())
 
 class TestJob(TestCase):
+	"""
+	This class serves to creating a Test Suite for testing the Job model.
+	The methods in this class test insertion of valid values, errors in duplicate entries(multiple_unique in this case),
+	Foreign key relationship with Event class
+	Validators for fields of Jobs class
+	"""
 	def setUp(self):
 		event = Event.objects.create(eventName='event1',noOfVolunteersRequired=5,startDate='2015-05-05 05:05:05',endDate='2015-05-05 05:05:05')
 		Job.objects.create(event=event, jobName='Test Job Name', jobDescription='Test Job Description', noOfVolunteersRequired=5,startDate='2015-05-05 05:05:05',endDate='2015-05-05 05:05:05')
@@ -141,6 +163,12 @@ class TestJob(TestCase):
 		self.assertEqual(0,Job.objects.filter(event__eventName='event2').count())
 
 class TestShift(TestCase):
+	"""
+	This class serves to creating a Test Suite for testing the Shift model.
+	The methods in this class test insertion of valid values, errors in duplicate entries(multiple_unique in this case),
+	Foreign key relationship with volunteer, event, job models
+	Validators for fields of Organization class
+	"""
 	def setUp(self):
 		event = Event.objects.create(eventName='event1',noOfVolunteersRequired=5,startDate='2015-05-05 05:05:05',endDate='2015-05-05 05:05:05')
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
@@ -174,6 +202,10 @@ class TestShift(TestCase):
 		self.assertEqual(previousCount, Shift.objects.filter(event__eventName='event1').count())
 
 class TestRegisterView(TestCase):
+	"""
+	This class serves to creating a Test Suite for testing the register view.
+	The methods in this class test insertion of valid values, asserting errors in null entries
+	"""
 	def test_invalid_value(self):
 		c = Client()
 		response = c.post('/AdminUnit/register/', {'firstname' : 'test', 'lastname' : 'test', 'email' : 'test', 'username' : 'test',
@@ -202,6 +234,16 @@ class TestRegisterView(TestCase):
 		self.assertEqual(response.context['userForm']['password2'].errors, ["This field is required."])
 
 class TestEventView(TestCase):
+	"""
+	This class serves to creating a Test Suite for testing the Create Event View.
+	The methods in this class test login_required decorator, insertion of valid values, asserting errors in null entries
+	"""
+	def test_login_required(self):
+		c = Client()
+		response = c.post('/AdminUnit/job/',{})
+		
+		self.assertNotEqual(200, response.status_code)
+
 	def test_invalid_value(self):
 		c = Client()
 		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
@@ -239,6 +281,17 @@ class TestEventView(TestCase):
 		self.assertEqual(response.context['eventForm']['endDate'].errors, ['This field is required.'])
 
 class TestJobView(TestCase):
+	"""
+	This class serves to creating a Test Suite for testing the Create Job View.
+	The methods in this class test login_required decorator, insertion of valid values, asserting errors in null entries,
+	Check unique_together property of Job Event
+	"""
+	def test_login_required(self):
+		c = Client()
+		response = c.post('/AdminUnit/job/',{})
+		
+		self.assertNotEqual(200, response.status_code)
+
 	def test_invalid_value(self):
 		Event.objects.create(eventName='test_event_1', noOfVolunteersRequired=10, startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
 		self.assertEqual(1, Event.objects.filter(eventName='test_event_1').count())
