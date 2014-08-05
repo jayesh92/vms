@@ -47,9 +47,9 @@ class EventForm(ModelForm):
 	class Meta:
      		model = Event
 		widgets = {
-				'startDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
-				'endDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
-			}
+			'startDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+			'endDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+		}
 
 class JobsForm(ModelForm):
 	'''
@@ -58,9 +58,9 @@ class JobsForm(ModelForm):
 	class Meta:
 		model = Job
 		widgets = {
-				'startDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
-				'endDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
-			}
+			'startDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+			'endDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+		}
 
 class OrgForm(ModelForm):
 	'''
@@ -86,9 +86,17 @@ class SelectOrgForm(ModelForm):
 		model = AllOrgs
 
 class SelectTimeForm(forms.Form):
-	startTime = forms.DateTimeField()
-	endTime = forms.DateTimeField()
+	startTime = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}))
+	endTime = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}))
 
 class SelectHoursForm(forms.Form):
 	fromHours = forms.IntegerField()
 	toHours = forms.IntegerField()
+
+	def clean_fromHours(self):
+		fromHours = self.cleaned_data['fromHours']
+		return fromHours
+
+	def clean_toHours(self):
+		toHours = self.cleaned_data['toHours']
+		return toHours

@@ -224,7 +224,9 @@ def searchByEvent(request):
 			eventName = selectEventForm.cleaned_data['event']
 			jobs = Job.objects.filter(event__eventName=eventName)
 			selectEventForm = {}
-			return render(request, "AdminUnit/search_by_events.html", {"jobs" : jobs, "selectEventForm" : selectEventForm});
+			return render(request, "AdminUnit/search_by_events.html", {"jobs" : jobs, "selectEventForm" : selectEventForm})
+		else:
+			return render(request, "AdminUnit/search_by_events.html", {"jobs" : {}, "selectEventForm" : selectEventForm})
 	else:
 		selectEventForm = SelectEventForm()
 		jobs = {}
@@ -241,6 +243,8 @@ def searchByTime(request):
 			jobs = Job.objects.filter(startDate__gte=startTime,endDate__lte=endTime)
 			selectTimeForm = {}
 			return render(request, "AdminUnit/search_by_time.html", {"jobs" : jobs, "selectTimeForm" : selectTimeForm});
+		else:
+			return render(request, "AdminUnit/search_by_time.html", {"jobs" : {}, "selectTimeForm" : selectTimeForm});
 	else:
 		selectTimeForm = SelectTimeForm()
 		jobs = {}
@@ -255,6 +259,8 @@ def searchEmployeeByOrg(request):
 			users = AdminProfile.objects.filter(organization__name=orgName)
 			selectOrgForm = {}
 			return render(request, "AdminUnit/search_by_org.html", {"users" : users, "selectOrgForm" : selectOrgForm});
+		else:
+			return render(request, "AdminUnit/search_by_org.html", {"users" : {}, "selectOrgForm" : selectOrgForm});
 	else:
 		selectOrgForm = SelectOrgForm()
 		users = {}
@@ -334,7 +340,9 @@ def reportHoursByOrg(request):
 					data.append([org,counts[org]])
 				else:
 					del(details[org])
-			return render(request, "AdminUnit/report_hours_by_org.html", {'pagesize':'A4', "values" : data, "selectHoursForm" : {}, "details" : details})
+			return render(request, "AdminUnit/report_hours_by_org.html", {"values" : data, "selectHoursForm" : {}, "details" : details})
+		else:
+			return render(request, "AdminUnit/report_hours_by_org.html", {"values" : {}, "selectHoursForm" : selectHoursForm, "details" : {}})
 	else:
 		selectHoursForm = SelectHoursForm()
 		return render(request, "AdminUnit/report_hours_by_org.html", {"values" : {}, "selectHoursForm" : selectHoursForm, "details" : {}})
@@ -379,6 +387,8 @@ def reportHoursByEvent(request):
 				data.append([org,counts[org]])
 			selectEventForm = {}
 			return render(request, "AdminUnit/report_hours_by_event.html", {"values" : data, "selectEventForm" : selectEventForm, "details" : details})
+		else:
+			return render(request, "AdminUnit/report_hours_by_event.html", {"values" : {}, "selectEventForm" : selectEventForm, "details" : {}})
 	else:
 		selectEventForm = SelectEventForm()
 		data = []
@@ -409,6 +419,8 @@ def reportHoursByTime(request):
 				data.append([org,counts[org]])
 			selectTimeForm = {}
 			return render(request, "AdminUnit/report_hours_by_time.html", {"values" : data, "selectTimeForm" : selectTimeForm, "details" : details})
+		else:
+			return render(request, "AdminUnit/report_hours_by_time.html", {"values" : {}, "selectTimeForm" : selectTimeForm, "details" : {}})
 	else:
 		selectTimeForm = SelectTimeForm()
 		data = []
@@ -442,6 +454,8 @@ def reportHoursByTimeAndOrg(request):
 				data.append([username,counts[username]])
 			selectTimeForm = {}
 			return render(request, "AdminUnit/report_hours_by_time_and_org.html", {"values" : data, "selectTimeForm" : {}, "selectOrgForm" : {},  "details" : details})
+		else:
+			return render(request, "AdminUnit/report_hours_by_time_and_org.html", {"values" : {}, "selectTimeForm" : selectTimeForm, "selectOrgForm" : selectOrgForm,  "details" : {}})
 	else:
 		selectTimeForm = SelectTimeForm()
 		selectOrgForm = SelectOrgForm()

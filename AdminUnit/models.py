@@ -124,7 +124,7 @@ class Shift(models.Model):
 		unique_together = (('event', 'volunteer', 'job'))
 
 class AllEvents(models.Model):
-	event = models.ForeignKey(Event)
+	event = models.ForeignKey(Event,blank=False)
 
 class AllOrgs(models.Model):
 	org = models.ForeignKey(Organization)
