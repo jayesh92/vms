@@ -92,11 +92,3 @@ class SelectTimeForm(forms.Form):
 class SelectHoursForm(forms.Form):
 	fromHours = forms.IntegerField()
 	toHours = forms.IntegerField()
-
-	def clean_fromHours(self):
-		fromHours = self.cleaned_data['fromHours']
-		return fromHours
-
-	def clean_toHours(self):
-		toHours = self.cleaned_data['toHours']
-		return toHours
