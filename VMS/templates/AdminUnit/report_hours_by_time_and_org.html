@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+		<title>VMS</title>
+		<style>
+			tr,th,td{
+				margin-left:10%
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container" >
+			<div class="header">
+				{% if selectTimeForm  %}
+				<h3 class="text-muted">VMS: Select Time And Org</h3>
+				{% endif %}
+			</div>
+			{% if selectTimeForm  %}
+			<form role="form" action="." method="post">
+				{% csrf_token %} <!-- CSRF token is rendered by Django in userForms to avoid CSRF attacks -->
+
+				<!-- If there are non-field errors in the userForm,
+				iterate over them one by one and display them.
+				-->
+				{% if SelectTimeForm.non_field_errors %}
+				<p class="error">
+				{% for error in selectTimeForm.non_field_errors %}
+				{{ error }}
+				{% endfor %}
+				</p>
+				{% endif %}
+				<!-- Iterate over the fields in a userForm and render them  -->
+				{% for field in selectTimeForm %}
+				<div class="form-group">
+					<!-- Render the field label tag -->
+					{{ field.label_tag }}
+					<!-- If the field is required, display a * next to the field label -->
+					{% if field.field.required %}
+					*
+					{% endif %}
+					<br/>
+					<!-- Render the input field -->
+					{{ field }}
+					<!-- Iterate over the field's errors, if any and display
+					them one by one in a error alert
+					-->
+					{% if field.errors %}
+					<p class="error">
+					{% for error in field.errors %}
+					{{ error }}
+					{% endfor %}
+					</p>
+					{% endif %}
+				</div>
+				{% endfor %}
+
+				{% if SelectOrgForm.non_field_errors %}
+				<p class="error">
+				{% for error in selectOrgForm.non_field_errors %}
+				{{ error }}
+				{% endfor %}
+				</p>
+				{% endif %}
+				<!-- Iterate over the fields in a userForm and render them  -->
+				{% for field in selectOrgForm %}
+				<div class="form-group">
+					<!-- Render the field label tag -->
+					{{ field.label_tag }}
+					<!-- If the field is required, display a * next to the field label -->
+					{% if field.field.required %}
+					*
+					{% endif %}
+					<br/>
+					<!-- Render the input field -->
+					{{ field }}
+					<!-- Iterate over the field's errors, if any and display
+					them one by one in a error alert
+					-->
+					{% if field.errors %}
+					<p class="error">
+					{% for error in field.errors %}
+					{{ error }}
+					{% endfor %}
+					</p>
+					{% endif %}
+				</div>
+				{% endfor %}
+
+				<input type="submit" class="btn btn-default" value="Submit" />
+			</form>
+		</div>
+		{% else %}
+		{% load googlecharts %}
+		{# container #}
+		<div id="out"></div>
+		{% googlecharts %}
+		{# named data and options can be reused #}
+		{% data values "out_data" %}
+		{% col "string" "Name" %}"{{ val }}"{% endcol %}
+		{% col "number" "Value" %}{{ val }}{% endcol %}
+		{% enddata %}
+		{# you can also use global javascript variables here, #}
+		{# and call functions #}
+		{% options "out_options" %}
+		kind: "PieChart",
+		options: {
+		width: 500,
+		height: 400
+		}
+		{% endoptions %}
+		{# chart is assembled from container, data and options #}
+		{% graph "out" "out_data" "out_options" %}
+		{% endgooglecharts %}
+		{% for key, value in details.items %}
+			<b> {{ key }} </b>
+			<hr />
+			<table>
+				<tr>
+					<th> Event Name </th>
+					<th> Hours Worked </th>
+				</tr>
+			{% for tuple in value %}
+				<tr>
+					<td> {{ tuple.0 }} </td>
+					<td> {{ tuple.1 }} </td>
+				</tr>
+			{% endfor %}
+			</table>
+			<br/>
+		{% endfor %}
+		{% endif %}
+	</body>
+</html>
