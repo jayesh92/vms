@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+# Below email fields are used to notify volunteers in case of creation of new jobs or assigning of job
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ADMIN EMAIL'
+EMAIL_HOST_PASSWORD = 'PASSWORD'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -31,7 +37,7 @@ TEMPLATE_DIRS = (
     # Execute cd path_of_cloned_gihub_repo/VMS/templstes
     # Execute pwd
     # copy the output of previous command and replace the below path with the same
-    '/home/jayesh/github/vms-1/VMS/templates',
+    BASE_DIR+'/VMS/templates',
 )
 
 ALLOWED_HOSTS = []

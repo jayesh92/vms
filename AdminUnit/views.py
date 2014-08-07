@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
+from django.core.mail import send_mail
 from django.db.models import Q
 
 import cStringIO as StringIO
@@ -64,7 +65,6 @@ def login_process(request):
 	'''
 	Authenticate a user against their credentials
 	'''
-
 	# POST Request, submitted form has come as a request, authenticate and redirect to apt page
   	if request.method == 'POST':
       		username = request.POST['username']
@@ -135,8 +135,14 @@ def job(request,jobId=None):
      		if jobsForm.is_valid():
 			newRecord = jobsForm.save();
 			eventObject=Event.objects.get(eventName=jobsForm.cleaned_data['event'])
-			eventObject.noOfVolunteersRequired += jobsForm.cleaned_data['noOfVolunteersRequired']
+			eventObject.noOfVolunteersRequired+=jobsForm.cleaned_data['noOfVolunteersRequired']
 			eventObject.save()
+			users = AdminProfile.objects.all()
+			email = []
+			for user in users:
+				email.append(user.user.email)
+			textContent = 'Job Name : ' + jobsForm.cleaned_data['jobName'] + '\n' + 'Job Decription : ' + jobsForm.cleaned_data['jobDescription'] + '\n' + 'Start Time : ' + str(jobsForm.cleaned_data['startDate']) + '\n' + 'End Time : ' + str(jobsForm.cleaned_data['endDate']) + '\n' + 'Would you like to volunteer ?'
+			send_mail('VMS: New Job', textContent, 'VMS Admin', email, fail_silently=False)
 			return HttpResponse('Job Created')
   	else:
      		jobsForm = JobsForm(instance = jobInstance)
@@ -292,6 +298,15 @@ def manageShift(request, shiftId=None):
    		 shiftForm = ShiftForm(request.POST,instance = shiftInstance)
 		 if shiftForm.is_valid():
 			 newRecord = shiftForm.save()
+			 event = shiftForm.cleaned_data['event'].eventName
+			 job = shiftForm.cleaned_data['job'].jobName
+			 volunteer = shiftForm.cleaned_data['volunteer'].user.username
+			 hours = shiftForm.cleaned_data['hours']
+			 startDate = Job.objects.get(event__eventName=event,jobName=job).startDate
+			 endDate = Job.objects.get(event__eventName=event,jobName=job).endDate
+			 email = [AdminProfile.objects.get(user__username=volunteer).user.email]
+			 textContent = 'Event : ' + event + '\n' + 'Job Name : ' + job + '\n' + 'Hours Assigned : ' + str(hours) + '\n' + 'Job Start Date : ' + str(startDate) +'\n' + 'Job End Date : ' + str(endDate)
+			 send_mail('VMS: You\'ve been assigned a job', textContent, 'VMS Admin', list(email), fail_silently=False)
 			 return HttpResponse("Shift Created/Edited")
   	
 	# to handle a GET Request

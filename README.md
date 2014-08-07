@@ -28,14 +28,7 @@ Also Run:
 
 Assuming, git is installed on your Linux or MAC OS machine, execute git clone https://github.com/jayesh92/vms-1.git <br />
 
-  - $> cd vms-1 <br />
-  - $> cd VMS/templates<br />
-  - $> pwd<br />
-  - Copy output of previous command
-  - $> cd .. <br />
-  - $> vim settings.py <br />
-  - Replace path on line number 34 to path copied from previously<br />
-  - cd ..<br />
+  - python manage.py syncdb<br />
   - python manage.py runserver<br />
 
 Point your browser to 127.0.0.1:8000/AdminUnit<br />
