@@ -2,7 +2,7 @@ from django.template import RequestContext
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.db.models import Q
@@ -16,16 +16,11 @@ from cgi import escape
 from AdminUnit.forms import *
 from AdminUnit.models import *
 
-def render_to_pdf(template_src, context_dict):
-    template = get_template(template_src)
-    context = Context(context_dict)
-    html  = template.render(context)
-    result = StringIO.StringIO()
-
-    pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
-    if not pdf.err:
-        return HttpResponse(result.getvalue(), mimetype='application/pdf')
-    return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
+def checkAdmin(user):
+	if user:
+		if AdminProfile.objects.filter(user__username=user.username).count() == 1:
+			return True
+	return False
 
 def index(request):
 	'''
@@ -99,6 +94,7 @@ def logout_process(request):
     	return HttpResponseRedirect('/AdminUnit/')
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def editEvent(request, eventId=None):
 	'''
 	Use to Edit/Create Event, In case of Creating new event eventId is None and therefore eventInstance
@@ -121,7 +117,9 @@ def editEvent(request, eventId=None):
   	
 	return render(request, "AdminUnit/event.html",{"eventForm" : eventForm})
 
+
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def job(request,jobId=None):
 	'''
 	Controller to Edit/Create Jobs. In case of Creating new job, jobId is None and therefore jobInstance
@@ -136,6 +134,9 @@ def job(request,jobId=None):
      		jobsForm = JobsForm(request.POST, instance = jobInstance)
      		if jobsForm.is_valid():
 			newRecord = jobsForm.save();
+			eventObject=Event.objects.get(eventName=jobsForm.cleaned_data['event'])
+			eventObject.noOfVolunteersRequired += jobsForm.cleaned_data['noOfVolunteersRequired']
+			eventObject.save()
 			return HttpResponse('Job Created')
   	else:
      		jobsForm = JobsForm(instance = jobInstance)
@@ -143,6 +144,7 @@ def job(request,jobId=None):
 	return render(request, "AdminUnit/jobs.html",{"jobsForm" : jobsForm})
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def allEvents(request):
 	'''
 	Controller responsible for displaying all Events that have been registered, alongside will be displayed the links to edit/delete an event
@@ -151,6 +153,7 @@ def allEvents(request):
   	return render(request, "AdminUnit/all_events.html", {"allEvents" : allEvents});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def allJobs(request):
 	'''
 	Controller responsible for displaying jobs registered across all Events that have been registered, alongside will be displayed the links to edit/delete the same
@@ -159,6 +162,7 @@ def allJobs(request):
   	return render(request, "AdminUnit/all_jobs.html", {"allJobs" : allJobs});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def deleteEvent(request,eventId=None):
 	'''
 	Delete's an event with a given primary key
@@ -168,6 +172,7 @@ def deleteEvent(request,eventId=None):
   	return render(request, "AdminUnit/all_events.html", {"allEvents" : allEvents});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def deleteJob(request,jobId=None):
 	'''
 	Delete's a job with a given primary key
@@ -177,6 +182,7 @@ def deleteJob(request,jobId=None):
   	return render(request, "AdminUnit/all_jobs.html", {"allJobs" : allJobs});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def editOrg(request, orgId=None):
 	'''
 	Use to Edit/Create Organization, In case of Creating new Org orgId is None and therefore orgInstance
@@ -200,6 +206,7 @@ def editOrg(request, orgId=None):
 	return render(request, "AdminUnit/org.html",{"orgForm" : orgForm})
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def allOrgs(request):
 	'''
 	Controller responsible for displaying all Events that have been registered, alongside will be displayed the links to edit/delete an event
@@ -208,6 +215,7 @@ def allOrgs(request):
   	return render(request, "AdminUnit/all_orgs.html", {"allOrgs" : allOrgs});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def deleteOrg(request,orgId=None):
 	'''
 	Delete's a job with a given primary key
@@ -217,6 +225,7 @@ def deleteOrg(request,orgId=None):
   	return render(request, "AdminUnit/all_orgs.html", {"allOrgs" : allOrgs});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def searchByEvent(request):
 	if request.method == 'POST':
 		selectEventForm = SelectEventForm(request.POST)
@@ -233,13 +242,13 @@ def searchByEvent(request):
 		return render(request, "AdminUnit/search_by_events.html", {"jobs" : jobs, "selectEventForm" : selectEventForm});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def searchByTime(request):
 	if request.method == 'POST':
 		selectTimeForm = SelectTimeForm(request.POST)
 		if selectTimeForm.is_valid():
 			startTime = selectTimeForm.cleaned_data['startTime']
 			endTime = selectTimeForm.cleaned_data['endTime']
-			print str(startTime) + ' ' + str(endTime)
 			jobs = Job.objects.filter(startDate__gte=startTime,endDate__lte=endTime)
 			selectTimeForm = {}
 			return render(request, "AdminUnit/search_by_time.html", {"jobs" : jobs, "selectTimeForm" : selectTimeForm});
@@ -251,6 +260,7 @@ def searchByTime(request):
 		return render(request, "AdminUnit/search_by_time.html", {"jobs" : jobs, "selectTimeForm" : selectTimeForm});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def searchEmployeeByOrg(request):
 	if request.method == 'POST':
 		selectOrgForm = SelectOrgForm(request.POST)
@@ -267,6 +277,7 @@ def searchEmployeeByOrg(request):
 		return render(request, "AdminUnit/search_by_org.html", {"users" : users, "selectOrgForm" : selectOrgForm});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def manageShift(request, shiftId=None):
 	'''
 	Use to Edit/Create Shifts, In case of Creating new Org orgId is None and therefore orgInstance
@@ -290,6 +301,7 @@ def manageShift(request, shiftId=None):
 	return render(request, "AdminUnit/shift.html", {"shiftForm" : shiftForm})
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def allShifts(request):
 	'''
 	Controller responsible for displaying all Events that have been registered, alongside will be displayed the links to edit/delete an event
@@ -298,6 +310,7 @@ def allShifts(request):
   	return render(request, "AdminUnit/all_shifts.html", {"allShifts" : allShifts});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def deleteShift(request,shiftId=None):
 	'''
 	Delete's a job with a given primary key
@@ -307,6 +320,7 @@ def deleteShift(request,shiftId=None):
   	return render(request, "AdminUnit/all_shifts.html", {"allShifts" : allShifts});
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def createShift(request, jobId=None, eventId=None, userName=None):
 	if Shift.objects.filter(event__pk=eventId,job__pk=jobId,volunteer__user__username=userName).count() == 0:
 	      	shift = Shift(event=Event.objects.get(pk=eventId),job=Job.objects.get(pk=jobId),volunteer=AdminProfile.objects.get(user__username=userName),hours=1)
@@ -316,6 +330,7 @@ def createShift(request, jobId=None, eventId=None, userName=None):
 		return HttpResponse("Shift with same username, eventname, jobname exists");
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def reportHoursByOrg(request):
 	if request.method == 'POST':
 		selectHoursForm = SelectHoursForm(request.POST)
@@ -348,6 +363,7 @@ def reportHoursByOrg(request):
 		return render(request, "AdminUnit/report_hours_by_org.html", {"values" : {}, "selectHoursForm" : selectHoursForm, "details" : {}})
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def reportVolunteersByOrg(request):
 	users = AdminProfile.objects.all()
 	counts = {}
@@ -364,6 +380,7 @@ def reportVolunteersByOrg(request):
 	return render(request, "AdminUnit/report_volunteers_by_org.html", values)
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def reportHoursByEvent(request):
 	if request.method == 'POST':
 		selectEventForm = SelectEventForm(request.POST)
@@ -395,6 +412,7 @@ def reportHoursByEvent(request):
 		return render(request, "AdminUnit/report_hours_by_event.html", {"values" : data, "selectEventForm" : selectEventForm, "details" : {}})
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def reportHoursByTime(request):
 	if request.method == 'POST':
 		selectTimeForm = SelectTimeForm(request.POST)
@@ -427,6 +445,7 @@ def reportHoursByTime(request):
 		return render(request, "AdminUnit/report_hours_by_time.html", {"values" : data, "selectTimeForm" : selectTimeForm, "details" : {}})
 
 @login_required
+@user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def reportHoursByTimeAndOrg(request):
 	if request.method == 'POST':
 		selectTimeForm = SelectTimeForm(request.POST)

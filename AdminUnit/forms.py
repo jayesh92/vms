@@ -46,6 +46,7 @@ class EventForm(ModelForm):
 	'''
 	class Meta:
      		model = Event
+		fields = ['eventName','startDate','endDate']
 		widgets = {
 			'startDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
 			'endDate': TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}),

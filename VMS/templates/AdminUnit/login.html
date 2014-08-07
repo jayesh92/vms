@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html>
-    <head>
-    	<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-        <title>VMS</title>
-    </head>
+	<head>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+		<title>VMS</title>
+	</head>
 
-    <body>
-        <h1>Login to VMS</h1>
+	<body>
+		<div class="container">
+			<div class="header">
+				<h3 class="text-muted">VMS: Login</h3>
+			</div>
+			<div class="row" style="padding:20px;">
+				<form role="form" action="." method="post">
 
-        <form id="login_form" method="post" action=".">
-            {% csrf_token %}
-            Username: <input type="text" name="username" value="" size="50" />
-            <br />
-            Password: <input type="password" name="password" value="" size="50" />
-            <br />
+					{% csrf_token %}
+					Username: <input type="text" name="username"/>
+					<br />
+					Password: <input type="password" name="password"/>
+					<br />
 
-            <input type="submit" value="Submit" />
-        </form>
-
-    </body>
+					<input type="submit" value="Submit" />
+				</form>
+			</div>
+		</div>
+	</body>
 </html>

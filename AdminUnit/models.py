@@ -73,6 +73,7 @@ class Event(models.Model):
 	'''
 	eventName = models.CharField(max_length=128, unique=True)
     	noOfVolunteersRequired = models.IntegerField(
+					default=0,
 					validators=[
 						RegexValidator(
 							r'^[1-9][0-9]*',
