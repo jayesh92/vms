@@ -210,7 +210,7 @@ def deleteJob(request,jobId=None):
 	associatedEvent = Job.objects.get(pk=jobId).event.eventName
 	event = Event.objects.get(eventName=associatedEvent)
 	event.noOfVolunteersRequired-=Job.objects.get(pk=jobId).noOfVolunteersRequired
-	evet.save()
+	event.save()
   	Job.objects.filter(pk=jobId).delete()
   	allJobs = Job.objects.all()
   	return render(request, "AdminUnit/all_jobs.html", {"allJobs" : allJobs});
