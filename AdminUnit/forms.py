@@ -34,11 +34,19 @@ class UserForm(forms.Form):
 
 class AdminProfileForm(ModelForm):
 	'''
-	As per the models, Registering a user involves two forms, user from auth models and custom-defined userProfile. This class is associated with forms for userProfile table.
+	As per the models, Registering a user involves two forms, user from auth models and custom-defined userProfile. This class is associated with forms for adminProfile table.
 	'''
 	class Meta:
 		model = AdminProfile
 		fields = ['address','location','state','organization','phone']
+
+class VolunteerProfileForm(ModelForm):
+	'''
+	As per the models, Registering a user involves two forms, user from auth models and custom-defined userProfile. This class is associated with forms for VolunteerProfile table.
+	'''
+	class Meta:
+		model = VolunteerProfile
+		fields = ['address','location','state','organization','phone','testfield']
 
 class EventForm(ModelForm):
 	'''

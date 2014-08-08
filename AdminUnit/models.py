@@ -5,7 +5,6 @@ from django.db.models import ForeignKey
 from django import forms
 import datetime
 
-
 class Organization(models.Model):
 	name = models.CharField(
 			max_length=128,
@@ -67,6 +66,45 @@ class AdminProfile(models.Model):
     	def __unicode__(self):
 		return self.user.username
 
+class VolunteerProfile(models.Model):
+	'''
+	Model for VolunteerProfile, each record is a one-to-one mapping ro user model from auth and also contains few other parameters
+	'''
+    	user = models.OneToOneField(User)
+
+    	address = models.CharField(
+			max_length=128,
+		)
+    	location = models.CharField(
+			max_length=128,
+			validators=[
+				RegexValidator(
+					r'^[(A-Z)|(a-z)|(\s)]+$',
+				)
+			]
+		)
+    	state = models.CharField(
+			max_length=128,
+			validators=[
+				RegexValidator(
+					r'^[(A-Z)|(a-z)|(\s)]+$',
+				)
+			]
+		)
+	organization = models.ForeignKey(Organization)
+    	phone = models.CharField(
+			max_length=128,
+			validators=[
+				RegexValidator(
+					r'^(\d{10})$',
+				)
+			]
+		)
+
+    	def __unicode__(self):
+		return self.user.username
+
+
 class Event(models.Model):
 	'''
 	Model structure of Event Table
@@ -111,7 +149,7 @@ class Job(models.Model):
 
 class Shift(models.Model):
 	event = models.ForeignKey(Event)
-	volunteer = models.ForeignKey(AdminProfile)
+	volunteer = models.ForeignKey(VolunteerProfile)
 	job = models.ForeignKey(Job)
 	hours = models.IntegerField(
 			validators=[

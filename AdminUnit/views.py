@@ -8,18 +8,18 @@ from django.shortcuts import render, render_to_response
 from django.core.mail import send_mail
 from django.db.models import Q
 
-import cStringIO as StringIO
-import ho.pisa as pisa
-from django.template.loader import get_template
-from django.template import Context
-from cgi import escape
-
 from AdminUnit.forms import *
 from AdminUnit.models import *
 
 def checkAdmin(user):
 	if user:
-		if AdminProfile.objects.filter(user__username=user.username).count() == 1:
+		if user.is_superuser or AdminProfile.objects.filter(user__username=user.username).count() == 1:
+			return True
+	return False
+
+def checkVolunteer(user):
+	if user:
+		if VolunteerProfile.objects.filter(user__username=user.username).count() == 1:
 			return True
 	return False
 
@@ -27,39 +27,64 @@ def index(request):
 	'''
 	Controller for VMS Homepage
 	'''
-	return render(request,"AdminUnit/index.html")
+	if request.user:
+		if checkAdmin(request.user):
+			return render(request,"AdminUnit/index.html",{"admin" : True, "volunteer" : False})
+		elif checkVolunteer(request.user):
+			return render(request,"AdminUnit/index.html",{"admin" : False, "volunteer" : True})
+	return render(request,"AdminUnit/index.html",{"admin" : False, "volunteer" : False})
 
 def register(request):
 	'''
-	This method is used to register new user into the system as a volunteer
+	This method is used to register new user into the system as an admin or volunteer
 	'''
-	
-	# POST Request, submitted form has come as a request
-  	if request.method == 'POST':
-    		userForm = UserForm(request.POST)
-    		adminProfileForm = AdminProfileForm(request.POST)
+	print request.user.username
+	if request.user.username != '' and request.user.is_authenticated() and checkAdmin(request.user):
+  		if request.method == 'POST':
+    			userForm = UserForm(request.POST)
+    			adminProfileForm = AdminProfileForm(request.POST)
 
-    		if userForm.is_valid() and adminProfileForm.is_valid():
-      			user = User.objects.create_user(first_name=userForm.cleaned_data['firstname'],last_name=userForm.cleaned_data['lastname'],
+    			if userForm.is_valid() and adminProfileForm.is_valid():
+      				user = User.objects.create_user(first_name=userForm.cleaned_data['firstname'],last_name=userForm.cleaned_data['lastname'],
 					  		email=userForm.cleaned_data['email'],username=userForm.cleaned_data['username'],
 							password=userForm.cleaned_data['password'])
 
-      			adminProfile = AdminProfile(user=user, address=adminProfileForm.cleaned_data['address'],location=adminProfileForm.cleaned_data['location'],
-        					 state=adminProfileForm.cleaned_data['state'],organization=adminProfileForm.cleaned_data['organization'],
-						 phone=adminProfileForm.cleaned_data['phone'])
+      				adminProfile = AdminProfile(user=user, address=adminProfileForm.cleaned_data['address'],
+						location=adminProfileForm.cleaned_data['location'],state=adminProfileForm.cleaned_data['state'],
+						organization=adminProfileForm.cleaned_data['organization'],phone=adminProfileForm.cleaned_data['phone'])
 
-      			adminProfile.save()
-			orgObject=Organization.objects.get(Q(name=adminProfileForm.cleaned_data['organization']))
-			orgObject.noOfVolunteers += 1
-			orgObject.save()
-      			return HttpResponse("You have registered, login available @ AdminUnit/")
+	     			adminProfile.save()
+				orgObject=Organization.objects.get(Q(name=adminProfileForm.cleaned_data['organization']))
+				orgObject.noOfVolunteers += 1
+				orgObject.save()
+      				return HttpResponse("You have registered, login available @ AdminUnit/")
+  		else:
+  			 userForm = UserForm()
+  			 adminProfileForm = AdminProfileForm()
+		return render(request, "AdminUnit/register.html",{ "userForm" : userForm , "adminProfileForm" : adminProfileForm , "admin" : True })
+	else:
+  		if request.method == 'POST':
+    			userForm = UserForm(request.POST)
+    			volunteerProfileForm = VolunteerProfileForm(request.POST)
 
-  	# GET Request, render empty form
-  	else:
-  		 userForm = UserForm()
-  		 adminProfileForm = AdminProfileForm()
- 
-  	return render(request, "AdminUnit/register.html",{ "userForm" : userForm , "adminProfileForm" : adminProfileForm })
+	    		if userForm.is_valid() and volunteerProfileForm.is_valid():
+      				user = User.objects.create_user(first_name=userForm.cleaned_data['firstname'],last_name=userForm.cleaned_data['lastname'],
+					  		email=userForm.cleaned_data['email'],username=userForm.cleaned_data['username'],
+							password=userForm.cleaned_data['password'])
+
+      				volunteerProfile = VolunteerProfile(user=user, address=volunteerProfileForm.cleaned_data['address'],
+					location=volunteerProfileForm.cleaned_data['location'],state=volunteerProfileForm.cleaned_data['state'],
+					organization=volunteerProfileForm.cleaned_data['organization'], phone=volunteerProfileForm.cleaned_data['phone'])
+
+      				volunteerProfile.save()
+				orgObject=Organization.objects.get(Q(name=volunteerProfileForm.cleaned_data['organization']))
+				orgObject.noOfVolunteers += 1
+				orgObject.save()
+      				return HttpResponse("You have registered, login available @ AdminUnit/")
+		else:
+  			 userForm = UserForm()
+  			 volunteerProfileForm = VolunteerProfileForm()
+		return render(request, "AdminUnit/register.html",{ "userForm" : userForm , "volunteerProfileForm" : volunteerProfileForm, "admin" : False })
 
 def login_process(request):
 	'''
@@ -74,8 +99,8 @@ def login_process(request):
 
       		if user:
           		if user.is_active:
-        	      		login(request,user)
-        	      		return HttpResponse("You are logged in, logout available @ AdminUnit/")
+	        	      	login(request,user)
+        		      	return HttpResponse("You are logged in, logout available @ AdminUnit/")
         	  	else:
               			return HttpResponse("Your account is disabled.")
       		else:
@@ -117,7 +142,6 @@ def editEvent(request, eventId=None):
   	
 	return render(request, "AdminUnit/event.html",{"eventForm" : eventForm})
 
-
 @login_required
 @user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def job(request,jobId=None):
@@ -137,7 +161,7 @@ def job(request,jobId=None):
 			eventObject=Event.objects.get(eventName=jobsForm.cleaned_data['event'])
 			eventObject.noOfVolunteersRequired+=jobsForm.cleaned_data['noOfVolunteersRequired']
 			eventObject.save()
-			users = AdminProfile.objects.all()
+			users = VolunteerProfile.objects.all()
 			email = []
 			for user in users:
 				email.append(user.user.email)
@@ -183,6 +207,10 @@ def deleteJob(request,jobId=None):
 	'''
 	Delete's a job with a given primary key
 	'''
+	associatedEvent = Job.objects.get(pk=jobId).event.eventName
+	event = Event.objects.get(eventName=associatedEvent)
+	event.noOfVolunteersRequired-=Job.objects.get(pk=jobId).noOfVolunteersRequired
+	evet.save()
   	Job.objects.filter(pk=jobId).delete()
   	allJobs = Job.objects.all()
   	return render(request, "AdminUnit/all_jobs.html", {"allJobs" : allJobs});
@@ -272,7 +300,7 @@ def searchEmployeeByOrg(request):
 		selectOrgForm = SelectOrgForm(request.POST)
 		if selectOrgForm.is_valid():
 			orgName = selectOrgForm.cleaned_data['org']
-			users = AdminProfile.objects.filter(organization__name=orgName)
+			users = VolunteerProfile.objects.filter(organization__name=orgName)
 			selectOrgForm = {}
 			return render(request, "AdminUnit/search_by_org.html", {"users" : users, "selectOrgForm" : selectOrgForm});
 		else:
@@ -304,7 +332,7 @@ def manageShift(request, shiftId=None):
 			 hours = shiftForm.cleaned_data['hours']
 			 startDate = Job.objects.get(event__eventName=event,jobName=job).startDate
 			 endDate = Job.objects.get(event__eventName=event,jobName=job).endDate
-			 email = [AdminProfile.objects.get(user__username=volunteer).user.email]
+			 email = [VolunteerProfile.objects.get(user__username=volunteer).user.email]
 			 textContent = 'Event : ' + event + '\n' + 'Job Name : ' + job + '\n' + 'Hours Assigned : ' + str(hours) + '\n' + 'Job Start Date : ' + str(startDate) +'\n' + 'Job End Date : ' + str(endDate)
 			 send_mail('VMS: You\'ve been assigned a job', textContent, 'VMS Admin', list(email), fail_silently=False)
 			 return HttpResponse("Shift Created/Edited")
@@ -338,7 +366,7 @@ def deleteShift(request,shiftId=None):
 @user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def createShift(request, jobId=None, eventId=None, userName=None):
 	if Shift.objects.filter(event__pk=eventId,job__pk=jobId,volunteer__user__username=userName).count() == 0:
-	      	shift = Shift(event=Event.objects.get(pk=eventId),job=Job.objects.get(pk=jobId),volunteer=AdminProfile.objects.get(user__username=userName),hours=1)
+	      	shift = Shift(event=Event.objects.get(pk=eventId),job=Job.objects.get(pk=jobId),volunteer=VolunteerProfile.objects.get(user__username=userName),hours=1)
 		shift.save()
 		return HttpResponse("Shift Created");
 	else:
