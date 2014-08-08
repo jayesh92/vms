@@ -46,7 +46,7 @@ class VolunteerProfileForm(ModelForm):
 	'''
 	class Meta:
 		model = VolunteerProfile
-		fields = ['address','location','state','organization','phone','testfield']
+		fields = ['address','location','state','organization','phone']
 
 class EventForm(ModelForm):
 	'''
