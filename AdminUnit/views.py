@@ -408,7 +408,7 @@ def reportHoursByOrg(request):
 @login_required
 @user_passes_test(checkAdmin, login_url='/AdminUnit/', redirect_field_name=None)
 def reportVolunteersByOrg(request):
-	users = AdminProfile.objects.all()
+	users = VolunteerProfile.objects.all()
 	counts = {}
 	for user in users:
 		org = user.organization.name

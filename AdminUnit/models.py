@@ -114,7 +114,7 @@ class Event(models.Model):
 					default=0,
 					validators=[
 						RegexValidator(
-							r'^[1-9][0-9]*',
+							r'^[0-9]*',
 						)
 					]
 				)
