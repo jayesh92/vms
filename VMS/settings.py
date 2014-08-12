@@ -34,9 +34,6 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    # Execute cd path_of_cloned_gihub_repo/VMS/templstes
-    # Execute pwd
-    # copy the output of previous command and replace the below path with the same
     BASE_DIR+'/VMS/templates',
 )
 
@@ -97,4 +94,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = BASE_DIR+'/VMS/static/'
