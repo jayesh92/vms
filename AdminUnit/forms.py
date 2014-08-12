@@ -7,9 +7,9 @@ from django.contrib.admin import widgets
 
 class UserForm(forms.Form):
 
-    '''
+    """
     As per the models, Registering a user involves two forms, user from auth models and custom-defines userprofile. This class is associated with forms for user table from auth.
-    '''
+    """
     firstname = forms.CharField(required=True)
     lastname = forms.CharField(required=True)
     username = forms.CharField(required=True)
@@ -42,9 +42,9 @@ class UserForm(forms.Form):
 
 class AdminProfileForm(ModelForm):
 
-    '''
+    """
     As per the models, Registering a user involves two forms, user from auth models and custom-defined userProfile. This class is associated with forms for adminProfile table.
-    '''
+    """
     class Meta:
         model = AdminProfile
         fields = ['address', 'location', 'state', 'organization', 'phone']
@@ -52,9 +52,9 @@ class AdminProfileForm(ModelForm):
 
 class VolunteerProfileForm(ModelForm):
 
-    '''
+    """
     As per the models, Registering a user involves two forms, user from auth models and custom-defined userProfile. This class is associated with forms for VolunteerProfile table.
-    '''
+    """
     class Meta:
         model = VolunteerProfile
         fields = ['address', 'location', 'state', 'organization', 'phone']
@@ -62,9 +62,9 @@ class VolunteerProfileForm(ModelForm):
 
 class EventForm(ModelForm):
 
-    '''
+    """
     Class Responsible for displaying forms of Event Class, inheriting ModelForm Class.
-    '''
+    """
     class Meta:
         model = Event
         fields = ['eventName', 'startDate', 'endDate']
@@ -80,9 +80,9 @@ class EventForm(ModelForm):
 
 class JobsForm(ModelForm):
 
-    '''
+    """
     Class Responsible for displaying forms of AssignedJob Class, inheriting ModelForm Class.
-    '''
+    """
     class Meta:
         model = Job
         widgets = {
@@ -97,9 +97,9 @@ class JobsForm(ModelForm):
 
 class OrgForm(ModelForm):
 
-    '''
+    """
     Class Responsible for displaying forms of AssignedJob Class, inheriting ModelForm Class.
-    '''
+    """
     class Meta:
         model = Organization
         fields = ['name', 'location']
@@ -107,9 +107,9 @@ class OrgForm(ModelForm):
 
 class ShiftForm(ModelForm):
 
-    '''
+    """
     Class for creating forms to insert/edit data into Shifts Model
-    '''
+    """
     class Meta:
         model = Shift
 

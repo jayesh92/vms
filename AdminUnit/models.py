@@ -32,9 +32,9 @@ class Organization(models.Model):
 
 class AdminProfile(models.Model):
 
-    '''
+    """
     Model for AdminProfile, each record is a one-to-one mapping ro user model from auth and also contains few other parameters
-    '''
+    """
     user = models.OneToOneField(User)
 
     address = models.CharField(
@@ -72,9 +72,9 @@ class AdminProfile(models.Model):
 
 class VolunteerProfile(models.Model):
 
-    '''
+    """
     Model for VolunteerProfile, each record is a one-to-one mapping ro user model from auth and also contains few other parameters
-    '''
+    """
     user = models.OneToOneField(User)
 
     address = models.CharField(
@@ -112,9 +112,9 @@ class VolunteerProfile(models.Model):
 
 class Event(models.Model):
 
-    '''
+    """
     Model structure of Event Table
-    '''
+    """
     eventName = models.CharField(max_length=128, unique=True)
     noOfVolunteersRequired = models.IntegerField(
         default=0,
@@ -133,9 +133,9 @@ class Event(models.Model):
 
 class Job(models.Model):
 
-    '''
+    """
     Model structure for Jobs, each job has a many-to-one relationship with events, i.e., there can be 'n' number of jobs associated with one single event. 'event' is therefore a foreign key
-    '''
+    """
     event = models.ForeignKey(Event)
 
     jobName = models.CharField(max_length=128)
