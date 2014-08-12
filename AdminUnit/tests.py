@@ -191,6 +191,24 @@ class TestRegisterView(TestCase):
 	The methods in this class test insertion of valid values, asserting errors in null entries
 	Current suite covers only volunteerProfile tests
 	"""
+	def test_volunteer_access(self):
+		c = Client()
+		response = c.post('/AdminUnit/register/', {})
+		self.assertEqual(200, response.status_code)
+		with self.assertRaises(KeyError):
+			response.context['adminProfileForm']
+
+	def test_admin_access(self):
+		c = Client()
+		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori',password='password')
+		profile = AdminProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		self.assertEqual(1, AdminProfile.objects.filter(user__username='jlahori').count())
+		c.login(username='jlahori', password='password')
+		response = c.post('/AdminUnit/register/', {})
+		self.assertEqual(200, response.status_code)
+		with self.assertRaises(KeyError):
+			response.context['volunteerProfileForm']
+
 	def test_invalid_value(self):
 		c = Client()
 		response = c.post('/AdminUnit/register/', {'firstname' : 'test', 'lastname' : 'test', 'email' : 'test', 'username' : 'test',
@@ -225,7 +243,17 @@ class TestEventView(TestCase):
 	"""
 	def test_login_required(self):
 		c = Client()
-		response = c.post('/AdminUnit/job/',{})
+		response = c.post('/AdminUnit/event/',{})
+		self.assertNotEqual(200, response.status_code)
+
+	def test_volunteer_access(self):
+		user = User.objects.create_user(first_name='Jayesh',last_name='Lahori',email='jlahori92@gmail.com',username='jlahori_volunteer',password='password')
+		profile = VolunteerProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
+		self.assertEqual(1, VolunteerProfile.objects.filter(user__username='jlahori_volunteer').count())
+
+		c = Client()
+		c.login(username='jlahori_volunteer',password='password')
+		response = c.post('/AdminUnit/event/', {})
 		self.assertNotEqual(200, response.status_code)
 
 	def test_invalid_value(self):
@@ -234,7 +262,6 @@ class TestEventView(TestCase):
 		profile = AdminProfile.objects.create(user=user,address='IIIT-H',location='Hyderabad',state='Andhra Pradesh',organization=Organization.objects.create(name='LinkedIn', location='blr'),phone='9581845730')
 		self.assertEqual(1, AdminProfile.objects.filter(user__username='jlahori').count())
 
-		#login with admin account
 		c.login(username='jlahori', password='password')
 
 		Event.objects.create(eventName='test_event', startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
