@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<!-- Link to the Bootstrap CSS from a CDN -->
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
 		<title>VMS</title>
 	</head>
@@ -9,18 +8,14 @@
 		<div class="container">
 			<div class="header">
 				{% if admin %}
-					<h3 class="text-muted">VMS: Register Admin</h3>
+				<h3 class="text-muted">VMS: Register Admin</h3>
 				{% else %}
-					<h3 class="text-muted">VMS: Register Volunteer</h3>
+				<h3 class="text-muted">VMS: Register Volunteer</h3>
 				{% endif %}
 			</div>
 			<div class="row" style="padding:20px;">
 				<form role="form" action="." method="post">
-					{% csrf_token %} <!-- CSRF token is rendered by Django in userForms to avoid CSRF attacks -->
-
-					<!-- If there are non-field errors in the userForm,
-					iterate over them one by one and display them.
-					-->
+					{% csrf_token %}
 					{% if UserForm.non_field_errors %}
 					<p class="error">
 					{% for error in userForm.non_field_errors %}
@@ -28,21 +23,14 @@
 					{% endfor %}
 					</p>
 					{% endif %}
-					<!-- Iterate over the fields in a userForm and render them  -->
 					{% for field in userForm %}
 					<div class="form-group">
-						<!-- Render the field label tag -->
 						{{ field.label_tag }}
-						<!-- If the field is required, display a * next to the field label -->
 						{% if field.field.required %}
 						*
 						{% endif %}
 						<br/>
-						<!-- Render the input field -->
 						{{ field }}
-						<!-- Iterate over the field's errors, if any and display
-						them one by one in a error alert
-						-->
 						{% if field.errors %}
 						<p class="error">
 						{% for error in field.errors %}
@@ -61,21 +49,14 @@
 					{% endfor %}
 					</p>
 					{% endif %}
-					<!-- Iterate over the fields in a userForm and render them  -->
 					{% for field in adminProfileForm %}
 					<div class="form-group">
-						<!-- Render the field label tag -->
 						{{ field.label_tag }}
-						<!-- If the field is required, display a * next to the field label -->
 						{% if field.field.required %}
 						*
 						{% endif %}
 						<br/>
-						<!-- Render the input field -->
 						{{ field }}
-						<!-- Iterate over the field's errors, if any and display
-						them one by one in a error alert
-						-->
 						{% if field.errors %}
 						<p class="error">
 						{% for error in field.errors %}
@@ -94,21 +75,14 @@
 					{% endfor %}
 					</p>
 					{% endif %}
-					<!-- Iterate over the fields in a userForm and render them  -->
 					{% for field in volunteerProfileForm %}
 					<div class="form-group">
-						<!-- Render the field label tag -->
 						{{ field.label_tag }}
-						<!-- If the field is required, display a * next to the field label -->
 						{% if field.field.required %}
 						*
 						{% endif %}
 						<br/>
-						<!-- Render the input field -->
 						{{ field }}
-						<!-- Iterate over the field's errors, if any and display
-						them one by one in a error alert
-						-->
 						{% if field.errors %}
 						<p class="error">
 						{% for error in field.errors %}

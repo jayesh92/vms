@@ -1,91 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Link to the Bootstrap CSS from a CDN -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>VMS</title>
-    <style>
-	    th,td{
-		    padding-left : 5%;
-	    }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-	  {% if selectEventForm  %}
-        	<h3 class="text-muted">VMS: Select Event</h3>
-	  {% else %}
-        	<h3 class="text-muted">VMS: List of Jobs</h3>
-	  {% endif %}
-      </div>
-       <div class="row" style="padding:20px;">
-	  {% if selectEventForm  %}
-          <form role="form" action="." method="post">
-	         {% csrf_token %} <!-- CSRF token is rendered by Django in userForms to avoid CSRF attacks -->
-           
-           <!-- If there are non-field errors in the userForm,
-                iterate over them one by one and display them.
-            -->
-           {% if SelectEventForm.non_field_errors %}
-            <p class="error">
-		          {% for error in selectEventForm.non_field_errors %}
-		            {{ error }}
-		          {% endfor %}
-            </p>
-           {% endif %}
-           <!-- Iterate over the fields in a userForm and render them  -->
-           {% for field in selectEventForm %}
-            <div class="form-group">
-              <!-- Render the field label tag -->
-		          {{ field.label_tag }}
-              <!-- If the field is required, display a * next to the field label -->
-              {% if field.field.required %}
-              *
-              {% endif %}
-              <br/>
-              <!-- Render the input field -->
-		          {{ field }}
-		        <!-- Iterate over the field's errors, if any and display
-                 them one by one in a error alert
-            -->
-		        {% if field.errors %}
-		          <p class="error">
-		          {% for error in field.errors %}
-		            {{ error }}
-		          {% endfor %}
-		          </p>
-		        {% endif %}
-            </div>
-          {% endfor %}
+	<head>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+		<title>VMS</title>
+		<style>
+			th,td{
+				padding-left : 5%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="header">
+				{% if selectEventForm  %}
+				<h3 class="text-muted">VMS: Select Event</h3>
+				{% else %}
+				<h3 class="text-muted">VMS: List of Jobs</h3>
+				{% endif %}
+			</div>
+			<div class="row" style="padding:20px;">
+				{% if selectEventForm  %}
+				<form role="form" action="." method="post">
+					{% csrf_token %}           
+					{% if SelectEventForm.non_field_errors %}
+					<p class="error">
+					{% for error in selectEventForm.non_field_errors %}
+					{{ error }}
+					{% endfor %}
+					</p>
+					{% endif %}
+					{% for field in selectEventForm %}
+					<div class="form-group">
+						{{ field.label_tag }}
+						{% if field.field.required %}
+						*
+						{% endif %}
+						<br/>
+						{{ field }}
+						{% if field.errors %}
+						<p class="error">
+						{% for error in field.errors %}
+						{{ error }}
+						{% endfor %}
+						</p>
+						{% endif %}
+					</div>
+					{% endfor %}
 
-    		<input type="submit" class="btn btn-default" value="Submit" />
-	</form>
-	{% else %}
-               <table>
-                       <tr>
-                                <th> Job Name </th>
-                                <th> Job Description </th>
-                                <th> Start Date </th>
-                                <th> End Date </th>
-                                <th> No Of Volunteers Reqd</th>
-                                <th> Have Time ?</th>
-                        </tr>
+					<input type="submit" class="btn btn-default" value="Submit" />
+				</form>
+				{% else %}
+				<table>
+					<tr>
+						<th> Job Name </th>
+						<th> Job Description </th>
+						<th> Start Date </th>
+						<th> End Date </th>
+						<th> No Of Volunteers Reqd</th>
+						<th> Have Time ?</th>
+					</tr>
 
-                        {% for job in jobs %}
-                        <tr>
-                                <td> {{ job.jobName }} </td>
-                                <td> {{ job.jobDescription }} </td>
-                                <td> {{ job.startDate }} </td>
-                                <td> {{ job.endDate }} </td>
-                                <td> {{ job.noOfVolunteersRequired }} </td>
-				<td> <a href="/AdminUnit/createShift/{{ job.pk }}/{{ job.event.pk }}/{{ user.username }}">Volunteer</a> </td>
-                        </tr>
-                        {% endfor %}
-		</table>
-	{% endif %}
-      </div>
-    </div>
-  </body>
+					{% for job in jobs %}
+					<tr>
+						<td> {{ job.jobName }} </td>
+						<td> {{ job.jobDescription }} </td>
+						<td> {{ job.startDate }} </td>
+						<td> {{ job.endDate }} </td>
+						<td> {{ job.noOfVolunteersRequired }} </td>
+						<td> <a href="/AdminUnit/createShift/{{ job.pk }}/{{ job.event.pk }}/{{ user.username }}">Volunteer</a> </td>
+					</tr>
+					{% endfor %}
+				</table>
+				{% endif %}
+			</div>
+		</div>
+	</body>
 </html>
 
