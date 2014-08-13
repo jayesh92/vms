@@ -144,8 +144,7 @@ def login_process(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponse(
-                    "You are logged in, logout available @ AdminUnit/")
+		return HttpResponseRedirect('/AdminUnit/')
             else:
                 return HttpResponse("Your account is disabled.")
         else:
@@ -166,10 +165,7 @@ def logout_process(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def editEvent(request, eventId=None):
     '''
     Use to Edit/Create Event, In case of Creating new event eventId is None and therefore eventInstance
@@ -195,10 +191,7 @@ def editEvent(request, eventId=None):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def job(request, jobId=None):
     '''
     Controller to Edit/Create Jobs. In case of Creating new job, jobId is None and therefore jobInstance
@@ -239,10 +232,7 @@ def job(request, jobId=None):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def allEvents(request):
     '''
     Controller responsible for displaying all Events that have been registered, alongside will be displayed the links to edit/delete an event
@@ -254,10 +244,7 @@ def allEvents(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def allJobs(request):
     '''
     Controller responsible for displaying jobs registered across all Events that have been registered, alongside will be displayed the links to edit/delete the same
@@ -267,10 +254,7 @@ def allJobs(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteEvent(request, eventId=None):
     '''
     Delete's an event with a given primary key
@@ -283,10 +267,7 @@ def deleteEvent(request, eventId=None):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteJob(request, jobId=None):
     '''
     Delete's a job with a given primary key
@@ -302,10 +283,7 @@ def deleteJob(request, jobId=None):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def editOrg(request, orgId=None):
     '''
     Use to Edit/Create Organization, In case of Creating new Org orgId is None and therefore orgInstance
@@ -331,10 +309,7 @@ def editOrg(request, orgId=None):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def allOrgs(request):
     '''
     Controller responsible for displaying all Events that have been registered, alongside will be displayed the links to edit/delete an event
@@ -344,10 +319,7 @@ def allOrgs(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteOrg(request, orgId=None):
     '''
     Delete's a job with a given primary key
@@ -358,10 +330,7 @@ def deleteOrg(request, orgId=None):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def searchByEvent(request):
     if request.method == 'POST':
         selectEventForm = SelectEventForm(request.POST)
@@ -388,10 +357,7 @@ def searchByEvent(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def searchByTime(request):
     if request.method == 'POST':
         selectTimeForm = SelectTimeForm(request.POST)
@@ -421,10 +387,7 @@ def searchByTime(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def searchEmployeeByOrg(request):
     if request.method == 'POST':
         selectOrgForm = SelectOrgForm(request.POST)
@@ -451,10 +414,7 @@ def searchEmployeeByOrg(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def manageShift(request, shiftId=None):
     '''
     Use to Edit/Create Shifts, In case of Creating new Org orgId is None and therefore orgInstance
@@ -501,10 +461,7 @@ def manageShift(request, shiftId=None):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def allShifts(request):
     '''
     Controller responsible for displaying all Events that have been registered, alongside will be displayed the links to edit/delete an event
@@ -516,10 +473,7 @@ def allShifts(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteShift(request, shiftId=None):
     '''
     Delete's a job with a given primary key
@@ -532,10 +486,7 @@ def deleteShift(request, shiftId=None):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def createShift(request, jobId=None, eventId=None, userName=None):
     if Shift.objects.filter(
             event__pk=eventId,
@@ -554,10 +505,7 @@ def createShift(request, jobId=None, eventId=None, userName=None):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportHoursByOrg(request):
     if request.method == 'POST':
         selectHoursForm = SelectHoursForm(request.POST)
@@ -605,10 +553,7 @@ def reportHoursByOrg(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportVolunteersByOrg(request):
     users = VolunteerProfile.objects.all()
     counts = {}
@@ -626,10 +571,7 @@ def reportVolunteersByOrg(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportHoursByEvent(request):
     if request.method == 'POST':
         selectEventForm = SelectEventForm(request.POST)
@@ -676,10 +618,7 @@ def reportHoursByEvent(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportHoursByTime(request):
     if request.method == 'POST':
         selectTimeForm = SelectTimeForm(request.POST)
@@ -729,10 +668,7 @@ def reportHoursByTime(request):
 
 
 @login_required
-@user_passes_test(
-    checkAdmin,
-    login_url='/AdminUnit/',
-    redirect_field_name=None)
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportHoursByTimeAndOrg(request):
     if request.method == 'POST':
         selectTimeForm = SelectTimeForm(request.POST)
