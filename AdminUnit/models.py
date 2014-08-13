@@ -31,9 +31,10 @@ class Organization(models.Model):
 
 
 class AdminProfile(models.Model):
-
     """
-    Model for AdminProfile, each record is a one-to-one mapping ro user model from auth and also contains few other parameters
+    Model for AdminProfile,
+    Each record is a one-to-one mapping to `user model` from
+    auth and also contains few other parameters
     """
     user = models.OneToOneField(User)
 
@@ -71,9 +72,10 @@ class AdminProfile(models.Model):
 
 
 class VolunteerProfile(models.Model):
-
     """
-    Model for VolunteerProfile, each record is a one-to-one mapping ro user model from auth and also contains few other parameters
+    Model for VolunteerProfile, Will be replaced by Irish` volunteer model
+    Each record is a one-to-one mapping to `user model` from
+    auth and also contains few other parameters
     """
     user = models.OneToOneField(User)
 
@@ -111,10 +113,6 @@ class VolunteerProfile(models.Model):
 
 
 class Event(models.Model):
-
-    """
-    Model structure of Event Table
-    """
     eventName = models.CharField(max_length=128, unique=True)
     noOfVolunteersRequired = models.IntegerField(
         default=0,
@@ -132,9 +130,10 @@ class Event(models.Model):
 
 
 class Job(models.Model):
-
     """
-    Model structure for Jobs, each job has a many-to-one relationship with events, i.e., there can be 'n' number of jobs associated with one single event. 'event' is therefore a foreign key
+    Model structure for Jobs,
+    Each job is associated with some event, therefore has a
+    Foreign Key relationship with event table
     """
     event = models.ForeignKey(Event)
 
@@ -158,6 +157,11 @@ class Job(models.Model):
 
 
 class Shift(models.Model):
+    """
+    Model structure for Shifts,
+    Each shift is store for records of the forms
+    <event, volunteer, job, hours>
+    """
     event = models.ForeignKey(Event)
     volunteer = models.ForeignKey(VolunteerProfile)
     job = models.ForeignKey(Job)

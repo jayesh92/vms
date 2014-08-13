@@ -13,6 +13,12 @@ from AdminUnit.models import *
 
 
 def checkAdmin(user):
+    """
+    This method is used by user_passes_test decorator to
+    distinguish between admin user and volunteer user.
+    It returns true if user object is a super user or
+    member of AdminProfile table
+    """
     if user:
         if user.is_superuser or AdminProfile.objects.filter(
                 user__username=user.username).count() == 1:
@@ -21,6 +27,10 @@ def checkAdmin(user):
 
 
 def checkVolunteer(user):
+    """
+    This method checks if passes uder object is a registerd
+    volunteer user or not
+    """
     if user:
         if VolunteerProfile.objects.filter(
                 user__username=user.username).count() == 1:
@@ -29,9 +39,12 @@ def checkVolunteer(user):
 
 
 def index(request):
-    '''
-    Controller for VMS Homepage
-    '''
+    """
+    Method displays the index page(dashboard) to the user
+    as per his access rights (Volunteer/Admin). Distinction
+    is done on the basis of checkAdmin and checkVolunteer
+    methods
+    """
     if request.user:
         if checkAdmin(request.user):
             return render(request,
@@ -50,10 +63,13 @@ def index(request):
 
 
 def register(request):
-    '''
-    This method is used to register new user into the system as an admin or volunteer
-    '''
-    print request.user.username
+    """
+    This method is responsible for siplaying the register user view
+    Register Admin or volunteer is judged on the basis of users 
+    access rights.
+    Only if user is registered and logged in and registered as an
+    admin user, he/she is allowed to register others as an admin user
+    """
     if request.user.username != '' and request.user.is_authenticated(
     ) and checkAdmin(request.user):
         if request.method == 'POST':
@@ -130,11 +146,10 @@ def register(request):
 
 
 def login_process(request):
-    '''
-    Authenticate a user against their credentials
-    '''
-    # POST Request, submitted form has come as a request, authenticate and
-    # redirect to apt page
+    """
+    Checks user's credentials and logs him to admin or volunteer
+    dashboard accordingly.
+    """
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -150,16 +165,15 @@ def login_process(request):
         else:
             return HttpResponse("Invalid login details supplied.")
 
-    # GET Request, display login form template
     else:
         return render(request, 'AdminUnit/login.html')
 
 
 @login_required
 def logout_process(request):
-    '''
-    logout a user
-    '''
+    """
+    Logout a user object
+    """
     logout(request)
     return HttpResponseRedirect('/AdminUnit/')
 
@@ -167,23 +181,19 @@ def logout_process(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def editEvent(request, eventId=None):
-    '''
-    Use to Edit/Create Event, In case of Creating new event eventId is None and therefore eventInstance
-    '''
+    """
+    Use to Edit/Create Event Objects
+    """
     if eventId:
         eventInstance = Event.objects.get(pk=eventId)
     else:
         eventInstance = None
 
-    # POST Request, submitted form has come as a request. If eventInstance is
-    # none implies new record has to be saved else edited record
     if request.method == 'POST':
         eventForm = EventForm(request.POST, instance=eventInstance)
         if eventForm.is_valid():
             newRecord = eventForm.save()
             return HttpResponse("Event Created/Edited")
-
-    # to handle a GET Request
     else:
         eventForm = EventForm(instance=eventInstance)
 
@@ -193,16 +203,14 @@ def editEvent(request, eventId=None):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def job(request, jobId=None):
-    '''
-    Controller to Edit/Create Jobs. In case of Creating new job, jobId is None and therefore jobInstance
-    '''
+    """
+    Used to Edit/Create Job
+    """
     if jobId:
         jobInstance = Job.objects.get(pk=jobId)
     else:
         jobInstance = None
 
-    # POST Request, submitted form has come as a request. If jobInstance is
-    # none implies new record has to be saved else edited record
     if request.method == 'POST':
         jobsForm = JobsForm(request.POST, instance=jobInstance)
         if jobsForm.is_valid():
@@ -216,8 +224,7 @@ def job(request, jobId=None):
             email = []
             for user in users:
                 email.append(user.user.email)
-            textContent = 'Job Name : ' + jobsForm.cleaned_data['jobName'] + '\n' + 'Job Decription : ' + jobsForm.cleaned_data['jobDescription'] + '\n' + 'Start Time : ' + str(
-                jobsForm.cleaned_data['startDate']) + '\n' + 'End Time : ' + str(jobsForm.cleaned_data['endDate']) + '\n' + 'Would you like to volunteer ?'
+            textContent = 'Job Name : ' + jobsForm.cleaned_data['jobName'] + '\n' + 'Job Decription : ' + jobsForm.cleaned_data['jobDescription'] + '\n' + 'Start Time : ' + str( jobsForm.cleaned_data['startDate'] ) + '\n' + 'End Time : ' + str(jobsForm.cleaned_data['endDate']) + '\n' + 'Would you like to volunteer ?'
             send_mail(
                 'VMS: New Job',
                 textContent,
@@ -227,16 +234,15 @@ def job(request, jobId=None):
             return HttpResponse('Job Created')
     else:
         jobsForm = JobsForm(instance=jobInstance)
-
     return render(request, "AdminUnit/jobs.html", {"jobsForm": jobsForm})
 
 
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def allEvents(request):
-    '''
-    Controller responsible for displaying all Events that have been registered, alongside will be displayed the links to edit/delete an event
-    '''
+    """
+    This method is responsible for the all events view
+    """
     allEvents = Event.objects.all()
     return render(request,
                   "AdminUnit/all_events.html",
@@ -246,74 +252,69 @@ def allEvents(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def allJobs(request):
-    '''
-    Controller responsible for displaying jobs registered across all Events that have been registered, alongside will be displayed the links to edit/delete the same
-    '''
+    """
+    This method is responsible for the all jobs view
+    """
     allJobs = Job.objects.all()
-    return render(request, "AdminUnit/all_jobs.html", {"allJobs": allJobs})
+    return render(request,
+                  "AdminUnit/all_jobs.html",
+                  {"allJobs": allJobs})
 
 
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteEvent(request, eventId=None):
-    '''
+    """
     Delete's an event with a given primary key
-    '''
-    Event.objects.filter(pk=eventId).delete()
-    allEvents = Event.objects.all()
-    return render(request,
-                  "AdminUnit/all_events.html",
-                  {"allEvents": allEvents})
+    """
+    if eventId != None:
+	    Event.objects.filter(pk=eventId).delete()
+    return HttpResponseRedirect('/AdminUnit/allEvents/')
 
 
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteJob(request, jobId=None):
-    '''
+    """
     Delete's a job with a given primary key
-    '''
-    associatedEvent = Job.objects.get(pk=jobId).event.eventName
-    event = Event.objects.get(eventName=associatedEvent)
-    event.noOfVolunteersRequired -= Job.objects.get(
-        pk=jobId).noOfVolunteersRequired
-    event.save()
-    Job.objects.filter(pk=jobId).delete()
-    allJobs = Job.objects.all()
-    return render(request, "AdminUnit/all_jobs.html", {"allJobs": allJobs})
+    """
+    if jobId != None:
+        associatedEvent = Job.objects.get(pk=jobId).event.eventName
+        event = Event.objects.get(eventName=associatedEvent)
+        event.noOfVolunteersRequired -= Job.objects.get(
+            pk=jobId).noOfVolunteersRequired
+        event.save()
+        Job.objects.filter(pk=jobId).delete()
+    return HttpResponseRedirect('/AdminUnit/allJobs/')
 
 
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def editOrg(request, orgId=None):
-    '''
-    Use to Edit/Create Organization, In case of Creating new Org orgId is None and therefore orgInstance
-    '''
+    """
+    Use to Edit/Create Organization
+    """
     if orgId:
         orgInstance = Organization.objects.get(pk=orgId)
     else:
         orgInstance = None
 
-    # POST Request, submitted form has come as a request. If eventInstance is
-    # none implies new record has to be saved else edited record
     if request.method == 'POST':
         orgForm = OrgForm(request.POST, instance=orgInstance)
         if orgForm.is_valid():
             newRecord = orgForm.save()
             return HttpResponse("Org Created/Edited")
-
-    # to handle a GET Request
     else:
         orgForm = OrgForm(instance=orgInstance)
-
     return render(request, "AdminUnit/org.html", {"orgForm": orgForm})
 
 
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def allOrgs(request):
-    '''
-    Controller responsible for displaying all Events that have been registered, alongside will be displayed the links to edit/delete an event
-    '''
+    """
+    This method is responsible for displating th all Organizations view
+    """
     allOrgs = Organization.objects.all()
     return render(request, "AdminUnit/all_orgs.html", {"allOrgs": allOrgs})
 
@@ -321,17 +322,20 @@ def allOrgs(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteOrg(request, orgId=None):
-    '''
-    Delete's a job with a given primary key
-    '''
+    """
+    Delete's an org with a given primary key
+    """
     Organization.objects.filter(pk=orgId).delete()
-    allOrgs = Organization.objects.all()
-    return render(request, "AdminUnit/all_orgs.html", {"allOrgs": allOrgs})
+    return HttpResponseRedirect("/AdminUnit/allOrgs")
 
 
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def searchByEvent(request):
+    """
+    This method displays all jobs inside an event.
+    Will be used by volunteer's to search jobs
+    """
     if request.method == 'POST':
         selectEventForm = SelectEventForm(request.POST)
         if selectEventForm.is_valid():
@@ -359,6 +363,10 @@ def searchByEvent(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def searchByTime(request):
+    """
+    This method displays all jobs within a time range.
+    Will be used by volunteer's to search jobs
+    """
     if request.method == 'POST':
         selectTimeForm = SelectTimeForm(request.POST)
         if selectTimeForm.is_valid():
@@ -389,6 +397,9 @@ def searchByTime(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def searchEmployeeByOrg(request):
+    """
+    This method displays all employees belonging to an Org.
+    """
     if request.method == 'POST':
         selectOrgForm = SelectOrgForm(request.POST)
         if selectOrgForm.is_valid():
@@ -416,16 +427,15 @@ def searchEmployeeByOrg(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def manageShift(request, shiftId=None):
-    '''
-    Use to Edit/Create Shifts, In case of Creating new Org orgId is None and therefore orgInstance
-    '''
+    """
+    Use to Edit/Create Shifts
+    Used by admin to assign shifts to voluneers
+    """
     if shiftId:
         shiftInstance = Shift.objects.get(pk=shiftId)
     else:
         shiftInstance = None
 
-    # POST Request, submitted form has come as a request. If eventInstance is
-    # none implies new record has to be saved else edited record
     if request.method == 'POST':
         shiftForm = ShiftForm(request.POST, instance=shiftInstance)
         if shiftForm.is_valid():
@@ -452,8 +462,6 @@ def manageShift(request, shiftId=None):
                 list(email),
                 fail_silently=False)
             return HttpResponse("Shift Created/Edited")
-
-    # to handle a GET Request
     else:
         shiftForm = ShiftForm(instance=shiftInstance)
 
@@ -463,9 +471,9 @@ def manageShift(request, shiftId=None):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def allShifts(request):
-    '''
-    Controller responsible for displaying all Events that have been registered, alongside will be displayed the links to edit/delete an event
-    '''
+    """
+    Controller for all Shifts views
+    """
     allShifts = Shift.objects.all()
     return render(request,
                   "AdminUnit/all_shifts.html",
@@ -475,14 +483,12 @@ def allShifts(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteShift(request, shiftId=None):
-    '''
-    Delete's a job with a given primary key
-    '''
-    Shift.objects.filter(pk=shiftId).delete()
-    allShifts = Shift.objects.all()
-    return render(request,
-                  "AdminUnit/all_shifts.html",
-                  {"allShifts": allShifts})
+    """
+    Delete's a shift with a given primary key
+    """
+    if shiftId != None:
+	    Shift.objects.filter(pk=shiftId).delete()
+    return HttpResponseRedirect('/AdminUnit/allShifts/')
 
 
 @login_required
@@ -507,6 +513,11 @@ def createShift(request, jobId=None, eventId=None, userName=None):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportHoursByOrg(request):
+    """
+    Reports total number of hours worked by all volunteers
+    grouped by organization
+    Gives Graphical as well as textual content
+    """
     if request.method == 'POST':
         selectHoursForm = SelectHoursForm(request.POST)
         if selectHoursForm.is_valid():
@@ -555,6 +566,9 @@ def reportHoursByOrg(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportVolunteersByOrg(request):
+    """
+    Reports total nu,ber of volunteers grouped by organization
+    """
     users = VolunteerProfile.objects.all()
     counts = {}
     for user in users:
@@ -573,6 +587,10 @@ def reportVolunteersByOrg(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportHoursByEvent(request):
+    """
+    Total numer of hours contributed by each organization during the
+    given event.
+    """
     if request.method == 'POST':
         selectEventForm = SelectEventForm(request.POST)
         if selectEventForm.is_valid():
@@ -620,6 +638,10 @@ def reportHoursByEvent(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportHoursByTime(request):
+    """
+    Reports total numer of hours contributed by employees across
+    all events occured during the given dates, Grouped by Organizations
+    """
     if request.method == 'POST':
         selectTimeForm = SelectTimeForm(request.POST)
         if selectTimeForm.is_valid():
@@ -670,6 +692,11 @@ def reportHoursByTime(request):
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportHoursByTimeAndOrg(request):
+    """
+    Total number of hours contributed by each employee of
+    given organization across all events occured during
+    the given timestamps
+    """
     if request.method == 'POST':
         selectTimeForm = SelectTimeForm(request.POST)
         selectOrgForm = SelectOrgForm(request.POST)

@@ -6,9 +6,10 @@ from django.contrib.admin import widgets
 
 
 class UserForm(forms.Form):
-
     """
-    As per the models, Registering a user involves two forms, user from auth models and custom-defines userprofile. This class is associated with forms for user table from auth.
+    This class creates a form instance as per the Django auth table
+    This is used alongwith AdminProfile/VolunteerProfile for for
+    registering users
     """
     firstname = forms.CharField(required=True)
     lastname = forms.CharField(required=True)
@@ -41,9 +42,9 @@ class UserForm(forms.Form):
 
 
 class AdminProfileForm(ModelForm):
-
     """
-    As per the models, Registering a user involves two forms, user from auth models and custom-defined userProfile. This class is associated with forms for adminProfile table.
+    ModelForm for AdminProfile Class
+    Used for registering admins into the system
     """
     class Meta:
         model = AdminProfile
@@ -51,9 +52,10 @@ class AdminProfileForm(ModelForm):
 
 
 class VolunteerProfileForm(ModelForm):
-
     """
-    As per the models, Registering a user involves two forms, user from auth models and custom-defined userProfile. This class is associated with forms for VolunteerProfile table.
+    ModelForm for AdminProfile Class
+    Used for registering admins into the system
+    Will be replaced by Irish's instance
     """
     class Meta:
         model = VolunteerProfile
@@ -61,9 +63,9 @@ class VolunteerProfileForm(ModelForm):
 
 
 class EventForm(ModelForm):
-
     """
-    Class Responsible for displaying forms of Event Class, inheriting ModelForm Class.
+    ModelForm for Event Class
+    Used by admins to create Events
     """
     class Meta:
         model = Event
@@ -79,9 +81,9 @@ class EventForm(ModelForm):
 
 
 class JobsForm(ModelForm):
-
     """
-    Class Responsible for displaying forms of AssignedJob Class, inheriting ModelForm Class.
+    ModelForm for Jobs Class
+    Used by admins to create Jobs inside events
     """
     class Meta:
         model = Job
@@ -96,9 +98,8 @@ class JobsForm(ModelForm):
 
 
 class OrgForm(ModelForm):
-
     """
-    Class Responsible for displaying forms of AssignedJob Class, inheriting ModelForm Class.
+    ModelForm for Organization Class
     """
     class Meta:
         model = Organization
@@ -106,9 +107,8 @@ class OrgForm(ModelForm):
 
 
 class ShiftForm(ModelForm):
-
     """
-    Class for creating forms to insert/edit data into Shifts Model
+    ModelForm for Shift class
     """
     class Meta:
         model = Shift
