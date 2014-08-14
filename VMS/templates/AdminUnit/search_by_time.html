@@ -15,7 +15,7 @@
 				{% if selectTimeForm  %}
 				<h3 class="text-muted">VMS: Select Time</h3>
 				{% else %}
-				<h3 class="text-muted">VMS: List of Jobs</h3>
+				<h3 class="text-muted">VMS: List of Shifts</h3>
 				{% endif %}
 			</div>
 			<div class="row" style="padding:20px;">
@@ -55,21 +55,19 @@
 						<th> Event Name </th>
 						<th> Job Name </th>
 						<th> Job Description </th>
-						<th> Start Date </th>
-						<th> End Date </th>
-						<th> No Of Volunteers Reqd</th>
+						<th> Shift Start Time </th>
+						<th> Shift End Time </th>
 						<th> Have Time ? </th>
 					</tr>
 
-					{% for job in jobs %}
+					{% for shift in shifts %}
 					<tr>
-						<td> {{ job.event.eventName }} </td>
-						<td> {{ job.jobName }} </td>
-						<td> {{ job.jobDescription }} </td>
-						<td> {{ job.startDate }} </td>
-						<td> {{ job.endDate }} </td>
-						<td> {{ job.noOfVolunteersRequired }} </td>
-						<td> <a href="/AdminUnit/createShift/{{ job.pk }}/{{ job.event.pk }}/{{ user.username }}">Volunteer</a> </td>
+						<td> {{ shift.event.eventName }} </td>
+						<td> {{ shift.job.jobName }} </td>
+						<td> {{ shift.job.jobDescription }} </td>
+						<td> {{ shift.startTime }} </td>
+						<td> {{ shift.endTime }} </td>
+						<td> <a href="/AdminUnit/createSat/{{ shift.pk }}/{{ user.username }}">Volunteer</a> </td>
 					</tr>
 					{% endfor %}
 				</table>

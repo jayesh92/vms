@@ -12,17 +12,19 @@
 	{% endif %}
 	{% if admin %}
 	<a href="/AdminUnit/register/">Register</a> <br />
+	<a href="/AdminUnit/org/">Create Organization</a> <br />
+	<a href="/AdminUnit/allOrgs/">All Organizations</a> <br />
 	<a href="/AdminUnit/event/">Create Event</a> <br />
 	<a href="/AdminUnit/allEvents/">All Events</a> <br />
 	<a href="/AdminUnit/job/">Create Job</a> <br />
 	<a href="/AdminUnit/allJobs/">All Jobs</a> <br />
-	<a href="/AdminUnit/org/">Create Organization</a> <br />
-	<a href="/AdminUnit/allOrgs/">All Organizations</a> <br />
+	<a href="/AdminUnit/searchByOrg/">Search Employee By Org</a> <br />
 	<a href="/AdminUnit/shift/">Create Shift</a> <br />
 	<a href="/AdminUnit/allShifts/">All Shifts</a> <br />
-	<a href="/AdminUnit/searchByEvent/">Search Job By Event</a> <br />
-	<a href="/AdminUnit/searchByTime/">Search Job By Time</a> <br />
-	<a href="/AdminUnit/searchByOrg/">Search Employee By Org</a> <br />
+	<a href="/AdminUnit/sat/">Create SAT Entry</a> <br />
+	<a href="/AdminUnit/allSats/">All SATs</a> <br />
+	<a href="/AdminUnit/wlt/">Create WLT Entry</a> <br />
+	<a href="/AdminUnit/allWlts/">All WLTs</a> <br />
 	<a href="/AdminUnit/reportHoursByOrg/">Report Hours By Org</a> <br />
 	<a href="/AdminUnit/reportHoursByEvent/">Report Hours By Event</a> <br />
 	<a href="/AdminUnit/reportHoursByTime/">Report Hours By Time</a> <br />
@@ -31,6 +33,11 @@
 	{% endif %}
 	{% if not admin and user.is_authenticated  %}
 	<h3> You are a Volunteer, you are on Irish's plate ;) </h3>
+	<a href="/AdminUnit/wlt/">Create WLT Entry</a> <br />
+	<a href="/AdminUnit/allWlts/">All WLTs</a> <br />
+	<a href="/AdminUnit/searchByEvent/">Search Job By Event</a> <br />
+	<a href="/AdminUnit/searchByTime/">Search Job By Time</a> <br />
+	<a href="/AdminUnit/mySats/">Assigned SATs</a> <br />
 	{% endif %}
 	{% if not user.is_authenticated %}
 	<a href="/AdminUnit/login/">Login</a> <br/>

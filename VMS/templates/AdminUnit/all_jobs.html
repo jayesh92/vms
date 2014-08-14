@@ -20,7 +20,7 @@
 		       <tr>
 		 		<th> Event Name </th>
 		 		<th> Job Description </th>
-		 		<th> Volunteers Reqd </th>
+		 		<th> Volunteers Assigned </th>
 		 		<th> Start Date </th>
 		 		<th> End Date </th>
 		 		<th> Edit </th>
@@ -31,7 +31,7 @@
 			<tr>
 				<td> {{ job.event.eventName }} </td>
 				<td> {{ job.jobDescription }} </td>
-				<td> {{ job.noOfVolunteersRequired }} </td>
+				<td> {{ job.noOfVolunteersAssigned }} </td>
 				<td> {{ job.startDate }} </td>
 				<td> {{ job.endDate }} </td>
 				<td> <a href="/AdminUnit/job/{{ job.pk }}/">Edit</a> </td>

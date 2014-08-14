@@ -76,12 +76,14 @@
 			<table>
 				<tr>
 					<th> Volunteer Username </th>
+					<th> Shift Name </th>
 					<th> Hours Worked </th>
 				</tr>
-			{% for tuple in value %}
+			{% for wlt in value %}
 				<tr>
-					<td> {{ tuple.0 }} </td>
-					<td> {{ tuple.1 }} </td>
+					<td> {{ wlt.volunteer.user.username }} </td>
+					<td> {{ wlt.shift }} </td>
+					<td> {{ wlt.hours }} </td>
 				</tr>
 			{% endfor %}
 			</table>

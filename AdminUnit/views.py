@@ -215,22 +215,6 @@ def job(request, jobId=None):
         jobsForm = JobsForm(request.POST, instance=jobInstance)
         if jobsForm.is_valid():
             newRecord = jobsForm.save()
-            eventObject = Event.objects.get(
-                eventName=jobsForm.cleaned_data['event'])
-            eventObject.noOfVolunteersRequired += jobsForm.cleaned_data[
-                'noOfVolunteersRequired']
-            eventObject.save()
-            users = VolunteerProfile.objects.all()
-            email = []
-            for user in users:
-                email.append(user.user.email)
-            textContent = 'Job Name : ' + jobsForm.cleaned_data['jobName'] + '\n' + 'Job Decription : ' + jobsForm.cleaned_data['jobDescription'] + '\n' + 'Start Time : ' + str( jobsForm.cleaned_data['startDate'] ) + '\n' + 'End Time : ' + str(jobsForm.cleaned_data['endDate']) + '\n' + 'Would you like to volunteer ?'
-            send_mail(
-                'VMS: New Job',
-                textContent,
-                'VMS Admin',
-                email,
-                fail_silently=False)
             return HttpResponse('Job Created')
     else:
         jobsForm = JobsForm(instance=jobInstance)
@@ -281,8 +265,10 @@ def deleteJob(request, jobId=None):
     if jobId != None:
         associatedEvent = Job.objects.get(pk=jobId).event.eventName
         event = Event.objects.get(eventName=associatedEvent)
-        event.noOfVolunteersRequired -= Job.objects.get(
-            pk=jobId).noOfVolunteersRequired
+        event.noOfVolunteersAssigned -= Job.objects.get(
+            pk=jobId).noOfVolunteersAssigned
+        event.noOfVolunteersWorked -= Job.objects.get(
+            pk=jobId).noOfVolunteersWorked
         event.save()
         Job.objects.filter(pk=jobId).delete()
     return HttpResponseRedirect('/AdminUnit/allJobs/')
@@ -330,38 +316,38 @@ def deleteOrg(request, orgId=None):
 
 
 @login_required
-@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
+@user_passes_test(checkVolunteer,login_url='/AdminUnit/',redirect_field_name=None)
 def searchByEvent(request):
     """
     This method displays all jobs inside an event.
-    Will be used by volunteer's to search jobs
+    Will be used by volunteer's to search Shifts in an event
     """
     if request.method == 'POST':
         selectEventForm = SelectEventForm(request.POST)
         if selectEventForm.is_valid():
             eventName = selectEventForm.cleaned_data['event']
-            jobs = Job.objects.filter(event__eventName=eventName)
+            shifts = Shift.objects.filter(event__eventName=eventName)
             selectEventForm = {}
             return render(request,
                           "AdminUnit/search_by_events.html",
-                          {"jobs": jobs,
+                          {"shifts": shifts,
                            "selectEventForm": selectEventForm})
         else:
             return render(request,
                           "AdminUnit/search_by_events.html",
-                          {"jobs": {},
+                          {"shifts": {},
                            "selectEventForm": selectEventForm})
     else:
         selectEventForm = SelectEventForm()
         jobs = {}
         return render(request,
                       "AdminUnit/search_by_events.html",
-                      {"jobs": jobs,
+                      {"shifts": jobs,
                        "selectEventForm": selectEventForm})
 
 
 @login_required
-@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
+@user_passes_test(checkVolunteer,login_url='/AdminUnit/',redirect_field_name=None)
 def searchByTime(request):
     """
     This method displays all jobs within a time range.
@@ -372,25 +358,25 @@ def searchByTime(request):
         if selectTimeForm.is_valid():
             startTime = selectTimeForm.cleaned_data['startTime']
             endTime = selectTimeForm.cleaned_data['endTime']
-            jobs = Job.objects.filter(
-                startDate__gte=startTime,
-                endDate__lte=endTime)
+            shifts = Shift.objects.filter(
+                startTime__gte=startTime,
+                endTime__lte=endTime)
             selectTimeForm = {}
             return render(request,
                           "AdminUnit/search_by_time.html",
-                          {"jobs": jobs,
+                          {"shifts": shifts,
                            "selectTimeForm": selectTimeForm})
         else:
             return render(request,
                           "AdminUnit/search_by_time.html",
-                          {"jobs": {},
+                          {"shifts": {},
                            "selectTimeForm": selectTimeForm})
     else:
         selectTimeForm = SelectTimeForm()
-        jobs = {}
+        shifts = {}
         return render(request,
                       "AdminUnit/search_by_time.html",
-                      {"jobs": jobs,
+                      {"shifts": shifts,
                        "selectTimeForm": selectTimeForm})
 
 
@@ -440,27 +426,6 @@ def manageShift(request, shiftId=None):
         shiftForm = ShiftForm(request.POST, instance=shiftInstance)
         if shiftForm.is_valid():
             newRecord = shiftForm.save()
-            event = shiftForm.cleaned_data['event'].eventName
-            job = shiftForm.cleaned_data['job'].jobName
-            volunteer = shiftForm.cleaned_data['volunteer'].user.username
-            hours = shiftForm.cleaned_data['hours']
-            startDate = Job.objects.get(
-                event__eventName=event,
-                jobName=job).startDate
-            endDate = Job.objects.get(
-                event__eventName=event,
-                jobName=job).endDate
-            email = [
-                VolunteerProfile.objects.get(
-                    user__username=volunteer).user.email]
-            textContent = 'Event : ' + event + '\n' + 'Job Name : ' + job + '\n' + 'Hours Assigned : ' + \
-                str(hours) + '\n' + 'Job Start Date : ' + str(startDate) + '\n' + 'Job End Date : ' + str(endDate)
-            send_mail(
-                'VMS: You\'ve been assigned a job',
-                textContent,
-                'VMS Admin',
-                list(email),
-                fail_silently=False)
             return HttpResponse("Shift Created/Edited")
     else:
         shiftForm = ShiftForm(instance=shiftInstance)
@@ -486,29 +451,209 @@ def deleteShift(request, shiftId=None):
     """
     Delete's a shift with a given primary key
     """
-    if shiftId != None:
+    if shiftId != None and Shift.objects.filter(pk=shiftId).count() == 1:
 	    Shift.objects.filter(pk=shiftId).delete()
     return HttpResponseRedirect('/AdminUnit/allShifts/')
 
 
 @login_required
-@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
-def createShift(request, jobId=None, eventId=None, userName=None):
-    if Shift.objects.filter(
-            event__pk=eventId,
-            job__pk=jobId,
-            volunteer__user__username=userName).count() == 0:
-        shift = Shift(
-            event=Event.objects.get(
-                pk=eventId), job=Job.objects.get(
-                pk=jobId), volunteer=VolunteerProfile.objects.get(
-                user__username=userName), hours=1)
-        shift.save()
-        return HttpResponse("Shift Created")
-    else:
-        return HttpResponse(
-            "Shift with same username, eventname, jobname exists")
+@user_passes_test(checkVolunteer,login_url='/AdminUnit/',redirect_field_name=None)
+def createSat(request, shiftId=None, userName=None):
+    if shiftId == None or userName == '':
+        return HttpResponseRedirect('/AdminUnit/CreateSat/')
+    if VolunteerProfile.objects.filter(user__username=userName).count == 0:
+        return HttpResponse('Matching volunteer Profile not found')
+    shift=Shift.objects.get(pk=shiftId)
+    volunteer=VolunteerProfile.objects.get(user__username=userName)
+    if SAT.objects.filter(shift=shift,volunteer=volunteer).count() == 1:
+        return HttpResponse('SAT entry with given shift and volunteer already exists')
+    startTime = shift.startTime
+    endTime = shift.endTime
+    diff = endTime-startTime
+    hours = "%.2f" % (diff.total_seconds()/3600.0)
+    SAT.objects.create(shift=shift, volunteer=volunteer, startTime=shift.startTime, endTime=shift.endTime, hours=hours)
 
+    job = Job.objects.get(jobName=shift.job.jobName,event__eventName=shift.event.eventName)
+    job.noOfVolunteersAssigned += 1
+    job.save()
+
+    event = Event.objects.get(eventName=shift.event.eventName)
+    event.noOfVolunteersAssigned += 1
+    event.save()
+    return HttpResponse('SAT entry created successfully')
+
+
+@login_required
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
+def sat(request, satId=None):
+    """
+    Use to Edit/Create SATs
+    Used by admin to assign shifts to voluneers
+    """
+    if satId:
+        satInstance = SAT.objects.get(pk=satId)
+    else:
+        satInstance = None
+
+    if request.method == 'POST':
+        satForm = SATForm(request.POST, instance=satInstance)
+        if satForm.is_valid():
+            eventName = satForm.cleaned_data['shift'].event.eventName
+            jobName = satForm.cleaned_data['shift'].job.jobName
+            startTime = satForm.cleaned_data['shift'].startTime
+            endTime = satForm.cleaned_data['shift'].endTime
+            diff = endTime-startTime
+            hours = "%.2f" % (diff.total_seconds()/3600.0)
+            SAT.objects.create(shift=satForm.cleaned_data['shift'],
+                volunteer=satForm.cleaned_data['volunteer'],
+                startTime=startTime,
+                endTime=endTime,
+                hours=hours
+            )
+           
+            job = Job.objects.get(jobName=jobName,event__eventName=eventName)
+            job.noOfVolunteersAssigned += 1
+            job.save()
+
+            event = Event.objects.get(eventName=eventName)
+            event.noOfVolunteersAssigned += 1
+            event.save()
+
+            email = [satForm.cleaned_data['volunteer'].user.email]
+            textContent = 'Hi ' + satForm.cleaned_data['volunteer'].user.username + '!' + '\n\n' + 'Event : ' + eventName + '\n' + 'Job Name : ' + jobName + '\n' +  'Shift Start Time : ' + str(startTime) + '\n' + 'Shift End Time : ' + str(endTime)
+            send_mail(
+                'VMS: You\'ve been assigned a Shift',
+                textContent,
+                'VMS Admin',
+                list(email),
+                fail_silently=False)
+            return HttpResponse("SAT Created/Edited")
+    else:
+        satForm = SATForm(instance=satInstance)
+
+    return render(request, "AdminUnit/sat.html", {"satForm": satForm})
+
+
+@login_required
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
+def allSats(request):
+    """
+    Controller for all Shifts views
+    """
+    allSats = SAT.objects.all()
+    return render(request,
+                  "AdminUnit/all_sats.html",
+                  {"allSats": allSats})
+
+
+@login_required
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
+def deleteSat(request, satId=None):
+    """
+    """
+    if satId != None:
+        eventName=SAT.objects.get(pk=satId).shift.event.eventName
+        jobName=SAT.objects.get(pk=satId).shift.job.jobName
+        job = Job.objects.get(jobName=jobName,event__eventName=eventName)
+        job.noOfVolunteersAssigned -= 1
+        job.save()
+        event = Event.objects.get(eventName=eventName)
+        event.noOfVolunteersAssigned -= 1
+        event.save()
+        SAT.objects.filter(pk=satId).delete()
+    return HttpResponseRedirect('/AdminUnit/allSats/')
+
+
+@login_required
+def wlt(request, wltId=None):
+    """
+    Use to Edit/Create SATs
+    Used by admin to assign shifts to voluneers
+    """
+    if checkAdmin(request.user):
+        if wltId:
+            wltInstance = WLT.objects.get(pk=wltId)
+        else:
+            wltInstance = None
+
+        if request.method == 'POST':
+            wltForm = WLTAdminForm(request.POST, instance=wltInstance)
+            if wltForm.is_valid():
+                newRecord = wltForm.save()
+                startTime = wltForm.cleaned_data['startTime']
+                endTime = wltForm.cleaned_data['endTime']
+                diff = endTime-startTime
+                hours = "%.2f" % (diff.total_seconds()/3600.0)
+                newRecord.hours = hours
+                newRecord.save()
+                return HttpResponse("WLT Created/Edited")
+        else:
+            wltForm = WLTAdminForm(instance=wltInstance)
+        return render(request, "AdminUnit/wlt.html", {"wltForm": wltForm})
+    else:
+        if wltId:
+            wltInstance = WLT.objects.get(pk=wltId)
+            if WLT.objects.get(pk=wltId).volunteer.user.username != request.user.username:
+                return HttpResponse("Access Denied")
+        else:
+            wltInstance = None
+
+        if request.method == 'POST':
+            wltForm = WLTVolunteerForm(request.POST, instance=wltInstance)
+            if wltForm.is_valid():
+                shift = wltForm.cleaned_data['shift']
+                volunteer = VolunteerProfile.objects.get(user__username=request.user.username)
+                startTime = wltForm.cleaned_data['startTime']
+                endTime = wltForm.cleaned_data['endTime']
+                diff = endTime-startTime
+                hours = "%.2f" % (diff.total_seconds()/3600.0)
+                if WLT.objects.filter(shift=shift,volunteer=volunteer).count() == 0:
+                    WLT.objects.create(shift=shift,volunteer=volunteer,startTime=startTime,
+                        endTime=endTime,hours=hours)
+                else:
+                    wltObject = WLT.objects.get(shift=shift,volunteer=volunteer)
+                    wltObject.startTime = startTime
+                    wltObject.endTime = endTime
+                    wltObject.hours = hours
+                    wltObject.save()
+                return HttpResponse("WLT Created/Edited")
+        else:
+            wltForm = WLTVolunteerForm(instance=wltInstance)
+        return render(request, "AdminUnit/wlt.html", {"wltForm": wltForm})
+
+
+@login_required
+def allWlts(request):
+    """
+    Controller for all Shifts views
+    """
+    if checkAdmin(request.user):
+        allWlts = WLT.objects.all()
+    else:
+        allWlts = WLT.objects.filter(volunteer__user__username=request.user.username)
+    return render(request,
+                  "AdminUnit/all_wlts.html",
+                  {"allWlts": allWlts})
+
+
+@login_required
+@user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
+def deleteWlt(request, wltId=None):
+    """
+    Delete's a shift with a given primary key
+    """
+    if checkVolunteer(request.user):
+        if WLT.objects.get(pk=wltId).volunteer.user.username != request.user.username:
+            return HttpResponse("Access Denied")
+    if wltId != None:
+	    WLT.objects.filter(pk=wltId).delete()
+    return HttpResponseRedirect('/AdminUnit/allWlts/')
+
+@login_required
+@user_passes_test(checkVolunteer,login_url='/AdminUnit/',redirect_field_name=None)
+def mySats(request):
+    sats = SAT.objects.filter(volunteer__user__username=request.user.username)
+    return render(request, "AdminUnit/my_sats.html", { "sats" : sats })
 
 @login_required
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
@@ -523,20 +668,18 @@ def reportHoursByOrg(request):
         if selectHoursForm.is_valid():
             fromHours = selectHoursForm.cleaned_data['fromHours']
             toHours = selectHoursForm.cleaned_data['toHours']
-            shifts = Shift.objects.all()
+            shifts = WLT.objects.all()
             counts = {}
             details = {}
             for shift in shifts:
                 org = shift.volunteer.organization.name
                 if org in counts:
                     counts[org] += shift.hours
-                    details[org].append(
-                        (shift.volunteer.user.username, shift.hours))
+                    details[org].append(shift)
                 else:
                     counts[org] = shift.hours
                     details[org] = []
-                    details[org].append(
-                        (shift.volunteer.user.username, shift.hours))
+                    details[org].append(shift)
             data = []
             for org in counts:
                 if counts[org] >= fromHours and counts[org] <= toHours:
@@ -571,16 +714,20 @@ def reportVolunteersByOrg(request):
     """
     users = VolunteerProfile.objects.all()
     counts = {}
+    details = {}
     for user in users:
         org = user.organization.name
         if org in counts:
             counts[org] += 1
+            details[org].append(user)
         else:
             counts[org] = 1
+            details[org] = []
+            details[org].append(user)
     data = []
     for org in counts:
         data.append([org, counts[org]])
-    values = {'values': data}
+    values = {'values': data, 'details' : details}
     return render(request, "AdminUnit/report_volunteers_by_org.html", values)
 
 
@@ -595,20 +742,18 @@ def reportHoursByEvent(request):
         selectEventForm = SelectEventForm(request.POST)
         if selectEventForm.is_valid():
             eventName = selectEventForm.cleaned_data['event']
-            shifts = Shift.objects.filter(event__eventName=eventName)
+            shifts = WLT.objects.filter(shift__event__eventName=eventName)
             counts = {}
             details = {}
             for shift in shifts:
                 org = shift.volunteer.organization.name
                 if org in counts:
                     counts[org] += shift.hours
-                    details[org].append(
-                        (shift.volunteer.user.username, shift.hours))
+                    details[org].append(shift)
                 else:
                     counts[org] = shift.hours
                     details[org] = []
-                    details[org].append(
-                        (shift.volunteer.user.username, shift.hours))
+                    details[org].append(shift)
 
             data = []
             for org in counts:
@@ -647,22 +792,20 @@ def reportHoursByTime(request):
         if selectTimeForm.is_valid():
             startTime = selectTimeForm.cleaned_data['startTime']
             endTime = selectTimeForm.cleaned_data['endTime']
-            shifts = Shift.objects.filter(
-                event__startDate__gte=startTime,
-                event__endDate__lte=endTime)
+            shifts = WLT.objects.filter(
+                startTime__gte=startTime,
+                endTime__lte=endTime)
             counts = {}
             details = {}
             for shift in shifts:
                 org = shift.volunteer.organization.name
                 if org in counts:
                     counts[org] += shift.hours
-                    details[org].append(
-                        (shift.volunteer.user.username, shift.hours))
+                    details[org].append(shift)
                 else:
                     counts[org] = shift.hours
                     details[org] = []
-                    details[org].append(
-                        (shift.volunteer.user.username, shift.hours))
+                    details[org].append(shift)
 
             data = []
             for org in counts:
@@ -704,22 +847,22 @@ def reportHoursByTimeAndOrg(request):
             startTime = selectTimeForm.cleaned_data['startTime']
             endTime = selectTimeForm.cleaned_data['endTime']
             organization = selectOrgForm.cleaned_data['org']
-            shifts = Shift.objects.filter(
-                event__startDate__gte=startTime,
-                event__endDate__lte=endTime,
+            shifts = WLT.objects.filter(
+                startTime__gte=startTime,
+                endTime__lte=endTime,
                 volunteer__organization__name=organization)
             counts = {}
             details = {}
             for shift in shifts:
-                eventname = shift.event.eventName
+                eventname = shift.shift.event.eventName
                 username = shift.volunteer.user.username
                 if username in counts:
                     counts[username] += shift.hours
-                    details[username].append((eventname, shift.hours))
+                    details[username].append(shift)
                 else:
                     counts[username] = shift.hours
                     details[username] = []
-                    details[username].append((eventname, shift.hours))
+                    details[username].append(shift)
 
             data = []
             for username in counts:

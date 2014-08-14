@@ -95,6 +95,7 @@ class JobsForm(ModelForm):
                 attrs={
                     'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
         }
+        fields = ['event', 'jobName', 'jobDescription', 'startDate', 'endDate']
 
 
 class OrgForm(ModelForm):
@@ -112,6 +113,57 @@ class ShiftForm(ModelForm):
     """
     class Meta:
         model = Shift
+        widgets = {
+            'startTime': TextInput(
+                attrs={
+                    'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+            'endTime': TextInput(
+                attrs={
+                    'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+        }
+
+
+class SATForm(ModelForm):
+    """
+    ModelForm for SAT class
+    """
+    class Meta:
+        model = SAT
+        fields = ['shift', 'volunteer']
+
+
+class WLTAdminForm(ModelForm):
+    """
+    ModelForm for WLT class
+    """
+    class Meta:
+        model = WLT
+        fields = ['shift', 'volunteer', 'startTime', 'endTime']
+        widgets = {
+            'startTime': TextInput(
+                attrs={
+                    'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+            'endTime': TextInput(
+                attrs={
+                    'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+        }
+
+
+class WLTVolunteerForm(ModelForm):
+    """
+    ModelForm for WLT class
+    """
+    class Meta:
+        model = WLT
+        fields = ['shift', 'startTime', 'endTime']
+        widgets = {
+            'startTime': TextInput(
+                attrs={
+                    'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+            'endTime': TextInput(
+                attrs={
+                    'placeholder': 'YYYY-MM-DD HH:MM:SS'}),
+        }
 
 
 class SelectEventForm(ModelForm):

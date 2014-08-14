@@ -20,8 +20,10 @@
 		       <tr>
 		 		<th> Event Name </th>
 				<th> Job Name </th>
-		 		<th> Volunteer Name </th>
-		 		<th> Hours </th>
+		 		<th> Location </th>
+		 		<th> How </th>
+		 		<th> Start Time </th>
+		 		<th> End Time </th>
 				<th> Edit </th>
 				<th> Delete </th>
 			</tr>
@@ -30,8 +32,10 @@
 			<tr>
 				<td> {{ shift.event.eventName }} </td>
 				<td> {{ shift.job.jobName }} </td>
-				<td> {{ shift.volunteer }} </td>
-				<td> {{ shift.hours }} </td>
+				<td> {{ shift.location }} </td>
+				<td> {{ shift.how }} </td>
+				<td> {{ shift.startTime }} </td>
+				<td> {{ shift.endTime }} </td>
 				<td> <a href="/AdminUnit/shift/{{ shift.pk }}/">Edit</a> </td>
 				<td> <a href="/AdminUnit/deleteShift/{{ shift.pk }}/">Delete</a> </td>
 			</tr>

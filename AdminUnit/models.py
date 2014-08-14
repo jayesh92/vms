@@ -114,7 +114,15 @@ class VolunteerProfile(models.Model):
 
 class Event(models.Model):
     eventName = models.CharField(max_length=128, unique=True)
-    noOfVolunteersRequired = models.IntegerField(
+    noOfVolunteersAssigned = models.IntegerField(
+        default=0,
+        validators=[
+            RegexValidator(
+                r'^[0-9]*',
+            )
+        ]
+    )
+    noOfVolunteersWorked = models.IntegerField(
         default=0,
         validators=[
             RegexValidator(
@@ -141,10 +149,19 @@ class Job(models.Model):
     jobDescription = models.CharField(max_length=256)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
-    noOfVolunteersRequired = models.IntegerField(
+    noOfVolunteersAssigned = models.IntegerField(
+        default=0,
         validators=[
             RegexValidator(
-                r'^[1-9][0-9]*',
+                r'^[0-9]*',
+            )
+        ]
+    )
+    noOfVolunteersWorked = models.IntegerField(
+        default=0,
+        validators=[
+            RegexValidator(
+                r'^[0-9]*',
             )
         ]
     )
@@ -163,18 +180,45 @@ class Shift(models.Model):
     <event, volunteer, job, hours>
     """
     event = models.ForeignKey(Event)
-    volunteer = models.ForeignKey(VolunteerProfile)
     job = models.ForeignKey(Job)
-    hours = models.IntegerField(
-        validators=[
-            RegexValidator(
-                r'^[1-9][0-9]*',
-            )
-        ]
-    )
+    location = models.CharField(max_length=128)
+    how = models.CharField(max_length=128)
+    startTime = models.DateTimeField()
+    endTime = models.DateTimeField()
 
     class Meta:
-        unique_together = (('event', 'volunteer', 'job'))
+        unique_together = (('event', 'job', 'startTime', 'endTime'))
+
+    def __unicode__(self):
+        return self.event.eventName + '_' + self.job.jobName + '_' + str(self.startTime) + '_' + str(self.endTime)
+
+
+class SAT(models.Model):
+    """
+    Assigned hours by Admin
+    """
+    shift = models.ForeignKey(Shift)
+    volunteer = models.ForeignKey(VolunteerProfile)
+    startTime = models.DateTimeField()
+    endTime = models.DateTimeField()
+    hours = models.FloatField(default=0)
+
+    class Meta:
+        unique_together = (('shift', 'volunteer'))
+
+
+class WLT(models.Model):
+    """
+    Actual Work looged by Volunteers
+    """
+    shift = models.ForeignKey(Shift)
+    volunteer = models.ForeignKey(VolunteerProfile)
+    startTime = models.DateTimeField()
+    endTime = models.DateTimeField()
+    hours = models.FloatField(default=0)
+
+    class Meta:
+        unique_together = (('shift', 'volunteer'))
 
 
 class AllEvents(models.Model):
