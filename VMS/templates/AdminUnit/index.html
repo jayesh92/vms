@@ -6,19 +6,20 @@
     </head>
 
     <body>
-        <h1>VMS Homepage</h1>
 	{% if not user.is_authenticated %}
+    <h1>VMS Homepage</h1>
 	<a href="/AdminUnit/register/">Register</a> <br />
 	{% endif %}
 	{% if admin %}
+    <h1>VMS Admin Homepage</h1>
 	<a href="/AdminUnit/register/">Register</a> <br />
 	<a href="/AdminUnit/org/">Create Organization</a> <br />
 	<a href="/AdminUnit/allOrgs/">All Organizations</a> <br />
+	<a href="/AdminUnit/searchByOrg/">Search Volunteer By Org</a> <br />
 	<a href="/AdminUnit/event/">Create Event</a> <br />
 	<a href="/AdminUnit/allEvents/">All Events</a> <br />
 	<a href="/AdminUnit/job/">Create Job</a> <br />
 	<a href="/AdminUnit/allJobs/">All Jobs</a> <br />
-	<a href="/AdminUnit/searchByOrg/">Search Employee By Org</a> <br />
 	<a href="/AdminUnit/shift/">Create Shift</a> <br />
 	<a href="/AdminUnit/allShifts/">All Shifts</a> <br />
 	<a href="/AdminUnit/sat/">Create SAT Entry</a> <br />
@@ -32,11 +33,12 @@
 	<a href="/AdminUnit/reporting/">Report Hours By Time And Org</a> <br />
 	{% endif %}
 	{% if not admin and user.is_authenticated  %}
-	<h3> You are a Volunteer, you are on Irish's plate ;) </h3>
+    <h1>VMS Volunteer Homepage</h1>
+	<h3> You are on Irish's plate ;) </h3>
 	<a href="/AdminUnit/wlt/">Create WLT Entry</a> <br />
 	<a href="/AdminUnit/allWlts/">All WLTs</a> <br />
-	<a href="/AdminUnit/searchByEvent/">Search Job By Event</a> <br />
-	<a href="/AdminUnit/searchByTime/">Search Job By Time</a> <br />
+	<a href="/AdminUnit/searchByEvent/">Search Shift By Event</a> <br />
+	<a href="/AdminUnit/searchByTime/">Search Shift By Time</a> <br />
 	<a href="/AdminUnit/mySats/">Assigned SATs</a> <br />
 	{% endif %}
 	{% if not user.is_authenticated %}

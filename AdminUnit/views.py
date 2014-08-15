@@ -166,6 +166,8 @@ def login_process(request):
             return HttpResponse("Invalid login details supplied.")
 
     else:
+        if request.user.is_authenticated():
+        	return HttpResponseRedirect('AdminUnit/index/')
         return render(request, 'AdminUnit/login.html')
 
 
@@ -350,8 +352,8 @@ def searchByEvent(request):
 @user_passes_test(checkVolunteer,login_url='/AdminUnit/',redirect_field_name=None)
 def searchByTime(request):
     """
-    This method displays all jobs within a time range.
-    Will be used by volunteer's to search jobs
+    This method displays all shifts within a time range.
+    Will be used by volunteer's to search Shifts in an event
     """
     if request.method == 'POST':
         selectTimeForm = SelectTimeForm(request.POST)
@@ -415,7 +417,6 @@ def searchEmployeeByOrg(request):
 def manageShift(request, shiftId=None):
     """
     Use to Edit/Create Shifts
-    Used by admin to assign shifts to voluneers
     """
     if shiftId:
         shiftInstance = Shift.objects.get(pk=shiftId)
@@ -459,6 +460,11 @@ def deleteShift(request, shiftId=None):
 @login_required
 @user_passes_test(checkVolunteer,login_url='/AdminUnit/',redirect_field_name=None)
 def createSat(request, shiftId=None, userName=None):
+    """
+    Will be used by admin to assign a shift to a volunteer
+    Each entry will be logged in SAT Table
+    Also, accordingly updates the NOVAssigned in the job table
+    """
     if shiftId == None or userName == '':
         return HttpResponseRedirect('/AdminUnit/CreateSat/')
     if VolunteerProfile.objects.filter(user__username=userName).count == 0:
@@ -538,7 +544,7 @@ def sat(request, satId=None):
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def allSats(request):
     """
-    Controller for all Shifts views
+    Controller for all SATs views
     """
     allSats = SAT.objects.all()
     return render(request,
@@ -550,6 +556,7 @@ def allSats(request):
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteSat(request, satId=None):
     """
+    Deletes a SAT with given pk
     """
     if satId != None:
         eventName=SAT.objects.get(pk=satId).shift.event.eventName
@@ -567,8 +574,9 @@ def deleteSat(request, satId=None):
 @login_required
 def wlt(request, wltId=None):
     """
-    Use to Edit/Create SATs
-    Used by admin to assign shifts to voluneers
+    Use to Edit/Create WLTs
+    Used by admin to log hours of any voluneers
+    Used by volunteer to lof only their hours
     """
     if checkAdmin(request.user):
         if wltId:
@@ -625,7 +633,7 @@ def wlt(request, wltId=None):
 @login_required
 def allWlts(request):
     """
-    Controller for all Shifts views
+    Controller for all WLTs views
     """
     if checkAdmin(request.user):
         allWlts = WLT.objects.all()
@@ -640,7 +648,7 @@ def allWlts(request):
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def deleteWlt(request, wltId=None):
     """
-    Delete's a shift with a given primary key
+    Delete's a WLT with a given primary key
     """
     if checkVolunteer(request.user):
         if WLT.objects.get(pk=wltId).volunteer.user.username != request.user.username:
@@ -652,6 +660,9 @@ def deleteWlt(request, wltId=None):
 @login_required
 @user_passes_test(checkVolunteer,login_url='/AdminUnit/',redirect_field_name=None)
 def mySats(request):
+    """
+    Used by volunteers to see SATs which have been assigned to them
+    """
     sats = SAT.objects.filter(volunteer__user__username=request.user.username)
     return render(request, "AdminUnit/my_sats.html", { "sats" : sats })
 
@@ -710,7 +721,7 @@ def reportHoursByOrg(request):
 @user_passes_test(checkAdmin,login_url='/AdminUnit/',redirect_field_name=None)
 def reportVolunteersByOrg(request):
     """
-    Reports total nu,ber of volunteers grouped by organization
+    Reports total number of volunteers grouped by organization
     """
     users = VolunteerProfile.objects.all()
     counts = {}

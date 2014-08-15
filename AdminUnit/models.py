@@ -113,6 +113,9 @@ class VolunteerProfile(models.Model):
 
 
 class Event(models.Model):
+    """
+    Model structure for Admin Class
+    """
     eventName = models.CharField(max_length=128, unique=True)
     noOfVolunteersAssigned = models.IntegerField(
         default=0,
@@ -177,7 +180,8 @@ class Shift(models.Model):
     """
     Model structure for Shifts,
     Each shift is store for records of the forms
-    <event, volunteer, job, hours>
+    <event, job, location, how, startTime, endTime>
+    This is the unit which will be assigned to volunteers 
     """
     event = models.ForeignKey(Event)
     job = models.ForeignKey(Job)
@@ -195,7 +199,10 @@ class Shift(models.Model):
 
 class SAT(models.Model):
     """
-    Assigned hours by Admin
+    Shift Assignment Table
+    Stores a mapping between volunteer and shift
+    Also expects, the time admin wants the volunteer to work for
+    which will be equal to Timing of the shift being assigned
     """
     shift = models.ForeignKey(Shift)
     volunteer = models.ForeignKey(VolunteerProfile)
@@ -209,7 +216,10 @@ class SAT(models.Model):
 
 class WLT(models.Model):
     """
-    Actual Work looged by Volunteers
+    Actual Work loged by Volunteers
+    Volunteer can log hours to any shifts which he has been assigned
+    He can also log an entry to shifts which he has volunteered
+    but not being assigned to him.
     """
     shift = models.ForeignKey(Shift)
     volunteer = models.ForeignKey(VolunteerProfile)

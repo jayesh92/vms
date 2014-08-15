@@ -71,23 +71,23 @@ WSGI_APPLICATION = 'VMS.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 # For prod, use below database settings in postgreSQL
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'vms',
-        'USER': 'myuser',
-        'PASSWORD': 'mypassword',
-        'HOST': 'localhost',
-    }
-}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'vms',
+#        'USER': 'myuser',
+#        'PASSWORD': 'mypassword',
+#        'HOST': 'localhost',
+#    }
+#}
 
 # For staging, use below database settings in sqlite
-#DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-#}
+DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+     }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

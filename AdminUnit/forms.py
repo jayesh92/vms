@@ -135,6 +135,7 @@ class SATForm(ModelForm):
 class WLTAdminForm(ModelForm):
     """
     ModelForm for WLT class
+    This will be used to display WLT forms to Admin
     """
     class Meta:
         model = WLT
@@ -152,6 +153,7 @@ class WLTAdminForm(ModelForm):
 class WLTVolunteerForm(ModelForm):
     """
     ModelForm for WLT class
+    This will be used to display WLT forms to Volunteer
     """
     class Meta:
         model = WLT
