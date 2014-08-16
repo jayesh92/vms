@@ -261,7 +261,6 @@ class TestJob(TestCase):
             event=event,
             jobName='Test Job Name',
             jobDescription='Test Job Description',
-            noOfVolunteersRequired=5,
             startDate='2015-05-05 05:05:05',
             endDate='2015-05-05 05:05:05')
 
@@ -271,9 +270,6 @@ class TestJob(TestCase):
             Job.objects.filter(
                 event__eventName='event1',
                 jobName='Test Job Name').count())
-        self.assertEqual(
-            5, Job.objects.get(
-                event__eventName='event1').noOfVolunteersRequired)
 
     def test_duplication(self):
         self.assertRaises(
@@ -283,7 +279,6 @@ class TestJob(TestCase):
                     eventName='event1'),
                 jobName='Test Job Name',
                 jobDescription='Test Job Description',
-                noOfVolunteersRequired=5,
                 startDate='2015-05-05 05:05:05',
                 endDate='2015-05-05 05:05:05'))
 
@@ -297,7 +292,6 @@ class TestJob(TestCase):
             event=event,
             jobName='Test Job Name',
             jobDescription='Test Job Description',
-            noOfVolunteersRequired=5,
             startDate='2015-05-05 05:05:05',
             endDate='2015-05-05 05:05:05')
         with self.assertRaises(ValidationError):
@@ -315,7 +309,7 @@ class TestShift(TestCase):
     """
     This class serves to creating a Test Suite for testing the Shift model.
     The methods in this class test insertion of valid values, errors in duplicate entries(multiple_unique in this case),
-    Foreign key relationship with volunteer, event, job models
+    Foreign key relationship with event, job models
     Validators for fields of Organization class
     """
 
@@ -324,37 +318,27 @@ class TestShift(TestCase):
             eventName='event1',
             startDate='2015-05-05 05:05:05',
             endDate='2015-05-05 05:05:05')
-        user = User.objects.create_user(
-            first_name='Jayesh',
-            last_name='Lahori',
-            email='jlahori92@gmail.com',
-            username='jlahori',
-            password='password')
-        profile = VolunteerProfile.objects.create(
-            user=user,
-            address='IIIT-H',
-            location='Hyderabad',
-            state='Andhra Pradesh',
-            organization=Organization.objects.create(
-                name='LinkedIn',
-                location='blr'),
-            phone='9581845730')
         job = Job.objects.create(
             event=event,
             jobName='Test Job Name',
             jobDescription='Test Job Description',
-            noOfVolunteersRequired=5,
             startDate='2015-05-05 05:05:05',
             endDate='2015-05-05 05:05:05')
-        Shift.objects.create(event=event, volunteer=profile, job=job, hours=1)
+        Shift.objects.create(event=event, job=job,
+                             location='Menlo Park, CA',
+                             how='Testing Code',
+                             startTime='2015-05-05 05:05:05',
+                             endTime='2015-05-05 05:05:05')
 
     def test_insertion(self):
         self.assertEqual(
             1,
             Shift.objects.filter(
                 event__eventName='event1',
-                volunteer__user__username='jlahori',
-                job__event__eventName='event1').count())
+                job__event__eventName='event1',
+                job__jobName='Test Job Name',
+                startTime='2015-05-05 05:05:05',
+                endTime='2015-05-05 05:05:05').count())
 
     def test_duplication(self):
         self.assertRaises(
@@ -362,12 +346,11 @@ class TestShift(TestCase):
             lambda: Shift.objects.create(
                 event=Event.objects.get(
                     eventName='event1'),
+                startTime='2015-05-05 05:05:05',
+                endTime='2015-05-05 05:05:05',
                 job=Job.objects.get(
                     jobName='Test Job Name',
-                    event__eventName='event1'),
-                volunteer=VolunteerProfile.objects.get(
-                    user__username='jlahori'),
-                hours=2))
+                    event__eventName='event1')))
 
     def test_event_foreign_key(self):
         # To test if only registered events are allowed in creation of shifts
@@ -377,51 +360,45 @@ class TestShift(TestCase):
             endDate='2015-05-05 05:05:05')
         shift = Shift(
             event=event,
-            volunteer=VolunteerProfile.objects.get(
-                user__username='jlahori'),
             job=Job.objects.get(
                 event__eventName='event1',
                 jobName='Test Job Name'),
-            hours=1)
-        with self.assertRaises(ValidationError):
-            if shift.full_clean():
-                job.save()
-        self.assertEqual(
-            0, Shift.objects.filter(
-                event__eventName='event2').count())
-
-    def test_volunteer_foreign_key(self):
-        # To test if only registered volunteers are allowed in creation of
-        # shifts
-        previousCount = Shift.objects.filter(event__eventName='event1').count()
-        profile = VolunteerProfile(
-            user=User(
-                first_name='Jayesh',
-                last_name='Lahori',
-                email='jlahori92@gmail.com',
-                username='jlahori_test',
-                password='password'),
-            address='IIIT-H',
-            location='Hyderabad',
-            state='Andhra Pradesh',
-            phone='9581845730',
-            organization=Organization(
-                name='Google',
-                location='hyderabad'))
-        shift = Shift(
-            event=Event.objects.get(
-                eventName='event1'),
-            volunteer=profile,
-            job=Job.objects.get(
-                event__eventName='event1'),
-            hours=1)
+            startTime='2015-05-05 05:05:05',
+            endTime='2015-05-05 05:05:05',)
         with self.assertRaises(ValidationError):
             if shift.full_clean():
                 shift.save()
         self.assertEqual(
-            previousCount,
-            Shift.objects.filter(
-                event__eventName='event1').count())
+            0, Shift.objects.filter(
+                event__eventName='event2',
+                job__jobName='Test Job Name',
+                job__event__eventName='event1',
+                startTime='2015-05-05 05:05:05',
+                endTime='2015-05-05 05:05:05').count())
+
+    def test_job_foreign_key(self):
+        # To test if only registered jobs are allowed in creation of shifts
+        job = Job(
+            event=Event.objects.get(eventName='event1'),
+            jobName='Test Job Name 2',
+            jobDescription='Test Job Desc 2',
+            startDate='2015-05-05 05:05:05',
+            endDate='2015-05-05 05:05:05')
+        shift = Shift(
+            event=Event.objects.get(eventName='event1'),
+            job=job,
+            startTime='2015-05-05 05:05:05',
+            endTime='2015-05-05 05:05:05')
+        with self.assertRaises(ValidationError):
+            if shift.full_clean():
+                shift.save()
+        self.assertEqual(
+            0, Shift.objects.filter(
+                event__eventName='event1',
+                job__jobName='Test Job Name 2',
+                job__event__eventName='event1',
+                startTime='2015-05-05 05:05:05',
+                endTime='2015-05-05 05:05:05').count())
 
 
 class TestRegisterView(TestCase):
@@ -658,7 +635,7 @@ class TestJobView(TestCase):
     """
     This class serves to creating a Test Suite for testing the Create Job View.
     The methods in this class test login_required decorator, insertion of valid values, asserting errors in null entries,
-    Check unique_together property of Job Event
+    Check unique_together property of JobName,Event)
     """
 
     def test_login_required(self):
@@ -669,7 +646,6 @@ class TestJobView(TestCase):
     def test_invalid_value(self):
         Event.objects.create(
             eventName='test_event_1',
-            noOfVolunteersRequired=10,
             startDate='2014-05-05 05:05:05',
             endDate='2014-05-05 05:05:05')
         self.assertEqual(
@@ -759,7 +735,6 @@ class TestJobView(TestCase):
     def test_duplicate_job_in_same_event(self):
         event = Event.objects.create(
             eventName='test_event',
-            noOfVolunteersRequired=10,
             startDate='2014-05-05 05:05:05',
             endDate='2014-05-05 05:05:05')
         Job.objects.create(
@@ -767,7 +742,6 @@ class TestJobView(TestCase):
                 eventName='test_event'),
             jobName='test_jobName',
             jobDescription='test_jobDescription_1',
-            noOfVolunteersRequired=10,
             startDate='2014-05-05 05:05:05',
             endDate='2014-05-05 05:05:05')
 
@@ -816,3 +790,143 @@ class TestJobView(TestCase):
         self.assertEqual(
             response.context['jobsForm'].non_field_errors()[0],
             "Job with this Event and JobName already exists.")
+
+class TestShiftView(TestCase):
+
+    """
+    This class serves to creating a Test Suite for testing the Create Shift View.
+    The methods in this class test login_required decorator, insertion of valid values, asserting errors in null entries,
+    Check unique_together property of (Event,Job,Start,End)
+    """
+    
+    def setUp(self):
+        event=Event.objects.create(eventName='Test Event', startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')
+        job=Job.objects.create(event=event, jobName='Test Job Name', jobDescription='Test Description', startDate='2014-05-05 05:05:05', endDate='2014-05-05 05:05:05')       
+
+    def test_login_required(self):
+        c = Client()
+        response = c.post('/AdminUnit/shift/', {})
+        self.assertNotEqual(200, response.status_code)
+
+    def test_event_foreign_key_insertion(self):
+        c = Client()
+        user = User.objects.create_user(
+            first_name='Jayesh',
+            last_name='Lahori',
+            email='jlahori92@gmail.com',
+            username='jlahori',
+            password='password')
+        profile = AdminProfile.objects.create(
+            user=user,
+            address='IIIT-H',
+            location='Hyderabad',
+            state='Andhra Pradesh',
+            organization=Organization.objects.create(
+                name='LinkedIn',
+                location='blr'),
+            phone='9581845730')
+
+        self.assertEqual(
+            1, AdminProfile.objects.filter(
+                user__username='jlahori').count())
+        c.login(username='jlahori', password='password')
+
+        event=Event.objects.get(eventName='Test Event')
+        job=Job.objects.get(event__eventName='Test Event', jobName='Test Job Name')
+        response = c.post('/AdminUnit/shift/',
+                          {'event': 2,
+                           'job': job.id,
+                           'location': 'CA',
+                           'how': 'Test',
+                           'startTime': '2014-05-05 05:05:05',
+                           'endTime': '2014-05-05 05:05:05'})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.context['shiftForm']['event'].errors,['Select a valid choice. That choice is not one of the available choices.'])
+        self.assertEqual(len(response.context['shiftForm'].non_field_errors()),0)
+
+    def test_job_foreign_key_insertion(self):
+        c = Client()
+        user = User.objects.create_user(
+            first_name='Jayesh',
+            last_name='Lahori',
+            email='jlahori92@gmail.com',
+            username='jlahori',
+            password='password')
+        profile = AdminProfile.objects.create(
+            user=user,
+            address='IIIT-H',
+            location='Hyderabad',
+            state='Andhra Pradesh',
+            organization=Organization.objects.create(
+                name='LinkedIn',
+                location='blr'),
+            phone='9581845730')
+
+        self.assertEqual(
+            1, AdminProfile.objects.filter(
+                user__username='jlahori').count())
+        c.login(username='jlahori', password='password')
+
+        event=Event.objects.get(eventName='Test Event')
+        job=Job.objects.get(event__eventName='Test Event', jobName='Test Job Name')
+        response = c.post('/AdminUnit/shift/',
+                          {'event': event.id,
+                           'job': str(job.id+1),
+                           'location': 'CA',
+                           'how': 'Test',
+                           'startTime': '2014-05-05 05:05:05',
+                           'endTime': '2014-05-05 05:05:05'})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.context['shiftForm']['job'].errors,['Select a valid choice. That choice is not one of the available choices.'])
+        self.assertEqual(len(response.context['shiftForm'].non_field_errors()),0)
+
+    def test_duplicate_shift(self):
+        c = Client()
+        user = User.objects.create_user(
+            first_name='Jayesh',
+            last_name='Lahori',
+            email='jlahori92@gmail.com',
+            username='jlahori',
+            password='password')
+        profile = AdminProfile.objects.create(
+            user=user,
+            address='IIIT-H',
+            location='Hyderabad',
+            state='Andhra Pradesh',
+            organization=Organization.objects.create(
+                name='LinkedIn',
+                location='blr'),
+            phone='9581845730')
+
+        self.assertEqual(
+            1, AdminProfile.objects.filter(
+                user__username='jlahori').count())
+        c.login(username='jlahori', password='password')
+
+        event=Event.objects.get(eventName='Test Event')
+        job=Job.objects.get(event__eventName='Test Event', jobName='Test Job Name')
+        # Create an object once
+        response = c.post('/AdminUnit/shift/',
+                          {'event': event.id,
+                           'job': job.id,
+                           'location': 'CA',
+                           'how': 'Test',
+                           'startTime': '2014-05-05 05:05:05',
+                           'endTime': '2014-05-05 05:05:05'})
+
+        # Create an object for second time
+        response = c.post('/AdminUnit/shift/',
+                          {'event': event.id,
+                           'job': job.id,
+                           'location': 'CA',
+                           'how': 'Test',
+                           'startTime': '2014-05-05 05:05:05',
+                           'endTime': '2014-05-05 05:05:05'})
+
+        self.assertEqual(
+            len(response.context['shiftForm'].non_field_errors()), 1)
+        self.assertEqual(
+            response.context['shiftForm'].non_field_errors()[0],
+            "Shift with this Event, Job, StartTime and EndTime already exists.")
