@@ -6,7 +6,7 @@ This tutorial assumes that the user is installing and running the project under 
 ## Table of Contents
 1. [Install git](https://github.com/systers/vms/blob/master/docs/Installation%20Guide.md#install-git)
 2. [Clone Project](https://github.com/systers/vms/blob/master/docs/Installation%20Guide.md#clone-project)
-3. [Install Django and PostgreSQL](hhttps://github.com/systers/vms/blob/master/docs/Installation%20Guide.md#install-django-and-postgresql)
+3. [Install Django and PostgreSQL](https://github.com/systers/vms/blob/master/docs/Installation%20Guide.md#install-django-and-postgresql)
 4. [Install VirtualBox and Vagrant](https://github.com/systers/vms/blob/master/docs/Installation%20Guide.md#install-virtualbox-and-vagrant)
 5. [Download Systers Ubuntu Virtual Machine](https://github.com/systers/vms/blob/master/docs/Installation%20Guide.md#download-systers-ubuntu-virtual-machine)
 6. [Using Vagrant] (https://github.com/systers/vms/blob/master/docs/Installation%20Guide.md#using-vagrant)
