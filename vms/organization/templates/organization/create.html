@@ -1,20 +1,40 @@
-{% extends "vms/base.html" %}
+{% extends "administrator/settings.html" %}
 
-{% block content %}
-    <h3 class="ui black block header">
-        Create Organization
-    </h3>
-    <form action="{% url 'organization:create' %}" method="post">
-        {% csrf_token %}
-        <div class="ui form segment">
-            <div class="field">
-                <label>Organization Name</label>
-                <div class="ui input">
-                    <input placeholder="Organization Name" type="text" name="organization_name">
+{% block setting_content %}
+    <div class="spacer"></div>
+    <div class="well">
+        <form class="form-horizontal" action="{% url 'organization:create' %}" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Create Organization</legend>
+                {% if form.name.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Organization Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="Organization Name" type="text" name="name" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Organization Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="Organization Name" type="text" name="name" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-2">
+                        <button class="btn btn-primary" type="submit">Create</button>
+                    </div>
                 </div>
-            </div>
-            <button class="ui blue button" type="submit">Create</button>
-            <button class="ui button" type="reset">Clear</button>
-        </div>
-    </form>
+            </fieldset>
+        </form>
+    </div>
 {% endblock %}

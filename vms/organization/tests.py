@@ -6,9 +6,9 @@ class OrganizationMethodTests(TestCase):
 
     def test_get_organization_by_id(self):
 
-        o1 = Organization(organization_name = "Google")
-        o2 = Organization(organization_name = "Yahoo")
-        o3 = Organization(organization_name = "Ubisoft")
+        o1 = Organization(name = "Google")
+        o2 = Organization(name = "Yahoo")
+        o3 = Organization(name = "Ubisoft")
 
         o1.save()
         o2.save()
@@ -41,22 +41,22 @@ class OrganizationMethodTests(TestCase):
 
     def test_get_organization_by_name(self):
 
-        o1 = Organization(organization_name = "Google")
-        o2 = Organization(organization_name = "Yahoo")
-        o3 = Organization(organization_name = "Ubisoft")
+        o1 = Organization(name = "Google")
+        o2 = Organization(name = "Yahoo")
+        o3 = Organization(name = "Ubisoft")
 
         o1.save()
         o2.save()
         o3.save()
 
         #test typical cases
-        self.assertIsNotNone(get_organization_by_name(o1.organization_name))
-        self.assertIsNotNone(get_organization_by_name(o2.organization_name))
-        self.assertIsNotNone(get_organization_by_name(o3.organization_name))
+        self.assertIsNotNone(get_organization_by_name(o1.name))
+        self.assertIsNotNone(get_organization_by_name(o2.name))
+        self.assertIsNotNone(get_organization_by_name(o3.name))
 
-        self.assertEqual(get_organization_by_name(o1.organization_name), o1)
-        self.assertEqual(get_organization_by_name(o2.organization_name), o2)
-        self.assertEqual(get_organization_by_name(o3.organization_name), o3)
+        self.assertEqual(get_organization_by_name(o1.name), o1)
+        self.assertEqual(get_organization_by_name(o2.name), o2)
+        self.assertEqual(get_organization_by_name(o3.name), o3)
 
         self.assertIsNone(get_organization_by_name("Apple"))
         self.assertIsNone(get_organization_by_name("IBM"))
@@ -74,13 +74,13 @@ class OrganizationMethodTests(TestCase):
         self.assertNotEqual(get_organization_by_name("IBM"), o3)
         self.assertNotEqual(get_organization_by_name("Cisco"), o3)
 
-    def test_get_organizations_by_name(self):
+    def test_get_organizations_ordered_by_name(self):
 
-        o1 = Organization(organization_name = "Google")
-        o2 = Organization(organization_name = "Yahoo")
-        o3 = Organization(organization_name = "Ubisoft")
-        o4 = Organization(organization_name = "IBM")
-        o5 = Organization(organization_name = "Cisco")
+        o1 = Organization(name = "Google")
+        o2 = Organization(name = "Yahoo")
+        o3 = Organization(name = "Ubisoft")
+        o4 = Organization(name = "IBM")
+        o5 = Organization(name = "Cisco")
 
         o1.save()
         o2.save()
@@ -89,7 +89,7 @@ class OrganizationMethodTests(TestCase):
         o5.save()
 
         #test typical cases
-        organization_list = get_organizations_by_name()
+        organization_list = get_organizations_ordered_by_name()
         self.assertIsNotNone(organization_list)
         self.assertIn(o1, organization_list)
         self.assertIn(o2, organization_list)

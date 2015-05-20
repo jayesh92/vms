@@ -1,0 +1,30 @@
+{% extends "administrator/settings.html" %}
+
+{% block setting_content %}
+    <div class="spacer"></div>
+    <div class="well well-sm">
+        <a href="{% url 'organization:create' %}" class="btn btn-success btn-sm">Create Organization</a>
+    </div>    
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Organization Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for organization in organization_list %}
+                <tr>
+                    <td>{{ organization.name }}</td>
+                    <td>
+                        <a href="{% url 'organization:edit' organization.id %}" class="btn btn-info btn-sm">Edit</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'organization:delete' organization.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

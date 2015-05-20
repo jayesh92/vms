@@ -1,0 +1,106 @@
+{% extends "administrator/settings.html" %}
+
+{% block setting_content %}
+    <div class="spacer"></div>
+    <div class="well">
+        <form class="form-horizontal" action="{% url 'shift:create' job_id %}" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Create Shift</legend>
+                {% if form.date.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Date</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="MM/DD/YYYY" type="text" name="date" value="{% if form.date.value %}{{ form.date.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.date.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Date</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="MM/DD/YYYY" type="text" name="date" value="{% if form.date.value %}{{ form.date.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.start_time.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Start Time</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="HH:MM" type="text" name="start_time" value="{% if form.start_time.value %}{{ form.start_time.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.start_time.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Start Time</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="HH:MM" type="text" name="start_time" value="{% if form.start_time.value %}{{ form.start_time.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.end_time.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">End Time</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="HH:MM" type="text" name="end_time" value="{% if form.end_time.value %}{{ form.end_time.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.end_time.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">End Time</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="HH:MM" type="text" name="end_time" value="{% if form.end_time.value %}{{ form.end_time.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.max_volunteers.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Maximum number of volunteers that can sign up for this shift</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="Maximum number of volunteers" type="text" name="max_volunteers" value="{% if form.max_volunteers.value %}{{ form.max_volunteers.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.max_volunteers.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Maximum number of volunteers that can sign up for this shift</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="Maximum number of volunteers" type="text" name="max_volunteers" value="{% if form.max_volunteers.value %}{{ form.max_volunteers.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-2">
+                        <button class="btn btn-primary" type="submit">Create</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,310 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <form class="signup form-signup" id="signup_form" method="post" action="{% url 'registration:signup_administrator' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>Sign Up</h2>
+        <hr>
+        {% if user_form.username.errors %}
+            <div id="div_id_username" class="form-group has-error">
+                <label class="control-label requiredField" for="id_username">
+                    Username<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_username" class="textinput textInput form-control" type="text" placeholder="Username" name="usr-username" maxlength="30" autofocus="autofocus" value="{{ user_form.username.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in user_form.username.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_username" class="form-group">
+                <label class="control-label requiredField" for="id_username">
+                    Username<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_username" class="textinput textInput form-control" type="text" placeholder="Username" name="usr-username" maxlength="30" autofocus="autofocus" value="{% if user_form.username.value %}{{ user_form.username.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        {% if user_form.password.errors %}
+            <div id="div_id_password" class="form-group has-error">
+                <label class="control-label requiredField" for="id_password">
+                    Password<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_password" class="textinput textInput form-control" type="password" placeholder="Password" name="usr-password">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in user_form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_password" class="form-group">
+                <label class="control-label requiredField" for="id_password">
+                    Password<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_password" class="textinput textInput form-control" type="password" placeholder="Password" name="usr-password">
+                </div>
+            </div>
+        {% endif %}
+        {% if administrator_form.first_name.errors %}
+            <div id="div_id_first_name" class="form-group has-error">
+                <label class="control-label requiredField" for="id_first_name">
+                    First Name<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_first_name" class="textinput textInput form-control" type="text" placeholder="First Name" name="admin-first_name" value="{{ administrator_form.first_name.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in administrator_form.first_name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_first_name" class="form-group">
+                <label class="control-label requiredField" for="id_first_name">
+                    First Name<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_first_name" class="textinput textInput form-control" type="text" placeholder="First Name" name="admin-first_name" value="{% if administrator_form.first_name.value %}{{ administrator_form.first_name.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        {% if administrator_form.last_name.errors %}
+            <div id="div_id_last_name" class="form-group has-error">
+                <label class="control-label requiredField" for="id_last_name">
+                    Last Name<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_last_name" class="textinput textInput form-control" type="text" placeholder="Last Name" name="admin-last_name" value="{{ administrator_form.last_name.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in administrator_form.last_name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_last_name" class="form-group">
+                <label class="control-label requiredField" for="id_last_name">
+                    Last Name<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_last_name" class="textinput textInput form-control" type="text" placeholder="Last Name" name="admin-last_name" value="{% if administrator_form.last_name.value %}{{ administrator_form.last_name.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        {% if administrator_form.email.errors %}
+            <div id="div_id_email" class="form-group has-error">
+                <label class="control-label requiredField" for="id_email">
+                    Email<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_email" class="textinput textInput form-control" type="text" placeholder="Email" name="admin-email" value="{{ administrator_form.email.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in administrator_form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_email" class="form-group">
+                <label class="control-label requiredField" for="id_email">
+                    Email<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_email" class="textinput textInput form-control" type="text" placeholder="Email" name="admin-email" value="{% if administrator_form.email.value %}{{ administrator_form.email.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        {% if administrator_form.address.errors %}
+            <div id="div_id_address" class="form-group has-error">
+                <label class="control-label requiredField" for="id_address">
+                    Address<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_address" class="textinput textInput form-control" type="text" placeholder="Address" name="admin-address" value="{{ administrator_form.address.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in administrator_form.address.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_address" class="form-group">
+                <label class="control-label requiredField" for="id_address">
+                    Address<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_address" class="textinput textInput form-control" type="text" placeholder="Address" name="admin-address" value="{% if administrator_form.address.value %}{{ administrator_form.address.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        {% if administrator_form.city.errors %}
+            <div id="div_id_city" class="form-group has-error">
+                <label class="control-label requiredField" for="id_city">
+                    City<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_city" class="textinput textInput form-control" type="text" placeholder="City" name="admin-city" value="{{ administrator_form.city.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in administrator_form.city.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_city" class="form-group">
+                <label class="control-label requiredField" for="id_city">
+                    City<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_city" class="textinput textInput form-control" type="text" placeholder="City" name="admin-city" value="{% if administrator_form.city.value %}{{ administrator_form.city.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        {% if administrator_form.state.errors %}
+            <div id="div_id_state" class="form-group has-error">
+                <label class="control-label requiredField" for="id_state">
+                    State/Province<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_state" class="textinput textInput form-control" type="text" placeholder="State/Province" name="admin-state" value="{{ administrator_form.state.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in administrator_form.state.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_state" class="form-group">
+                <label class="control-label requiredField" for="id_state">
+                    State/Province<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_state" class="textinput textInput form-control" type="text" placeholder="State/Province" name="admin-state" value="{% if administrator_form.state.value %}{{ administrator_form.state.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        {% if administrator_form.country.errors %}
+            <div id="div_id_country" class="form-group has-error">
+                <label class="control-label requiredField" for="id_country">
+                    Country<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_country" class="textinput textInput form-control" type="text" placeholder="Country" name="admin-country" value="{{ administrator_form.country.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in administrator_form.country.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_country" class="form-group">
+                <label class="control-label requiredField" for="id_country">
+                    Country<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_country" class="textinput textInput form-control" type="text" placeholder="Country" name="admin-country" value="{% if administrator_form.country.value %}{{ administrator_form.country.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        {% if administrator_form.phone_number.errors %}
+            <div id="div_id_phone_number" class="form-group has-error">
+                <label class="control-label requiredField" for="id_phone_number">
+                    Phone Number<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_phone_number" class="textinput textInput form-control" type="text" placeholder="Phone Number" name="admin-phone_number" value="{{ administrator_form.phone_number.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in administrator_form.phone_number.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_phone_number" class="form-group">
+                <label class="control-label requiredField" for="id_phone_number">
+                    Phone Number<span class="asteriskField">*</span>
+                </label>
+                <div class="controls">
+                    <input id="id_phone_number" class="textinput textInput form-control" type="text" placeholder="Phone Number" name="admin-phone_number" value="{% if administrator_form.phone_number.value %}{{ administrator_form.phone_number.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        <div id="div_id_organization" class="form-group">
+            <label class="control-label">
+                Organization
+            </label>
+            <select id="select" class="form-control" name="organization_name">
+                <option value="0">-- Select Organization --</option>
+                {% for organization in organization_list %}
+                    <option value="{{ organization.id }}">{{ organization.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if administrator_form.unlisted_organization.errors %}
+            <div id="div_id_unlisted_organization" class="form-group has-error">
+                <label class="control-label" for="id_unlisted_organization">
+                    If your organization is not listed above, please provide it here:
+                </label>
+                <div class="controls">
+                    <input id="id_unlisted_organization" class="textinput textInput form-control" type="text" placeholder="Organization" name="admin-unlisted_organization" value="{{ administrator_form.unlisted_organization.value }}">
+                    <p class="help-block">
+                        <strong>
+                            {% for error in administrator_form.unlisted_organization.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div id="div_id_unlisted_organization" class="form-group">
+                <label class="control-label" for="id_unlisted_organization">
+                    If your organization is not listed above, please provide it here:
+                </label>
+                <div class="controls">
+                    <input id="id_unlisted_organization" class="textinput textInput form-control" type="text" placeholder="Organization" name="admin-unlisted_organization" value="{% if administrator_form.unlisted_organization.value %}{{ administrator_form.unlisted_organization.value }}{% endif %}">
+                </div>
+            </div>
+        {% endif %}
+        <button type="submit" class="btn btn-lg btn-primary btn-block">Create Account</button>
+        <!--<p>
+            Already have an account? Then please <a href="{% url 'authentication:login_process' %}">sign in</a>.
+        </p>-->
+    </form>
+{% endblock %}

@@ -147,7 +147,7 @@ class VolunteerMethodTests(TestCase):
         self.assertNotEqual(get_volunteer_resume_file_url(v1.id), "resumes/DifferentResume.pdf")
         self.assertNotEqual(get_volunteer_resume_file_url(v1.id), "resumes/AnotherResume.pdf")
 
-    def test_get_volunteers_by_first_name(self):
+    def test_get_volunteers_ordered_by_first_name(self):
 
         u1 = User.objects.create_user('Yoshi')
         u2 = User.objects.create_user('Ashley')
@@ -189,7 +189,7 @@ class VolunteerMethodTests(TestCase):
         v3.save()
 
         #test typical cases
-        volunteer_list = get_volunteers_by_first_name()
+        volunteer_list = get_volunteers_ordered_by_first_name()
         self.assertIsNotNone(volunteer_list)
         self.assertIn(v1, volunteer_list)
         self.assertIn(v2, volunteer_list)
@@ -242,9 +242,9 @@ class VolunteerMethodTests(TestCase):
         v2.save()
         v3.save()
 
-        self.assertTrue(delete_volunteer(v1.id))
-        self.assertTrue(delete_volunteer(v2.id))
-        self.assertTrue(delete_volunteer(v3.id))
+        delete_volunteer(v1.id)
+        delete_volunteer(v2.id)
+        delete_volunteer(v3.id)
 
         #why is active not set to false?
         #self.assertFalse(u1.is_active)
@@ -257,8 +257,8 @@ class VolunteerMethodTests(TestCase):
         u2 = User.objects.create_user('Ashley')
         u3 = User.objects.create_user('Zelda')
 
-        o1 = Organization(organization_name = "Apple")
-        o2 = Organization(organization_name = "Google")
+        o1 = Organization(name = "Apple")
+        o2 = Organization(name = "Google")
 
         o1.save()
         o2.save()

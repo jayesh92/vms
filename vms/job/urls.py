@@ -2,11 +2,10 @@ from django.conf.urls import patterns, url
 from job import views
 
 urlpatterns = patterns('',
-    url(r'^$', views.index, name='index'),
-    url(r'^authorization_error/$', views.authorization_error, name='authorization_error'),
-    url(r'^create_job/$', views.create_job, name='create_job'),
-    url(r'^details/(?P<job_id>\d+)/$', views.details, name='details'),
-    url(r'^error/$', views.error, name='error'),
-    url(r'^list_jobs/$', views.list_jobs, name='list_jobs'),
-    url(r'^manage_jobs/$', views.manage_jobs, name='manage_jobs'),
+    url(r'^create/$', views.create, name='create'),
+    url(r'^delete/(?P<job_id>\d+)$', views.delete, name='delete'),
+    url(r'^details/(?P<job_id>\d+)$', views.details, name='details'),
+    url(r'^edit/(?P<job_id>\d+)$', views.edit, name='edit'),
+    url(r'^list/$', views.list, name='list'),
+    url(r'^list_sign_up/(?P<event_id>\d+)/(?P<volunteer_id>\d+)$', views.list_sign_up, name='list_sign_up'),
 )

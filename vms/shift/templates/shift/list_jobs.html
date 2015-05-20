@@ -1,0 +1,37 @@
+{% extends "administrator/settings.html" %}
+
+{% block setting_content %}
+    <div class="spacer"></div>
+    {% if job_list %}
+        <div class="alert alert-dismissable alert-info">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            Click on shifts to view shifts for a particular job or to add, edit or delete shifts.
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <th>Job Name</th>
+                <th>Event</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th></th>
+            </thead>
+            <tbody>
+                {% for job in job_list %}
+                    <tr>
+                        <td>{{ job.name }}</td>
+                        <td>{{ job.event.name }}</td>
+                        <td>{{ job.start_date }}</td>
+                        <td>{{ job.end_date }}</td>
+                        <td>
+                            <a href="{% url 'shift:list_shifts' job.id %}" class="btn btn-success btn-sm">Shifts</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-success">
+            There are currently no jobs. Please create jobs first.
+        </div>
+    {% endif %}            
+{% endblock %}

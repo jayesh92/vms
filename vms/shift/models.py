@@ -1,33 +1,17 @@
-from django.core.validators import RegexValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from job.models import Job
 from volunteer.models import Volunteer
 
 class Shift(models.Model):
     date = models.DateField()
-    location = models.CharField(
-        max_length=75,
-        validators=[
-            RegexValidator(
-                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\-)]+$',
-            ),
-        ],
-    )
     start_time = models.TimeField()
     end_time = models.TimeField()
-    max_volunteers = models.PositiveSmallIntegerField(
+    max_volunteers = models.IntegerField(
         validators=[
-            RegexValidator(
-                r'^[0-9]+$',
-            ),
-        ],
-    )
-    slots_remaining = models.PositiveSmallIntegerField(
-        validators=[
-            RegexValidator(
-                r'^[0-9]+$',
-            ),
-        ],
+            MinValueValidator(1),
+            MaxValueValidator(5000)
+        ]
     )
     #Job to Shift is a one-to-many relationship
     job = models.ForeignKey(Job)
@@ -35,9 +19,10 @@ class Shift(models.Model):
     volunteers = models.ManyToManyField(Volunteer, through='VolunteerShift')
 
 class VolunteerShift(models.Model):
-    start_time = models.TimeField(blank=True, null=True)
-    end_time = models.TimeField(blank=True, null=True)
-    #Volunteer to VolunteerShift is a one-to-many relationship
+    #Volunteer  to VolunteerShift is a one-to-many relationship
     volunteer = models.ForeignKey(Volunteer)
     #Shift to VolunteerShift is a one-to-many relationship
     shift = models.ForeignKey(Shift)
+    start_time = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
+    #assigned_by_manager = models.BooleanField()

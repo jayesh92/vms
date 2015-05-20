@@ -3,10 +3,11 @@ def validate_file(my_file):
     MAX_FILENAME_LENGTH = 40
     MAX_FILESIZE_BYTES = 5243000
     VALID_CONTENT_TYPES = [
-    "application/pdf", 
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.oasis.opendocument.text"
+        "text/plain",
+        "application/msword",
+        "application/pdf", 
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.oasis.opendocument.text",
     ]
 
     is_valid = True

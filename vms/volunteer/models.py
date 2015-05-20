@@ -5,7 +5,7 @@ from organization.models import Organization
 
 class Volunteer(models.Model):
     first_name = models.CharField(
-        max_length=20,
+        max_length=30,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
@@ -13,7 +13,7 @@ class Volunteer(models.Model):
         ],
     )
     last_name = models.CharField(
-        max_length=20,
+        max_length=30,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
@@ -21,7 +21,7 @@ class Volunteer(models.Model):
         ],
     )
     address = models.CharField(
-        max_length=30,
+        max_length=75,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\-)]+$',
@@ -29,7 +29,7 @@ class Volunteer(models.Model):
         ],
     )
     city = models.CharField(
-        max_length=30,
+        max_length=75,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
@@ -37,7 +37,7 @@ class Volunteer(models.Model):
         ],
     )
     state = models.CharField(
-        max_length=30,
+        max_length=75,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
@@ -45,7 +45,7 @@ class Volunteer(models.Model):
         ],
     )
     country = models.CharField(
-        max_length=30,
+        max_length=75,
         validators=[
             RegexValidator(
                 r'^[(A-Z)|(a-z)|(\s)|(\-)]+$',
@@ -62,17 +62,17 @@ class Volunteer(models.Model):
     )
     unlisted_organization = models.CharField(
         blank=True,
-        max_length=75,
+        max_length=100,
         validators=[
             RegexValidator(
-                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\-)]+$',
+                r'^[(A-Z)|(a-z)|(0-9)|(\s)|(\-)|(:)]+$',
             ),
         ],
     )
     #Organization to Volunteer is a one-to-many relationship
     organization = models.ForeignKey(Organization, null=True)
     #EmailField automatically checks if email address is a valid format 
-    email = models.EmailField(max_length=20)
+    email = models.EmailField(max_length=45)
     websites = models.TextField(
         blank=True,
         validators=[
@@ -97,5 +97,6 @@ class Volunteer(models.Model):
             ),
         ],
     )
-    resume_file = models.FileField(upload_to='resumes/', max_length=40, blank=True)
+    #all resumes are stored in /srv/vms/resume/
+    resume_file = models.FileField(upload_to='vms/resume/', max_length=75, blank=True)
     user = models.OneToOneField(User)

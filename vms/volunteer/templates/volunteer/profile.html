@@ -1,87 +1,120 @@
 {% extends "vms/base.html" %}
 
 {% block content %}
-    <h3 class="ui black block header">
-        Volunteer Profile
-    </h3>
-    <div class="ui segment">
-        <i class="square inverted teal huge user icon"></i>
-        {% if volunteer.description %}
-            <h5 class="ui dividing header">
-                About Me
-            </h5>
-            {{ volunteer.description }}
-        {% endif %}
-    </div>
-    <div class="ui divided selection list">
-        <a class="item">
-            <div class="ui horizontal label">Name</div>
-            {{ volunteer.first_name }} {{ volunteer.last_name }}
-        </a>
-        <a class="item">
-            <div class="ui horizontal label">Address</div>
-            {{ volunteer.address }}
-        </a>
-        <a class="item">
-            <div class="ui horizontal label">City</div>
-            {{ volunteer.city }}
-        </a>
-        <a class="item">
-            <div class="ui horizontal label">State</div>
-            {{ volunteer.state }}
-        </a>
-        <a class="item">
-            <div class="ui horizontal label">Country</div>
-            {{ volunteer.country }}
-        </a>
-        <a class="item">
-            <div class="ui horizontal label">Phone Number</div>
-            {{ volunteer.phone_number }}
-        </a>
-        {% if volunteer.organization.organization_name %}
-            <a class="item">
-                <div class="ui horizontal label">Organization</div>
-                {{ volunteer.organization.organization_name }}
-            </a>
-        {% elif volunteer.unlisted_organization %}
-            <a class="item">
-                <div class="ui horizontal label">Organization</div>
-                {{ volunteer.unlisted_organization }}
-            </a>
-        {% else %}
-        {% endif %}
-        <a class="item">
-            <div class="ui horizontal label">Email Address</div>
-            {{ volunteer.email }}
-        </a>
-    </div>
-    {% if volunteer.websites %}
-        <div class="ui secondary segment">
-            <h5 class="ui dividing header">
-                Other Profiles
-            </h5>
-            <pre>
-                {{ volunteer.websites }}
-            </pre>
+    <div class="spacer"></div>
+    <div class="row">
+        <h1>
+            {{ user.volunteer.first_name }} {{ user.volunteer.last_name }}
+        </h1>
+        <hr>
+        <div class="col-md-12">
+            <div class="panel-group" id="accordion_desc">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion_desc" href="#collapseDesc">
+                                About Me
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseDesc" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            {{ volunteer.description }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Details
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <!-- Better to have css padding instead of nbsp to insert spaces -->
+                    <label><h4><span class="label label-info">Email</span></h4></label>&nbsp&nbsp&nbsp{{ volunteer.email }}
+                    <br>
+                    <label><h4><span class="label label-info">City</span></h4></label>&nbsp&nbsp&nbsp{{ volunteer.city }}
+                    <br>
+                    <label><h4><span class="label label-info">State/Province</span></h4></label>&nbsp&nbsp&nbsp{{ volunteer.state }}
+                    <br>
+                    <label><h4><span class="label label-info">Country</span></h4></label>&nbsp&nbsp&nbsp{{ volunteer.country }}
+                    <br>
+                    {% if volunteer.organization %}
+                        <label><h4><span class="label label-info">Organization</span></h4></label>&nbsp&nbsp&nbsp{{ volunteer.organization.name }}
+                    {% elif volunteer.unlisted_organization  %}
+                        <label><h4><span class="label label-info">Organization</span></h4></label>&nbsp&nbsp&nbsp{{ volunteer.unlisted_organization }}
+                    {% else %}
+                    {% endif %}
+                </div>
+            </div>
+            {% if volunteer.websites %}
+                <div class="panel-group" id="accordion_profiles">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion_profiles" href="#collapseProfiles">
+                                    Additional Profiles
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseProfiles" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                {{ volunteer.websites }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if volunteer.resume %}
+                <div class="panel-group" id="accordion_resume">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion_resume" href="#collapseResume">
+                                    Resume 
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseResume" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                {{ volunteer.resume }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if volunteer.resume_file %}
+                <div class="panel-group" id="accordion_resume_file">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion_resume_file" href="#collapseResumeFile">
+                                    Uploads
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseResumeFile" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <form action="{% url 'volunteer:download_resume' volunteer.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="btn btn-default" type="submit">Download Resume</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Options
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <a href="{% url 'volunteer:edit' volunteer.id %}" class="btn btn-default">Edit Profile</a>
+                </div>
+            </div>
         </div>
-    {% endif %}
-    {% if volunteer.resume %}
-        <div class="ui fluid accordion">
-            <div class="title">
-                <i class="dropdown icon"></i>
-                View Resume
-            </div>
-            <div class="content">
-                {{ volunteer.resume }}    
-            </div>
-        </div>
-    {% endif %}
-    {% if volunteer.resume_file %}
-        <form action="{% url 'volunteer:download_resume' volunteer.id %}" method="post">
-            {% csrf_token %}
-            <div class="ui form segment">
-                <button class="ui small blue button" type="submit">Download Resume</button> 
-            </div>
-        </form>
-    {% endif %}
+    </div>
 {% endblock %}

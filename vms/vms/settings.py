@@ -7,6 +7,7 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
+from django.core.urlresolvers import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -17,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'zp2jjq5jgx)2sm@0nwb_fo&36p3!1+tu-t4rk&blk@ij&$*6@)'
+SECRET_KEY = 'rs473)3n^fe0^t-^s$n)_%pl=75f_na7z5ee@(^xc-vn^bzr%a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,6 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+# Make sure all apps are specified here
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,9 +38,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'auth',
+    'administrator',
+    'authentication',
+    'event',
+    'home',
     'job',
     'organization',
+    'registration',
     'shift',
     'vms',
     'volunteer',
@@ -61,13 +67,14 @@ WSGI_APPLICATION = 'vms.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+# Change these database settings if your database engine, database name, username or password changes
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'vms',
-        'USER': 'myuser',
-        'PASSWORD': 'mypassword',
-        'HOST': 'localhost',
+        'ENGINE' : 'django.db.backends.postgresql_psycopg2',    #your database engine
+        'NAME' : 'vms',             #the name of your database
+        'USER' : 'myuser',          #your DBMS username
+        'PASSWORD' : 'mypassword',  #your DBMS password
+        'HOST' : 'localhost',
     }
 }
 
@@ -88,12 +95,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+# Specifies the directory where static files (CSS, JavasScript) are stored
 STATIC_URL = '/static/'
 
-# All uploaded files are stored in the /tmp directory (for now)
-MEDIA_ROOT = '/tmp/'
+# All uploaded files (such as resumes) are stored in the /srv directory
+# /srv directory contains site-specific data which is served by the system
+MEDIA_ROOT = '/srv/'
 
 # Uploaded files have read and write permissions to the owner only
 FILE_UPLOAD_PERMISSIONS = 0600
 
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0600
+
+# If user fails to authenticate, then they are redirected to the view specified in the reverse_lazy call
+LOGIN_URL = reverse_lazy('auth:user_login')

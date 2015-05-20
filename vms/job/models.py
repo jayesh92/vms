@@ -1,8 +1,10 @@
 from django.core.validators import RegexValidator
 from django.db import models
+from event.models import Event
 
 class Job(models.Model):
-    job_title = models.CharField(
+    event = models.ForeignKey(Event)
+    name = models.CharField(
         max_length=75,
         validators=[
             RegexValidator(

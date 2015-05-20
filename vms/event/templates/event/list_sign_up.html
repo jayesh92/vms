@@ -1,0 +1,38 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <div class="spacer"></div>
+    <a href="{% url 'shift:manage_volunteer_shifts' volunteer_id %}" class="btn btn-default">Return to Manage Shifts</a>
+    <div class="spacer"></div>
+    {% if event_list %}
+        <ul class="breadcrumb">
+            <li class="active">Events</li>
+        </ul>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>View Jobs</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in event_list %}
+                    <tr>
+                        <td>{{ event.name }}</td>
+                        <td>{{ event.start_date }}</td>
+                        <td>{{ event.end_date }}</td>
+                        <td>
+                            <a href="{% url 'job:list_sign_up' event.id volunteer_id %}" class="btn btn-success btn-sm">View Jobs</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            There are currently no events.
+        </div>
+    {% endif %}
+{% endblock %}

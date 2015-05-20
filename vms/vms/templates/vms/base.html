@@ -1,71 +1,67 @@
 <!DOCTYPE html>
+{% load staticfiles %}
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
-    <link rel='stylesheet' type='text/css' href="/static/vms/semantic_custom_css/open-sans.css">
-    <link rel="stylesheet" type="text/css" href="/static/vms/semantic_custom_css/semantic-font.css">
-    <link rel="stylesheet" type="text/css" href="/static/vms/packaged/css/semantic.css">
-
-    <script src="/static/vms/jquery/jquery_2.0.3.js"></script>
-    <script src="/static/vms/packaged/javascript/semantic.js"></script>
-    <script src="/static/vms/semantic_custom_js/semantic-accordion.js"></script>
-    <script src="/static/vms/semantic_custom_js/semantic-init-accordion.js"></script>
-    <script src="/static/vms/semantic_custom_js/semantic-menu.js"></script>
-</head>
-
-<body>
-    <div class="ui small menu">
-        <div class="menu">
-            <!-- We will now be creating volunteers during registration only -->
-            <!--<a class="item" href="{% url 'volunteer:create' %}">
-                <i class="user icon"></i>
-                Create Volunteer
-            </a>-->
-            <a class="item" href="{% url 'volunteer:list' %}">
-                <i class="users icon"></i>
-                Manage Volunteers
-            </a>
-            <a class="item" href="{% url 'volunteer:search' %}">
-                <i class="search icon"></i>
-                Search Volunteers
-            </a>
-            <a class="item" href="{% url 'job:manage_jobs' %}">
-                <i class="suitcase icon"></i>
-                Manage Jobs
-            </a>
-            <a class="item" href="{% url 'job:list_jobs' %}">
-                <i class="browser icon"></i>
-                Available Jobs
-            </a>
-            {% if user.is_authenticated %}
-                <a class="item" href="{% url 'shift:view_volunteer_shifts' user.volunteer.id %}">
-                    <i class="browser icon"></i>
-                    Manage Shifts
-                </a>
-            {% endif %}
-            <a class="item" href="{% url 'organization:create' %}">
-                <i class="globe icon"></i>
-                Create Organization 
-            </a>
-            {% if user.is_authenticated %}
-                <div class="right item">
-                    <a class="ui button" href="{% url 'auth:user_logout' %}">Log out</a>
-                </div>
-            {% else %}
-                <div class="right item">
-                    <a class="ui button" href="{% url 'auth:user_login' %}">Log in</a>
-                </div>
-                <div class="right item">
-                    <a class="ui teal button" href="{% url 'auth:register_volunteer' %}">Register</a>
-                </div>
-            {% endif %}
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Volunteer Management System</title>
+    <!-- Bootstrap core CSS -->
+    <!--<link href="../../static/vms/bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="{% static "vms/bootstrap-lumen-theme/css/bootstrap.min.css" %}" rel="stylesheet">
+    <!-- Custom styling taken from Systers Portal -->
+    <link href="{% static "vms/css/style.css" %}" rel="stylesheet">
+    <link href="{% static "vms/jquery-ui-1.11.4.custom/jquery-ui.min.css" %}" rel="stylesheet">
+    <link href="{% static "vms/jquery-ui-1.11.4.custom/jquery-ui.structure.min.css" %}" rel="stylesheet">
+    <link href="{% static "vms/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" %}" rel="stylesheet">
+    <script src="{% static "vms/jquery/jquery-1.11.1.min.js" %}"></script>
+    <script src="{% static "vms/bootstrap-3.2.0-dist/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "vms/jquery-ui-1.11.4.custom/jquery-ui.min.js" %}"></script>
+    <script src="{% static "vms/jquery-custom/activate-datepicker.js" %}"></script>
+  </head>
+  <body>
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'home:index' %}">Systers</a>
+            </div>
+            <div class="navbar-collapse collapse navbar-responsive-collapse">
+                <ul class="nav navbar-nav text-uppercase">
+                    <li><a href="#">About</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right text-uppercase">
+                    {% if user.is_authenticated %}
+                        {% if user.administrator %}
+                            <li><a href="{% url 'volunteer:search' %}">Volunteer Search</a></li>
+                            <li><a href="{% url 'shift:volunteer_search' %}">Manage Volunteer Shifts</a></li>
+                            <li><a href="{% url 'administrator:report' %}">Report</a></li>
+                            <li><a href="{% url 'administrator:settings' %}">Settings</a></li>
+                            <li><a href="{% url 'registration:signup_administrator' %}">Create Admin Account</a></li>
+                        {% endif %}
+                        {% if user.volunteer %} 
+                            <li><a href="{% url 'shift:view_volunteer_shifts' user.volunteer.id %}">Upcoming Shifts</a></li>
+                            <li><a href="{% url 'shift:view_hours' user.volunteer.id %}">Shift Hours</a></li>
+                            <li><a href="{% url 'event:list_sign_up' user.volunteer.id %}">Shift Sign Up</a></li>
+                            <li><a href="{% url 'volunteer:report' user.volunteer.id %}">Report</a></li>
+                            <li><a href="{% url 'volunteer:profile' user.volunteer.id %}">Profile</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'authentication:logout_process' %}">Log Out</a></li>
+                    {% else %}
+                        <li><a href="{% url 'registration:signup_volunteer' %}">Sign Up</a></li>
+                        <li><a href="{% url 'authentication:login_process' %}">Log In</a></li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
     </div>
-    <div id="content">
-        {% block content %}{% endblock %}
+    <div class="container">
+        {% block content %}
+        {% endblock %}
     </div>
-</body>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
 </html>

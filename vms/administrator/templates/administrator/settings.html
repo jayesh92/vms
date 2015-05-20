@@ -1,0 +1,13 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <div class="spacer"></div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{% url 'event:list' %}">Events</a></li>
+        <li class="active"><a href="{% url 'job:list' %}">Jobs</a></li>
+        <li class="active"><a href="{% url 'shift:list_jobs' %}">Shifts</a></li>
+        <li class="active"><a href="{% url 'organization:list' %}">Organizations</a></li>
+    </ul>
+    {% block setting_content %}
+    {% endblock %}
+{% endblock %}

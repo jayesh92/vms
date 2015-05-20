@@ -1,28 +1,62 @@
 {% extends "vms/base.html" %}
 
 {% block content %}
-    <h3 class="ui black block header">
-        Add Shift Hours
-    </h3>
-    <form action="{% url 'shift:add_hours' shift_id volunteer_id %}" method="post">
-        {% csrf_token %}
-        <div class="ui form segment">
-            <div class="two fields">
-                <div class="field">
-                    <label>Start Time</label>
-                    <div class="ui input">
-                        <input placeholder="HH:MM" type="text" name="start_time">
+    <div class="spacer"></div>
+    <div class="well">
+        <form class="form-horizontal" action="{% url 'shift:add_hours' shift_id volunteer_id %}" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Log Shift Hours</legend>
+                {% if form.start_time.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Start Time</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="HH:MM" type="text" name="start_time" value="{% if form.start_time.value %}{{ form.start_time.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.start_time.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Start Time</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="HH:MM" type="text" name="start_time" value="{% if form.start_time.value %}{{ form.start_time.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.end_time.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">End Time</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="HH:MM" type="text" name="end_time" value="{% if form.end_time.value %}{{ form.end_time.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.end_time.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">End Time</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="HH:MM" type="text" name="end_time" value="{% if form.end_time.value %}{{ form.end_time.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-2">
+                        <button class="btn btn-primary" type="submit">Submit</button>
                     </div>
                 </div>
-                <div class="field"> 
-                    <label>End Time</label>
-                    <div class="ui input">
-                        <input placeholder="HH:MM" type="text" name="end_time">
-                    </div>
-                </div>
-            </div>
-            <button class="ui blue button" type="submit">Submit</button>
-            <button class="ui button" type="reset">Clear</button>
-        </div>
-    </form>
+            </fieldset>
+        </form>
+    </div>
 {% endblock %}
