@@ -1,4 +1,4 @@
-# Getting Started
+# VMS [![Build Status](https://travis-ci.org/jayesh92/vms.svg)](https://travis-ci.org/jayesh92/vms)
 
 To get started, read the documentation in the **docs** folder.
 
