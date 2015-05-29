@@ -1,4 +1,4 @@
-# VMS [![Build Status](https://travis-ci.org/jayesh92/vms.svg)](https://travis-ci.org/jayesh92/vms)
+# VMS [![Build Status](https://travis-ci.org/jayesh92/vms.svg)](https://travis-ci.org/jayesh92/vms) [![Coverage Status](https://coveralls.io/repos/jayesh92/vms/badge.svg)](https://coveralls.io/r/jayesh92/vms)
 
 To get started, read the documentation in the **docs** folder.
 
