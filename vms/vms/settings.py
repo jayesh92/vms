@@ -72,8 +72,8 @@ DATABASES = {
     'default': {
         'ENGINE' : 'django.db.backends.postgresql_psycopg2',    #your database engine
         'NAME' : 'vms',             #the name of your database
-        'USER' : 'myuser',          #your DBMS username
-        'PASSWORD' : 'mypassword',  #your DBMS password
+        'USER' : '',                #your DBMS username
+        'PASSWORD' : '',            #your DBMS password
         'HOST' : 'localhost',
     }
 }
