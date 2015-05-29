@@ -1,0 +1,111 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <div class="spacer"></div>
+    <div class="alert alert-info">
+        Please enter any of the fields below to generate a report.
+    </div>
+    <div class="well">
+        <form class="form-horizontal" action="" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Report</legend>
+                {% if form.event_name.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Event Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="event_name" value="{% if form.event_name.value %}{{ form.event_name.value}}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.event_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Event Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="event_name" value="{% if form.event_name.value %}{{ form.event_name.value}}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.job_name.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Job Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="job_name" value="{% if form.job_name.value %}{{ form.job_name.value}}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.job_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Job Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="job_name" value="{% if form.job_name.value %}{{ form.job_name.value}}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Date</label>
+                    <div class="col-md-8">
+                        <input class="form-control" type="text" name="date" id="datepicker" value="{% if form.date.value %}{{ form.date.value }}{% endif %}">
+                    </div>
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <div class="col-md-12 col-md-offset-2">
+                    <button class="btn btn-primary" type="submit">Generate Report</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% if report_list %}
+        <div class="well">
+            <legend>Report Statistics</legend>
+            <label><h4><span class="label label-default">Total Number of Shifts</span></h4></label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ report_list|length }}
+            <br>
+            <label><h4><span class="label label-default">Total Hours</span></h4></label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ total_hours }}
+        </div>
+        <div class="well">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Job Name</th>
+                        <th>Date</th>
+                        <th>Logged Start Time</th>
+                        <th>Logged End Time</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in report_list %}
+                        <tr>
+                            <td>{{ report.event_name }}</td>
+                            <td>{{ report.job_name }}</td>
+                            <td>{{ report.date }}</td>
+                            <td>{{ report.logged_start_time }}</td>
+                            <td>{{ report.logged_end_time }}</td>
+                            <td>{{ report.duration }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        {% if notification %}
+            <div class="alert alert-danger">
+                Your criteria did not return any results.
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

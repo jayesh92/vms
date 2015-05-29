@@ -1,0 +1,25 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <div class="spacer"></div>
+    <form action="{% url 'shift:cancel' shift_id volunteer_id %}" method="post">
+        {% csrf_token %}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">Cancel Shift Confirmation</h3>
+            </div>
+            <div class="panel-body">
+                <br>
+                {% if user.administrator %}
+                    Are you sure you want to cancel this registered shift?
+                {% else %}
+                    Are you sure you want to cancel this shift you are signed up for?
+                {% endif %}
+                <br>
+                <br>
+                <button class="btn btn-danger" type="submit">Yes, Cancel this Shift</button>
+                <input type="button" class="btn btn-default" value="Return to Previous Page" onClick="javascript:history.go(-1);">
+            </div>
+        </div>
+    </form>
+{% endblock %}

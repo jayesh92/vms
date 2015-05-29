@@ -1,0 +1,29 @@
+{% extends "administrator/settings.html" %}
+
+{% block setting_content %}
+    <div class="spacer"></div>
+    {% if job.description %}
+        <div class="panel panel-default">
+            <div class="panel-heading">Job Description</div>
+            <div class="panel-body">
+                {{ job.description }}
+            </div>
+        </div>
+    {% endif %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <th>Job Name</th>
+            <th>Event</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ job.name }}</td> 
+                <td>{{ job.event.name }}</td> 
+                <td>{{ job.start_date }}</td> 
+                <td>{{ job.end_date }}</td> 
+            </tr> 
+        </tbody>
+    </table>
+{% endblock %}

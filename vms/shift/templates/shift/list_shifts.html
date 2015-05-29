@@ -1,0 +1,40 @@
+{% extends "administrator/settings.html" %}
+
+{% block setting_content %}
+    <div class="spacer"></div>
+    <div class="well well-sm">
+        <a href="{% url 'shift:create' job_id %}" class="btn btn-success btn-sm">Create Shift</a>
+    </div>
+    {% if shift_list %}
+        <table class="table table-striped table-hover">
+            <thead>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Maximum # of Volunteers</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </thead>
+            <tbody>
+                {% for shift in shift_list %}
+                    <tr>
+                        <td>{{ shift.date }}</td>
+                        <td>{{ shift.start_time }}</td>
+                        <td>{{ shift.end_time }}</td>
+                        <td>{{ shift.max_volunteers }}</td>
+                        <td>
+                            <a href="{% url 'shift:edit' shift.id %}" class="btn btn-info btn-sm">Edit</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'shift:delete' shift.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-success">
+            There are currently no shifts. Please create shifts first.
+        </div>
+    {% endif %}            
+{% endblock %}

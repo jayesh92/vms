@@ -1,0 +1,41 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <div class="spacer"></div>
+    <h3>Upcoming Shifts</h3>
+    <hr>
+    {% if shift_list %}
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Job</th>
+                    <th>Date</th>
+                    <th>Scheduled Start Time</th>
+                    <th>Scheduled End Time</th>
+                    <th>Log Hours</th>
+                    <th>Cancel Shift Registration</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shift in shift_list %}
+                    <tr>
+                        <td>{{ shift.job.name }}</td>
+                        <td>{{ shift.date }}</td>
+                        <td>{{ shift.start_time }}</td>
+                        <td>{{ shift.end_time }}</td>
+                        <td>
+                            <a href="{% url 'shift:add_hours' shift.id user.volunteer.id %}" class="btn btn-success btn-sm">Log Hours</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'shift:cancel' shift.id user.volunteer.id %}" class="btn btn-danger btn-sm">Cancel Shift Registration</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            You do not have any upcoming shifts.
+        </div>
+    {% endif %}
+{% endblock %}

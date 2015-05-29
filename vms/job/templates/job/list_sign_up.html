@@ -1,0 +1,37 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <div class="spacer"></div>
+    <ul class="breadcrumb">
+        <li><a href="{% url 'event:list_sign_up' volunteer_id %}">Events</a></li>
+        <li class="active">{{ event.name }} Jobs</li>
+    </ul>
+    {% if job_list %}
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Job Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>View Shifts</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in job_list %}
+                    <tr>
+                        <td>{{ job.name }}</td>
+                        <td>{{ job.start_date }}</td>
+                        <td>{{ job.end_date }}</td>
+                        <td>
+                            <a href="{% url 'shift:list_shifts_sign_up' job.id volunteer_id %}" class="btn btn-success btn-sm">View Shifts</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            There are currently no jobs for {{ event.name }}.
+        </div>
+    {% endif %}
+{% endblock %}

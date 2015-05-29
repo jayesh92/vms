@@ -1,0 +1,334 @@
+{% extends "vms/base.html" %}
+
+{% block content %}
+    <div class="spacer"></div>
+    <div class="well">
+        <form class="form-horizontal" method="post" action="{% url 'volunteer:edit' volunteer.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Edit Profile</legend>
+                {% if form.description.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">About Me</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" type="text" rows="4" placeholder="Include a short biography of yourself" name="description">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.description.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">About Me</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" type="text" rows="4" placeholder="Include a short biography of yourself" name="description">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.first_name.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">First Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="First Name" name="first_name" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.first_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">First Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="First Name" name="first_name" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.last_name.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Last Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Last Name" name="last_name" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.last_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Last Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Last Name" name="last_name" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.email.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Email</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Email" name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Email</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Email" name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.address.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Address</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Address" name="address" value="{% if form.address.value %}{{ form.address.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.address.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Address</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Address" name="address" value="{% if form.address.value %}{{ form.address.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.city.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">City</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="City" name="city" value="{% if form.city.value %}{{ form.city.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.city.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">City</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="City" name="city" value="{% if form.city.value %}{{ form.city.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.state.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">State/Province</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="State/Province" name="state" value="{% if form.state.value %}{{ form.state.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.state.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">State/Province</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="State/Province" name="state" value="{% if form.state.value %}{{ form.state.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.country.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Country</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Country" name="country" value="{% if form.country.value %}{{ form.country.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.country.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Country</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Country" name="country" value="{% if form.country.value %}{{ form.country.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.phone_number.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Phone Number</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Phone Number" name="phone_number" value="{% if form.phone_number.value %}{{ form.phone_number.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.phone_number.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Phone Number</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Phone Number" name="phone_number" value="{% if form.phone_number.value %}{{ form.phone_number.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        Select your organization:
+                    </label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="organization_name">
+                            <option value="0">-- None --</option>
+                            {% for organization in organization_list %}
+                                {% if volunteer.organization_id %}
+                                    {% if organization.name == volunteer.organization.name %}
+                                        <option selected value="{{ organization.id }}">{{ organization.name }}</option>
+                                    {% else %}
+                                        <option value="{{ organization.id }}">{{ organization.name }}</option>
+                                    {% endif %}
+                                {% else %}
+                                    <option value="{{ organization.id }}">{{ organization.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% if form.unlisted_organization.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">If your organization is not listed, please provide it here:</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Organization" name="unlisted_organization" value="{% if form.unlisted_organization.value %}{{ form.unlisted_organization.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.unlisted_organization.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">If your organization is not listed, please provide it here:</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" placeholder="Organization" name="unlisted_organization" value="{% if form.unlisted_organization.value %}{{ form.unlisted_organization.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.websites.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Profiles</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" type="text" rows="4" placeholder="Include links to any online profiles here" name="websites">{% if form.websites.value %}{{ form.websites.value }}{% endif %}</textarea>
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.websites.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Profiles</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" type="text" rows="4" placeholder="Include links to any online profiles here" name="websites">{% if form.websites.value %}{{ form.websites.value }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if resume_invalid %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Upload Updated Resume</label>
+                        <div class="col-md-8">
+                            <input name="resume_file" type="file">
+                            <p class="help-block">
+                                <strong>
+                                    Uploaded file is invalid.
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Upload Updated Resume</label>
+                        <div class="col-md-8">
+                            <input name="resume_file" type="file">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.resume.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Resume</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" type="text" rows="4" placeholder="Include your resume here" name="resume">{% if form.resume.value %}{{ form.resume.value }}{% endif %}</textarea>
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.resume.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Resume</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" type="text" rows="4" placeholder="Include your resume here" name="resume">{% if form.resume.value %}{{ form.resume.value }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-2">
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    {% if form.resume_file.value and not resume_invalid %}
+        <form action="{% url 'volunteer:delete_resume' volunteer.id %}" method="post">
+            {% csrf_token %}
+            <div class="panel panel-default">
+                <div class="panel-heading">Uploads</div>
+                <div class="panel-body">
+                    <button class="btn btn-danger" type="submit">Delete Uploaded Resume</button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

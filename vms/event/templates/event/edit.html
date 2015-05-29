@@ -1,0 +1,84 @@
+{% extends "administrator/settings.html" %}
+
+{% block setting_content %}
+    <div class="spacer"></div>
+    <div class="well">
+        <form class="form-horizontal" action="" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Edit Event</legend>
+                {% if form.name.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Event Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="Event Name" type="text" name="name" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Event Name</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="Event Name" type="text" name="name" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.start_date.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">Start Date</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="MM/DD/YYYY" type="text" name="start_date" value="{% if form.start_date.value %}{{ form.start_date.value|date:"SHORT_DATE_FORMAT" }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.start_date.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Start Date</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="MM/DD/YYYY" type="text" name="start_date" value="{% if form.start_date.value %}{{ form.start_date.value|date:"SHORT_DATE_FORMAT" }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                {% if form.end_date.errors %}
+                    <div class="form-group has-error">
+                        <label class="col-md-2 control-label">End Date</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="MM/DD/YYYY" type="text" name="end_date" value="{% if form.end_date.value %}{{ form.end_date.value|date:"SHORT_DATE_FORMAT" }}{% endif %}">
+                            <p class="help-block">
+                                <strong>
+                                    {% for error in form.end_date.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">End Date</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="MM/DD/YYYY" type="text" name="end_date" value="{% if form.end_date.value %}{{ form.end_date.value|date:"SHORT_DATE_FORMAT" }}{% endif %}">
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-2">
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}

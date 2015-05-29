@@ -1,0 +1,11 @@
+{% extends "administrator/settings.html" %}
+
+{% block setting_content %}
+    <div class="spacer"></div>
+    <div class="alert alert-danger">
+        <h4>Error</h4>
+        <p>You cannot delete an event that a job is currently associated with.</p>
+        <br>
+        <a href="{% url 'event:list' %}" class="btn btn-default">Return to Previous Page</a>
+    </div>
+{% endblock %}
