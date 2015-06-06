@@ -9,6 +9,8 @@ from selenium.common.exceptions import NoSuchElementException
 from volunteer.models import Volunteer
 from administrator.models import Administrator
 
+import re
+
 
 class TestAccessControl(LiveServerTestCase):
     '''
@@ -28,6 +30,15 @@ class TestAccessControl(LiveServerTestCase):
 
         Administrator.objects.create(
                 user = admin_user,
+                address = 'address',
+                city = 'city',
+                state = 'state',
+                country = 'country',
+                phone_number = '9999999999',
+                unlisted_organization = 'organization')
+
+        Volunteer.objects.create(
+                user = volunteer_user,
                 address = 'address',
                 city = 'city',
                 state = 'state',
@@ -92,7 +103,7 @@ class TestAccessControl(LiveServerTestCase):
                 self.authentication_page)
 
         self.driver.find_element_by_id('id_login').send_keys('admin')
-        self.driver.find_element_by_id('id_password').send_keys('admin1')
+        self.driver.find_element_by_id('id_password').send_keys('wrong_password')
         self.driver.find_element_by_xpath('//form[1]').submit()
 
         self.assertNotEqual(self.driver.current_url, self.live_server_url +
@@ -103,3 +114,75 @@ class TestAccessControl(LiveServerTestCase):
 
         self.assertNotEqual(self.driver.find_element_by_class_name(
             'alert-danger'), None)
+
+    def test_correct_volunteer_credentials(self):
+        '''
+        Method to simulate logging in of a volunteer user and check if they
+        are NOT displayed any error as well as displayed all volunteer
+        functionality after redirecting to '/home'
+        '''
+        self.driver.get(self.live_server_url + self.homepage)
+        self.driver.find_element_by_link_text('Log In').click()
+
+        self.assertEqual(self.driver.current_url, self.live_server_url +
+                self.authentication_page)
+
+        self.driver.find_element_by_id('id_login').send_keys('volunteer')
+        self.driver.find_element_by_id('id_password').send_keys('volunteer')
+        self.driver.find_element_by_xpath('//form[1]').submit()
+
+        self.assertEqual(self.driver.current_url, self.live_server_url +
+                self.homepage)
+
+        with self.assertRaises(NoSuchElementException):
+            self.driver.find_element_by_link_text('Log In')
+
+        self.assertNotEqual(self.driver.find_element_by_link_text(
+            'Upcoming Shifts'), None)
+        self.assertNotEqual(self.driver.find_element_by_link_text(
+            'Shift Hours'), None)
+        self.assertNotEqual(self.driver.find_element_by_link_text(
+            'Shift Sign Up'), None)
+        self.assertNotEqual(self.driver.find_element_by_link_text(
+            'Report'), None)
+        self.assertNotEqual(self.driver.find_element_by_link_text(
+            'Profile'), None)
+        self.assertNotEqual(self.driver.find_element_by_link_text(
+            'Log Out'), None)
+
+    def test_incorrect_volunteer_credentials(self):
+        '''
+        Method to simulate logging in of a Invalid volunteer user and check if
+        they are displayed an error and redirected to login page again.
+        '''
+        self.driver.get(self.live_server_url + self.homepage)
+        self.driver.find_element_by_link_text('Log In').click()
+
+        self.assertEqual(self.driver.current_url, self.live_server_url +
+                self.authentication_page)
+
+        self.driver.find_element_by_id('id_login').send_keys('volunteer')
+        self.driver.find_element_by_id('id_password').send_keys('wrong_password')
+        self.driver.find_element_by_xpath('//form[1]').submit()
+
+        self.assertNotEqual(self.driver.current_url, self.live_server_url +
+                self.homepage)
+
+        self.assertEqual(self.driver.current_url, self.live_server_url +
+                self.authentication_page)
+
+        self.assertNotEqual(self.driver.find_element_by_class_name(
+            'alert-danger'), None)
+
+    def test_admin_cannot_access_volunteer_urls(self):
+        self.driver.get(self.live_server_url + self.authentication_page)
+
+        self.driver.find_element_by_id('id_login').send_keys('admin')
+        self.driver.find_element_by_id('id_password').send_keys('admin')
+        self.driver.find_element_by_xpath('//form[1]').submit()
+
+        self.driver.get(self.live_server_url +
+                '/shift/view_volunteer_shifts/1')
+        page_source = self.driver.page_source
+        error = re.search('403', page_source)
+        self.assertNotEqual(error, None)
