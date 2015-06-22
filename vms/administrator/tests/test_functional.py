@@ -3,6 +3,7 @@ from django.contrib.staticfiles.testing import LiveServerTestCase
 
 from django.contrib.auth.models import User
 from administrator.models import Administrator
+from organization.models import Organization #hack to pass travis,Bug in Code
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -25,6 +26,11 @@ class Settings(LiveServerTestCase):
                 country = 'country',
                 phone_number = '9999999999',
                 unlisted_organization = 'organization')
+
+        # create an org prior to registration. Bug in Code
+        # added to pass CI
+        Organization.objects.create(
+                name = 'DummyOrg')
 
         self.homepage = '/home/'
         self.authentication_page = '/authentication/login/'

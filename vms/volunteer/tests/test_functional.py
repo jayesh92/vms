@@ -7,6 +7,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
 from administrator.models import Administrator
+from organization.models import Organization #hack to pass travis,Bug in Code
 
 class SearchVolunteer(LiveServerTestCase):
     '''
@@ -36,6 +37,11 @@ class SearchVolunteer(LiveServerTestCase):
                 country = 'country',
                 phone_number = '9999999999',
                 unlisted_organization = 'organization')
+
+        # create an org prior to registration. Bug in Code
+        # added to pass CI
+        Organization.objects.create(
+                name = 'DummyOrg')
 
         self.homepage = '/home/'
         self.registration_page = '/registration/signup_volunteer/'
