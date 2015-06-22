@@ -13,7 +13,7 @@ class SignUpAdmin(LiveServerTestCase):
     '''
     SignUpAdmin Class contains tests to register a admin User
     '''
-    def setUp(self):
+    def setUp(self):        
         self.homepage = '/home/'
         self.admin_registration_page = '/registration/signup_administrator/'
         self.authentication_page = '/authentication/login/'
@@ -47,7 +47,7 @@ class SignUpAdmin(LiveServerTestCase):
     def test_name_fields(self):
         # register valid admin user
         self.driver.get(self.live_server_url + self.admin_registration_page)
-        
+
         self.driver.find_element_by_id('id_username').send_keys('admin-username')
         self.driver.find_element_by_id('id_password').send_keys('admin-password!@#$%^&*()_')
         self.driver.find_element_by_id('id_first_name').send_keys('admin-first-name')
@@ -87,7 +87,7 @@ class SignUpAdmin(LiveServerTestCase):
                 None)
         self.assertEqual(self.driver.find_element_by_xpath("id('div_id_username')/div/p/strong").text,
                 'User with this Username already exists.')
-        
+
         # test numeric characters in first-name, last-name
         self.driver.get(self.live_server_url + self.admin_registration_page)
 
@@ -110,7 +110,7 @@ class SignUpAdmin(LiveServerTestCase):
                 'Enter a valid value.')
         self.assertEqual(self.driver.find_element_by_xpath("id('div_id_last_name')/div/p/strong").text,
                 'Enter a valid value.')
-        
+
         # test special characters in first-name, last-name
         self.driver.get(self.live_server_url + self.admin_registration_page)
 
@@ -161,7 +161,7 @@ class SignUpAdmin(LiveServerTestCase):
     def test_address_field(self):
         # register valid admin user
         self.driver.get(self.live_server_url + self.admin_registration_page)
-        
+
         self.driver.find_element_by_id('id_username').send_keys('admin-username')
         self.driver.find_element_by_id('id_password').send_keys('admin-password!@#$%^&*()_')
         self.driver.find_element_by_id('id_first_name').send_keys('admin-first-name')
@@ -202,7 +202,7 @@ class SignUpAdmin(LiveServerTestCase):
 
         self.assertEqual(self.driver.current_url, self.live_server_url +
                 self.homepage)
-        
+
         # test special characters in address
         self.driver.get(self.live_server_url + self.admin_registration_page)
 
@@ -229,7 +229,7 @@ class SignUpAdmin(LiveServerTestCase):
     def test_city_field(self):
         # register valid admin user
         self.driver.get(self.live_server_url + self.admin_registration_page)
-        
+
         self.driver.find_element_by_id('id_username').send_keys('admin-username')
         self.driver.find_element_by_id('id_password').send_keys('admin-password!@#$%^&*()_')
         self.driver.find_element_by_id('id_first_name').send_keys('admin-first-name')
@@ -271,7 +271,7 @@ class SignUpAdmin(LiveServerTestCase):
                 self.admin_registration_page)
         self.assertEqual(self.driver.find_element_by_xpath("id('div_id_city')/div/p/strong").text,
                 'Enter a valid value.')
-        
+
         # test special characters in city
         self.driver.get(self.live_server_url + self.admin_registration_page)
 
