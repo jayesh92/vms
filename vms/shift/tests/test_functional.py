@@ -12,6 +12,30 @@ from organization.models import Organization #hack to pass travis,Bug in Code
 
 class ManageVolunteerShift(LiveServerTestCase):
     '''
+    Admin users have ManageVolunteerShift View which has the following
+    functionalities:
+    - Filter Volunteers according to certain criteriras
+    - Click on `Manage Shift` to check assigned shifts to a volunteer
+    - Click on `Assign Shift` lists registered events
+    - Click on `View Jobs` to list jobs in selected event
+    - Click on `View Shift` to list shifts in the selected job
+    - Click on `Assign Shift` and confirm to assign shift.
+    - Cancel assigned shift by clicking on `Cancel Shift Assignment`
+
+    ManageVolunteerShift Class contains UI tests for ManageVolunteerShift
+    View of Admin Profile. Tests Included.
+
+    - Test View with/without any registered volunteers
+    - Test Redirection to events view on clicking `Manage Shifts` 
+    - Test Jobs page without jobs
+    - Test assign shifts without any registered shifts
+    - Test assign shifts with registered shifts
+    - Test if shift can be assigned to more number of volunteers than slots
+      in a shift
+    - Test no of slots remaining increases by one when an admin cancels an
+      assigned shift
+    - Test if a shift can be assigned to a volunteer who has already been
+      assigned the same shift
     '''
     def setUp(self):
         admin_user = User.objects.create_user(

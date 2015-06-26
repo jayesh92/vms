@@ -14,6 +14,21 @@ from organization.models import Organization #hack to pass travis,Bug in Code
 class SignUpAdmin(LiveServerTestCase):
     '''
     SignUpAdmin Class contains tests to register a admin User
+    Tests included.
+
+    Name Fields:
+        - Test Null values
+        - Test legit characters in first_name, last_name fields
+        - Register admin with already registered username
+        - Test length of name fields ( 30 char, limit)
+
+    Address Field:
+        - Test Null Values
+        - Test legit characters as per Models defined
+
+    City Field:
+        - Test Null Values
+        - Test legit characters as per Models defined
     '''
     def setUp(self):        
         # create an org prior to registration. Bug in Code

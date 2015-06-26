@@ -12,6 +12,33 @@ from selenium.common.exceptions import NoSuchElementException
 
 class Settings(LiveServerTestCase):
     '''
+    Settings Class contains UI testcases for `Settings` view in
+    Administrator profile. This view consists of Events, Jobs, Shifts,
+    Organization tabs.
+
+    Event:
+        - Create Event
+        - Edit Event
+        - Delete Event with No Associated Job
+        - Delete event with Associated Job
+
+    Job:
+        - Create Job without any event
+        - Edit Job
+        - Delete Job without Assoicated Shift
+        - Delete Job with Shifts
+
+    Shift:
+        - Create Shift without any Job
+        - Edit Shift
+        - Delete shift
+
+    Organization:
+        - Create Organization
+        - Edit Organization
+        - Replication of Organization
+        - Delete Org's with registered volunteers
+        - Delete Org without registered volunteers 
     '''
     def setUp(self):
         admin_user = User.objects.create_user(

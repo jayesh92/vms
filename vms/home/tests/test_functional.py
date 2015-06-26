@@ -16,7 +16,13 @@ import re
 class TestAccessControl(LiveServerTestCase):
     '''
     TestAccessControl class contains the functional tests to check Admin and
-    Volunteer can access '/home' view of VMS.
+    Volunteer can access '/home' view of VMS. Following tests are included:
+    Administrator:
+        - Login admin with correct credentials
+        - Login admin with incorrect credentials 
+    Volunteer:
+        - Login volunteer with correct credentials
+        - Login volunteer with incorrect credentials 
     '''
     def setUp(self):
         admin_user = User.objects.create_user(
@@ -65,7 +71,7 @@ class TestAccessControl(LiveServerTestCase):
     def test_correct_admin_credentials(self):
         '''
         Method to simulate logging in of a valid admin user and check if they
-        redirected to '/home'
+        redirected to '/home' and no errors are generated.
         '''
         self.driver.get(self.live_server_url + self.homepage)
         self.driver.find_element_by_link_text('Log In').click()
@@ -155,8 +161,10 @@ class TestAccessControl(LiveServerTestCase):
 
 class CheckURLAccess(LiveServerTestCase):
     '''
-    CheckURLAccess contains methods to directly browse a volunteer page view
-    after logging in from an admin account and vice-versa.
+    CheckURLAccess contains methods to browse(via URL) a volunteer page view
+    after logging in from an admin account and vice-versa. Tests included:
+    - Admin cannot access volunteer URL's
+    - Volunteer cannot access admin URL's
     '''
     def setUp(self):
         admin_user = User.objects.create_user(
@@ -273,8 +281,10 @@ class CheckURLAccess(LiveServerTestCase):
 
 class CheckPageContent(LiveServerTestCase):
     '''
-    This Class contains methods to check if an administrator or a volunteer are
-    provided their respective views links on their dashboard.
+    This Class contains methods to check if an administrator or a volunteer
+    are provided their respective views links on their dashboard.
+    - Check admin page content
+    - check volunteer page content
     '''
     def setUp(self):
         admin_user = User.objects.create_user(
