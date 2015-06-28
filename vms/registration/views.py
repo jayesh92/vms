@@ -47,7 +47,6 @@ def signup_administrator(request):
 
                 return HttpResponseRedirect(reverse('home:index'))
             else:
-                print user_form.errors, administrator_form.errors
                 return render(request, 'registration/signup_administrator.html', {'user_form' : user_form, 'administrator_form' : administrator_form, 'registered' : registered, 'organization_list' : organization_list,})
         else:
             user_form = UserForm(prefix="usr")
@@ -96,7 +95,6 @@ def signup_volunteer(request):
 
                 return HttpResponseRedirect(reverse('home:index'))
             else:
-                print user_form.errors, volunteer_form.errors
                 return render(request, 'registration/signup_volunteer.html', {'user_form' : user_form, 'volunteer_form' : volunteer_form, 'registered' : registered, 'organization_list' : organization_list,})
         else:
             user_form = UserForm(prefix="usr")
