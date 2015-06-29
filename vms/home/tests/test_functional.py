@@ -386,3 +386,152 @@ class CheckPageContent(LiveServerTestCase):
             'Profile'), None)
         self.assertNotEqual(self.driver.find_element_by_link_text(
             'Log Out'), None)
+
+class CheckRedirection(LiveServerTestCase):
+    '''
+    CheckRedirection class contains test cases to check if all links
+    in the nav-bar for admin and volunteer page redirect to desired
+    views.
+    Admin views nav-bar consists of:
+    - Volunteer Search
+    - Manage Volunteer Shifts
+    - Report
+    - Settings
+    - Create Admin Account
+    - Logout
+
+    Volunteer views nav-bar consists of:
+    - Upcoming Shifts
+    - Shift Hours
+    - Sihft SignUp
+    - Report
+    - Profile
+    - Logout
+    '''
+    def setUp(self):
+        admin_user = User.objects.create_user(
+                username = 'admin',
+                password = 'admin',
+                email = 'admin@admin.com')
+
+        volunteer_user = User.objects.create_user(
+                username = 'volunteer',
+                password = 'volunteer',
+                email = 'volunteer@volunteer.com')
+
+        Administrator.objects.create(
+                user = admin_user,
+                address = 'address',
+                city = 'city',
+                state = 'state',
+                country = 'country',
+                phone_number = '9999999999',
+                unlisted_organization = 'organization')
+
+        Volunteer.objects.create(
+                user = volunteer_user,
+                address = 'address',
+                city = 'city',
+                state = 'state',
+                country = 'country',
+                phone_number = '9999999999',
+                unlisted_organization = 'organization')
+
+        self.volunteer_id = str(Volunteer.objects.get(user__username =
+                'volunteer').pk)
+
+        self.authentication_page = '/authentication/login/'
+        self.homepage = '/home/'
+        self.driver = webdriver.Firefox()
+        self.driver.maximize_window()
+        super(CheckRedirection, self).setUp()
+
+    def tearDown(self):
+        self.driver.quit()
+        super(CheckRedirection, self).tearDown()
+
+    def test_admin_page_redirection(self):
+        self.driver.get(self.live_server_url + self.authentication_page)
+
+        self.driver.find_element_by_id('id_login').send_keys('admin')
+        self.driver.find_element_by_id('id_password').send_keys('admin')
+        self.driver.find_element_by_xpath('//form[1]').submit()
+
+        self.assertEqual(self.driver.current_url, self.live_server_url +
+                self.homepage)
+
+        with self.assertRaises(NoSuchElementException):
+            self.driver.find_element_by_link_text('Log In')
+
+        volunteer_search_link =  self.driver.find_element_by_link_text(
+                'Volunteer Search').get_attribute('href')
+        self.assertEqual(volunteer_search_link, self.live_server_url + 
+                '/volunteer/search/')
+
+        manage_volunteer_shift_link =  self.driver.find_element_by_link_text(
+                'Manage Volunteer Shifts').get_attribute('href')
+        self.assertEqual(manage_volunteer_shift_link, self.live_server_url + 
+                '/shift/volunteer_search/')
+
+        report_link =  self.driver.find_element_by_link_text(
+                'Report').get_attribute('href')
+        self.assertEqual(report_link, self.live_server_url + 
+                '/administrator/report/')
+
+        settings_link =  self.driver.find_element_by_link_text(
+                'Settings').get_attribute('href')
+        self.assertEqual(settings_link, self.live_server_url + 
+                '/administrator/settings/')
+
+        creat_account_link =  self.driver.find_element_by_link_text(
+                'Create Admin Account').get_attribute('href')
+        self.assertEqual(creat_account_link, self.live_server_url + 
+                '/registration/signup_administrator/')
+
+        logout_link =  self.driver.find_element_by_link_text(
+                'Log Out').get_attribute('href')
+        self.assertEqual(logout_link, self.live_server_url + 
+                '/authentication/logout/')
+
+    def test_volunteer_page_redirection(self):
+        self.driver.get(self.live_server_url + self.authentication_page)
+
+        self.driver.find_element_by_id('id_login').send_keys('volunteer')
+        self.driver.find_element_by_id('id_password').send_keys('volunteer')
+        self.driver.find_element_by_xpath('//form[1]').submit()
+
+        self.assertEqual(self.driver.current_url, self.live_server_url +
+                self.homepage)
+
+        with self.assertRaises(NoSuchElementException):
+            self.driver.find_element_by_link_text('Log In')
+
+        upcoming_shift_link =  self.driver.find_element_by_link_text(
+                'Upcoming Shifts').get_attribute('href')
+        self.assertEqual(upcoming_shift_link, self.live_server_url + 
+                '/shift/view_volunteer_shifts/' + self.volunteer_id)
+
+        shift_hours_link =  self.driver.find_element_by_link_text(
+                'Shift Hours').get_attribute('href')
+        self.assertEqual(shift_hours_link, self.live_server_url + 
+                '/shift/view_hours/' + self.volunteer_id)
+
+        shift_signup_link =  self.driver.find_element_by_link_text(
+                'Shift Sign Up').get_attribute('href')
+        self.assertEqual(shift_signup_link, self.live_server_url + 
+                '/event/list_sign_up/' + self.volunteer_id)
+
+        report_link =  self.driver.find_element_by_link_text(
+                'Report').get_attribute('href')
+        self.assertEqual(report_link, self.live_server_url + 
+                '/volunteer/report/' + self.volunteer_id)
+
+        profile_link =  self.driver.find_element_by_link_text(
+                'Profile').get_attribute('href')
+        self.assertEqual(profile_link, self.live_server_url + 
+                '/volunteer/profile/' + self.volunteer_id)
+
+        logout_link =  self.driver.find_element_by_link_text(
+                'Log Out').get_attribute('href')
+        self.assertEqual(logout_link, self.live_server_url + 
+                '/authentication/logout/')
