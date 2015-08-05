@@ -22,6 +22,8 @@ class VolunteerProfile(LiveServerTestCase):
                 email = 'idonthave@gmail.com')
 
         Volunteer.objects.create(
+                first_name = 'Sherlock',
+                last_name = 'Holmes',
                 user = volunteer_user,
                 email = 'idonthave@gmail.com',
                 address = '221-B Baker Street',
@@ -43,9 +45,8 @@ class VolunteerProfile(LiveServerTestCase):
         super(VolunteerProfile, self).setUp()
 
     def tearDown(self):
-        pass
-        #self.driver.quit()
-        #super(VolunteerProfile, self).tearDown()
+        self.driver.quit()
+        super(VolunteerProfile, self).tearDown()
 
     def login(self):
         self.driver.get(self.live_server_url + self.authentication_page)
@@ -162,5 +163,28 @@ class VolunteerProfile(LiveServerTestCase):
         found_org = re.search('Lawyer', page_source)
         self.assertNotEqual(found_org, None)
 
-    def test_resume(self):
-        pass
+    def test_upload_resume(self):
+        self.login()
+        self.driver.find_element_by_link_text('Profile').click()
+        self.driver.find_element_by_link_text('Edit Profile').click()
+
+        self.driver.find_element_by_xpath(
+                '//input[@name = "resume_file"]').send_keys('/home/jlahori/Downloads/water.pdf')
+
+        self.driver.find_element_by_xpath('//form').submit()
+        self.assertEqual(self.driver.find_element_by_xpath(
+            './/*[@id="collapseResumeFile"]/div/form/button').text,
+            'Download Resume')
+
+    def test_invalid_resume_format(self):
+        self.login()
+        self.driver.find_element_by_link_text('Profile').click()
+        self.driver.find_element_by_link_text('Edit Profile').click()
+
+        self.driver.find_element_by_xpath(
+                '//input[@name = "resume_file"]').send_keys('/home/jlahori/Downloads/ca.crt')
+
+        self.driver.find_element_by_xpath('//form').submit()
+        self.assertEqual(self.driver.find_element_by_xpath(
+            'html/body/div[2]/div[2]/form/fieldset/div[13]/div/p/strong').text,
+            'Uploaded file is invalid.')
