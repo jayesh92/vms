@@ -11,6 +11,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
 from organization.models import Organization #hack to pass travis,Bug in Code
+import re
 
 
 class ViewVolunteerShift(LiveServerTestCase):
@@ -33,6 +34,7 @@ class ViewVolunteerShift(LiveServerTestCase):
 
         # create an org prior to registration. Bug in Code
         # added to pass CI
+        volunteer_id = Volunteer.objects.get(user__username = 'volunteer').pk
         Organization.objects.create(
                 name = 'DummyOrg')
 
@@ -51,6 +53,37 @@ class ViewVolunteerShift(LiveServerTestCase):
         self.driver.find_element_by_id('id_login').send_keys(credentials['username'])
         self.driver.find_element_by_id('id_password').send_keys(credentials['password'])
         self.driver.find_element_by_xpath('//form[1]').submit()
+
+    def test_access_another_existing_volunteer_view(self):
+        '''
+        test_volunteer_user = User.objects.create_user(
+                username = 'test_volunteer',
+                password = 'volunteer',
+                email = 'test_volunteer@volunteer.com')
+
+        test_volunteer = Volunteer.objects.create(
+                user = test_volunteer_user,
+                address = 'address',
+                city = 'city',
+                state = 'state',
+                country = 'country',
+                phone_number = '9999999999',
+                unlisted_organization = 'organization')
+
+        test_volunteer_id = Volunteer.objects.get(user__username = 'test_volunteer').pk
+
+        credentials = {'username' : 'volunteer', 'password' : 'volunteer'}
+        self.login(credentials)
+        self.driver.get(self.live_server_url + '/shift/view_volunteer_shifts/' + str(test_volunteer_id))
+        '''
+        pass
+
+    def test_access_another_nonexisting_volunteer_view(self):
+        credentials = {'username' : 'volunteer', 'password' : 'volunteer'}
+        self.login(credentials)
+        self.driver.get(self.live_server_url + '/shift/view_volunteer_shifts/' + '65459')
+        found = re.search('Not Found', self.driver.page_source)
+        self.assertNotEqual(found, None)
 
     def test_view_without_any_assigned_shift(self):
         credentials = {'username' : 'volunteer', 'password' : 'volunteer'}

@@ -43,9 +43,8 @@ class VolunteerReport(LiveServerTestCase):
         super(VolunteerReport, self).setUp()
 
     def tearDown(self):
-        pass
-        #self.driver.quit()
-        #super(VolunteerReport, self).tearDown()
+        self.driver.quit()
+        super(VolunteerReport, self).tearDown()
 
     def login(self, credentials):
         self.driver.get(self.live_server_url + self.authentication_page)
