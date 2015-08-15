@@ -39,6 +39,7 @@ class ShiftHours(LiveServerTestCase):
         self.homepage = '/home/'
         self.authentication_page = '/authentication/login/'
         self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(5)
         self.driver.maximize_window()
         super(ShiftHours, self).setUp()
 

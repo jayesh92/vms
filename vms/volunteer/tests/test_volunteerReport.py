@@ -12,6 +12,7 @@ from event.models import Event
 from job.models import Job
 from shift.models import Shift, VolunteerShift
 
+
 class VolunteerReport(LiveServerTestCase):
     '''
     '''
@@ -39,6 +40,7 @@ class VolunteerReport(LiveServerTestCase):
         self.registration_page = '/registration/signup_volunteer/'
         self.authentication_page = '/authentication/login/'
         self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(5)
         self.driver.maximize_window()
         super(VolunteerReport, self).setUp()
 

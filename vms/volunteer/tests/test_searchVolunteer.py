@@ -9,6 +9,7 @@ from selenium.common.exceptions import NoSuchElementException
 from administrator.models import Administrator
 from organization.models import Organization #hack to pass travis,Bug in Code
 
+
 class SearchVolunteer(LiveServerTestCase):
     '''
     SearchVolunteer class contains tests to check '/voluneer/search/' view.
@@ -47,6 +48,7 @@ class SearchVolunteer(LiveServerTestCase):
         self.registration_page = '/registration/signup_volunteer/'
         self.authentication_page = '/authentication/login/'
         self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(5)
         self.driver.maximize_window()
         super(SearchVolunteer, self).setUp()
 

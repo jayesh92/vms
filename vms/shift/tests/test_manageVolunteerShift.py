@@ -63,6 +63,7 @@ class ManageVolunteerShift(LiveServerTestCase):
         self.volunteer_registration_page = '/registration/signup_volunteer/'
         self.settings_page = '/event/list/'
         self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(5)
         self.driver.maximize_window()
         super(ManageVolunteerShift, self).setUp()
 
